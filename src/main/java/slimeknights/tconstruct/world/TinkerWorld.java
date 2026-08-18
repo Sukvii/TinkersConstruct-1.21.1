@@ -76,6 +76,8 @@ import slimeknights.tconstruct.shared.TinkerMaterials;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
+import slimeknights.tconstruct.world.data.WorldRecipeProvider;
+import slimeknights.tconstruct.world.data.MobEquipmentProvider;
 import slimeknights.tconstruct.world.block.CongealedSlimeBlock;
 import slimeknights.tconstruct.world.block.CrystalClusterBlock;
 import slimeknights.tconstruct.world.block.DirtType;
@@ -418,7 +420,12 @@ public final class TinkerWorld extends TinkerModule {
 
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
-    // Runtime-first 1.21 port: providers are migrated separately.
+    DataGenerator generator = event.getGenerator();
+    boolean server = event.includeServer();
+    PackOutput packOutput = generator.getPackOutput();
+    generator.getPackGenerator(server, "tconstruct_world", "")
+             .addProvider(output -> new WorldRecipeProvider(output, event.getLookupProvider()));
+    generator.addProvider(server, new MobEquipmentProvider(packOutput));
   }
 
   /** Adds all relevant items to the creative tab */

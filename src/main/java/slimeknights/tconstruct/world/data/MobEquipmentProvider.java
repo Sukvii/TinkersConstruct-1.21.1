@@ -2,12 +2,15 @@ package slimeknights.tconstruct.world.data;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import slimeknights.mantle.data.predicate.item.ItemPredicate;
-import slimeknights.mantle.recipe.data.ItemNameOutput;
+import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.data.FakeRegistryEntry;
@@ -19,6 +22,8 @@ import java.util.List;
 
 /** Provider for custom mob equipment */
 public class MobEquipmentProvider extends AbstractMobEquipmentProvider {
+  private static final TagKey<Item> MINOTAUR_AXE = ItemTags.create(TConstruct.getResource("compat/twilightforest/minotaur_axe"));
+
   public MobEquipmentProvider(PackOutput output) {
     super(output, TConstruct.MOD_ID);
   }
@@ -62,7 +67,7 @@ public class MobEquipmentProvider extends AbstractMobEquipmentProvider {
     String tf = "twilightforest";
     equip(FakeRegistryEntry.entity(ResourceLocation.fromNamespaceAndPath(tf, "minotaur")), new ModLoadedCondition(tf))
       .slot(EquipmentSlot.MAINHAND)
-      .tool(ItemNameOutput.fromName(TinkerTools.minotaurAxe.getId()))
+      .tool(ItemOutput.fromTag(MINOTAUR_AXE))
       .material(random, random, random);
   }
 

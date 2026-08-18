@@ -21,6 +21,9 @@
     ],
     "priority": 100,
     "slot": "mainhand",
-    "tool": "tconstruct:minotaur_axe"
+    "tool": {
+      "count": 1,
+      "tag": "tconstruct:compat/twilightforest/minotaur_axe"
+    }
   }
 }

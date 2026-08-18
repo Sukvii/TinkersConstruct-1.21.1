@@ -57,6 +57,10 @@ import slimeknights.mantle.registration.object.FluidObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerModule;
+import slimeknights.tconstruct.fluids.data.FluidBlockstateModelProvider;
+import slimeknights.tconstruct.fluids.data.FluidBucketModelProvider;
+import slimeknights.tconstruct.fluids.data.FluidTextureProvider;
+import slimeknights.tconstruct.fluids.data.FluidTooltipProvider;
 import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 import slimeknights.tconstruct.fluids.fluids.SlimeFluid;
 import slimeknights.tconstruct.fluids.item.BottleItem;
@@ -260,7 +264,15 @@ public final class TinkerFluids extends TinkerModule {
 
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
-    // Runtime-first 1.21 port: providers are migrated separately.
+    DataGenerator generator = event.getGenerator();
+    PackOutput packOutput = generator.getPackOutput();
+    boolean client = event.includeClient();
+    generator.addProvider(client, new FluidTooltipProvider(packOutput));
+    FluidTextureProvider textureProvider = new FluidTextureProvider(packOutput);
+    generator.addProvider(client, textureProvider);
+    generator.addProvider(client, new FluidTextureCameraProvider(packOutput, event.getExistingFileHelper(), textureProvider));
+    generator.addProvider(client, new FluidBucketModelProvider(packOutput, TConstruct.MOD_ID));
+    generator.addProvider(client, new FluidBlockstateModelProvider(packOutput, TConstruct.MOD_ID));
   }
 
   @SubscribeEvent
