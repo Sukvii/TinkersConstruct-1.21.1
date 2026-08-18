@@ -21,7 +21,7 @@
     "sws"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:part_chest"
-  },
-  "show_notification": true
+  }
 }

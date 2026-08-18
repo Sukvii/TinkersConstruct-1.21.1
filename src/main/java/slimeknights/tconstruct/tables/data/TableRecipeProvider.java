@@ -1,32 +1,30 @@
 package slimeknights.tconstruct.tables.data;
 
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import slimeknights.mantle.Mantle;
 import slimeknights.mantle.recipe.crafting.ShapedRetexturedRecipeBuilder;
-import slimeknights.mantle.recipe.data.ItemNameIngredient;
-import slimeknights.mantle.recipe.data.ItemNameOutput;
-import slimeknights.mantle.recipe.helper.SimpleFinishedRecipe;
+import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.data.BaseRecipeProvider;
 import slimeknights.tconstruct.fluids.TinkerFluids;
-import slimeknights.tconstruct.library.data.recipe.CraftingNBTWrapper;
 import slimeknights.tconstruct.library.json.predicate.material.MaterialPredicate;
 import slimeknights.tconstruct.library.recipe.ingredient.MaterialIngredient;
 import slimeknights.tconstruct.library.recipe.material.MaterialsConsumerBuilder;
@@ -36,31 +34,27 @@ import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.recipe.TinkerStationDamagingRecipeBuilder;
 import slimeknights.tconstruct.tables.recipe.TinkerStationPartSwappingBuilder;
+import slimeknights.tconstruct.tables.recipe.CraftingTableRepairKitRecipe;
+import slimeknights.tconstruct.tables.recipe.TinkerStationRepairRecipe;
 import slimeknights.tconstruct.tools.TinkerToolParts;
 import slimeknights.tconstruct.tools.TinkerTools;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.concurrent.CompletableFuture;
 
 public class TableRecipeProvider extends BaseRecipeProvider {
 
-  public TableRecipeProvider(PackOutput packOutput) {
-    super(packOutput);
+  public TableRecipeProvider(PackOutput packOutput, CompletableFuture<Provider> registries) {
+    super(packOutput, registries);
   }
 
   @Override
-  public String getName() {
-    return "Tinkers' Construct Table Recipes";
-  }
-
-  @Override
-  protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+  protected void buildRecipes(RecipeOutput consumer) {
     this.tableRecipes(consumer);
     this.damageRecipes(consumer);
     this.recyclingRecipes(consumer);
   }
 
-  private void tableRecipes(Consumer<FinishedRecipe> consumer) {
+  private void tableRecipes(RecipeOutput consumer) {
     String folder = "tables/";
     // pattern
     ShapedRecipeBuilder.shaped(RecipeCategory.MISC, TinkerTables.pattern, 6)
@@ -207,16 +201,12 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .build(consumer, prefix(TinkerTables.scorchedAnvil, folder));
 
     // tool forge - just a humor recipe
-    Consumer<FinishedRecipe> toolForge;
-    {
-      CompoundTag nbt = new CompoundTag();
-      CompoundTag display = new CompoundTag();
-      display.putString("Name", Serializer.toJson(Component.translatable("block.tconstruct.tool_forge")));
-      nbt.put("display", display);
-      toolForge = CraftingNBTWrapper.wrap(consumer, nbt);
-    }
+    ItemStack toolForge = new ItemStack(TinkerTables.tinkersAnvil.get());
+    toolForge.set(DataComponents.CUSTOM_NAME, Component.translatable("block.tconstruct.tool_forge"));
+    ItemStack scorchedToolForge = new ItemStack(TinkerTables.scorchedAnvil.get());
+    scorchedToolForge.set(DataComponents.CUSTOM_NAME, Component.translatable("block.tconstruct.tool_forge"));
     ShapedRetexturedRecipeBuilder.fromShaped(
-      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
+      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, toolForge)
         .define('m', TinkerTags.Items.ANVIL_METAL)
         .define('s', TinkerTags.Items.SEARED_BLOCKS)
         .define('t', TinkerTables.tinkerStation)
@@ -226,9 +216,9 @@ public class TableRecipeProvider extends BaseRecipeProvider {
         .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
       .setSource('m')
       .setMatchAll()
-      .build(toolForge, location(folder + "tinkers_forge"));
+      .build(consumer, location(folder + "tinkers_forge"));
     ShapedRetexturedRecipeBuilder.fromShaped(
-      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
+      ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, scorchedToolForge)
         .define('m', TinkerTags.Items.ANVIL_METAL)
         .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
         .define('t', TinkerTables.tinkerStation)
@@ -238,10 +228,10 @@ public class TableRecipeProvider extends BaseRecipeProvider {
         .unlockedBy("has_item", has(TinkerTags.Items.ANVIL_METAL)))
       .setSource('m')
       .setMatchAll()
-      .build(toolForge, location(folder + "scorched_forge"));
+      .build(consumer, location(folder + "scorched_forge"));
 
     // material recipes - for the material fallbacks
-    Consumer<FinishedRecipe> materialConsumer = MaterialsConsumerBuilder.shaped("m").build(consumer);
+    RecipeOutput materialConsumer = MaterialsConsumerBuilder.shaped("m").build(consumer);
     Ingredient fakeStorageBlock = MaterialIngredient.of(TinkerToolParts.fakeStorageBlock, MaterialPredicate.tag(TinkerTags.Materials.COMPATABILITY_ALLOYS));
     ShapedRecipeBuilder.shaped(RecipeCategory.MISC, TinkerTables.tinkersAnvil)
       .define('m', fakeStorageBlock)
@@ -259,8 +249,8 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .pattern("sss")
       .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
       .save(materialConsumer, wrap(TinkerTables.scorchedAnvil, folder, "_material"));
-    materialConsumer = MaterialsConsumerBuilder.shaped("m").build(toolForge);
-    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
+    materialConsumer = MaterialsConsumerBuilder.shaped("m").build(consumer);
+    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, toolForge)
       .define('m', fakeStorageBlock)
       .define('s', TinkerTags.Items.SEARED_BLOCKS)
       .define('t', TinkerTables.tinkerStation)
@@ -269,7 +259,7 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .pattern("m m")
       .unlockedBy("has_item", has(TinkerToolParts.fakeStorageBlock))
       .save(materialConsumer, location(folder + "seared_forge_material"));
-    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.scorchedAnvil)
+    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, scorchedToolForge)
       .define('m', fakeStorageBlock)
       .define('s', TinkerTags.Items.SCORCHED_BLOCKS)
       .define('t', TinkerTables.tinkerStation)
@@ -292,11 +282,13 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .save(consumer, location(folder + "throwing_axe_part_swapping"));
 
     // tool repair recipe
-    consumer.accept(new SimpleFinishedRecipe(location(folder + "tinker_station_repair"), TinkerTables.tinkerStationRepairSerializer.get()));
-    consumer.accept(new SimpleFinishedRecipe(location(folder + "crafting_table_repair"), TinkerTables.craftingTableRepairSerializer.get()));
+    ResourceLocation tinkerStationRepair = location(folder + "tinker_station_repair");
+    consumer.accept(tinkerStationRepair, new TinkerStationRepairRecipe(tinkerStationRepair), null);
+    ResourceLocation craftingTableRepair = location(folder + "crafting_table_repair");
+    consumer.accept(craftingTableRepair, new CraftingTableRepairKitRecipe(craftingTableRepair), null);
   }
 
-  private void damageRecipes(Consumer<FinishedRecipe> consumer) {
+  private void damageRecipes(RecipeOutput consumer) {
     // tool damaging
     String damageFolder = "tables/tinker_station_damaging/";
     TinkerStationDamagingRecipeBuilder.damage(Ingredient.of(TinkerFluids.magmaBottle), 20)
@@ -314,7 +306,7 @@ public class TableRecipeProvider extends BaseRecipeProvider {
   }
 
   @SuppressWarnings("removal")
-  private void recyclingRecipes(Consumer<FinishedRecipe> consumer) {
+  private void recyclingRecipes(RecipeOutput consumer) {
     // recipes for recycling vanilla tools
     String folder = "tables/recycling/";
 
@@ -380,71 +372,71 @@ public class TableRecipeProvider extends BaseRecipeProvider {
     // turtle shell
     Pattern scale = new Pattern(TConstruct.MOD_ID, "scale");
     PartBuilderRecycleBuilder.tool(Items.TURTLE_HELMET)
-      .result(scale, Items.SCUTE, 5)
+      .result(scale, Items.TURTLE_SCUTE, 5)
       .save(consumer, location(folder + "turtle_helmet"));
 
     // twilight forest
     String tfId = "twilightforest";
-    Function<String,ResourceLocation> tf = name -> ResourceLocation.fromNamespaceAndPath(tfId, name);
-    Consumer<FinishedRecipe> tfConsumer = withCondition(consumer, new ModLoadedCondition(tfId));
+    RecipeOutput tfConsumer = withCondition(consumer, new ModLoadedCondition(tfId));
     // naga scale armor
-    ResourceLocation nagaScale = tf.apply("naga_scale");
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("naga_chestplate")))
-      .result(scale, ItemNameOutput.fromName(nagaScale, 8))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("naga_chestplate")))
+      .result(scale, ItemOutput.fromTag(compatTag("naga_scale"), 8))
       .save(tfConsumer, location(folder + "twilightforest/naga_chestplate"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("naga_leggings")))
-      .result(scale, ItemNameOutput.fromName(nagaScale, 7))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("naga_leggings")))
+      .result(scale, ItemOutput.fromTag(compatTag("naga_scale"), 7))
       .save(tfConsumer, location(folder + "twilightforest/naga_leggings"));
     // ironwood armor and tools
-    TagKey<Item> ironwoodIngot = ItemTags.create(Mantle.commonResource("ingots/ironwood"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_pickaxe"), tf.apply("ironwood_axe")))
+    TagKey<Item> ironwoodIngot = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/ironwood"));
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_axe")))
       .result(ingot, ironwoodIngot, 3)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_axe"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_sword"), tf.apply("ironwood_hoe")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_sword")))
       .result(ingot, ironwoodIngot, 2)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_sword"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_shovel")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_shovel")))
       .result(ingot, ironwoodIngot, 1)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_shovel"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_helmet")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_helmet")))
       .result(ingot, ironwoodIngot, 5)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_helmet"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_chestplate")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_chestplate")))
       .result(ingot, ironwoodIngot, 8)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_chestplate"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_leggings")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_leggings")))
       .result(ingot, ironwoodIngot, 7)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_leggings"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("ironwood_boots")))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("ironwood_boots")))
       .result(ingot, ironwoodIngot, 4)
       .save(tfConsumer, location(folder + "twilightforest/ironwood_boots"));
     // arctic
-    ResourceLocation arcticFur = tf.apply("arctic_fur");
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("arctic_helmet")))
-      .result(leather, ItemNameOutput.fromName(arcticFur, 5))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("arctic_helmet")))
+      .result(leather, ItemOutput.fromTag(compatTag("arctic_fur"), 5))
       .save(tfConsumer, location(folder + "twilightforest/arctic_helmet"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("arctic_chestplate")))
-      .result(leather, ItemNameOutput.fromName(arcticFur, 8))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("arctic_chestplate")))
+      .result(leather, ItemOutput.fromTag(compatTag("arctic_fur"), 8))
       .save(tfConsumer, location(folder + "twilightforest/arctic_chestplate"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("arctic_leggings")))
-      .result(leather, ItemNameOutput.fromName(arcticFur, 7))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("arctic_leggings")))
+      .result(leather, ItemOutput.fromTag(compatTag("arctic_fur"), 7))
       .save(tfConsumer, location(folder + "twilightforest/arctic_leggings"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("arctic_boots")))
-      .result(leather, ItemNameOutput.fromName(arcticFur, 4))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("arctic_boots")))
+      .result(leather, ItemOutput.fromTag(compatTag("arctic_fur"), 4))
       .save(tfConsumer, location(folder + "twilightforest/arctic_boots"));
     // arctic
-    ResourceLocation alphaYetiFur = tf.apply("alpha_yeti_fur");
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("yeti_helmet")))
-      .result(leather, ItemNameOutput.fromName(alphaYetiFur, 5))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("yeti_helmet")))
+      .result(leather, ItemOutput.fromTag(compatTag("alpha_yeti_fur"), 5))
       .save(tfConsumer, location(folder + "twilightforest/yeti_helmet"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("yeti_chestplate")))
-      .result(leather, ItemNameOutput.fromName(alphaYetiFur, 8))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("yeti_chestplate")))
+      .result(leather, ItemOutput.fromTag(compatTag("alpha_yeti_fur"), 8))
       .save(tfConsumer, location(folder + "twilightforest/yeti_chestplate"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("yeti_leggings")))
-      .result(leather, ItemNameOutput.fromName(alphaYetiFur, 7))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("yeti_leggings")))
+      .result(leather, ItemOutput.fromTag(compatTag("alpha_yeti_fur"), 7))
       .save(tfConsumer, location(folder + "twilightforest/yeti_leggings"));
-    PartBuilderRecycleBuilder.tool(ItemNameIngredient.from(tf.apply("yeti_boots")))
-      .result(leather, ItemNameOutput.fromName(alphaYetiFur, 4))
+    PartBuilderRecycleBuilder.tool(Ingredient.of(compatTag("yeti_boots")))
+      .result(leather, ItemOutput.fromTag(compatTag("alpha_yeti_fur"), 4))
       .save(tfConsumer, location(folder + "twilightforest/yeti_boots"));
+  }
+
+  private static TagKey<Item> compatTag(String name) {
+    return TagKey.create(Registries.ITEM, TConstruct.getResource("compat/twilightforest/" + name));
   }
 }

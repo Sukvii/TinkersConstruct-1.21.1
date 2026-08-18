@@ -1,17 +1,17 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "ceramics"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": [
     {
-      "item": "ceramics:clay_faucet"
+      "tag": "tconstruct:compat/ceramics/clay_faucet"
     },
     {
-      "item": "ceramics:clay_channel"
+      "tag": "tconstruct:compat/ceramics/clay_channel"
     }
   ],
   "result": {

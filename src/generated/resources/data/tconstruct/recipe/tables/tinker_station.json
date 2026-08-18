@@ -16,8 +16,10 @@
     "w w"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:tinker_station"
   },
-  "show_notification": true,
-  "texture": "w"
+  "texture": {
+    "tag": "tconstruct:planklike"
+  }
 }

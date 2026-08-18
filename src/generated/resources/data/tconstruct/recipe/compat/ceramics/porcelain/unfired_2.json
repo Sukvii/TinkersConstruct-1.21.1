@@ -1,17 +1,17 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "ceramics"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": [
     {
-      "item": "ceramics:unfired_faucet"
+      "tag": "tconstruct:compat/ceramics/unfired_faucet"
     },
     {
-      "item": "ceramics:unfired_channel"
+      "tag": "tconstruct:compat/ceramics/unfired_channel"
     }
   ],
   "result": {

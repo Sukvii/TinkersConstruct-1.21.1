@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.shared;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -47,6 +48,12 @@ import slimeknights.tconstruct.common.TinkerModule;
 import slimeknights.tconstruct.common.json.BlockOrEntityCondition;
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.common.recipe.RecipeCacheInvalidator;
+import slimeknights.tconstruct.common.data.model.ModelSpriteProvider;
+import slimeknights.tconstruct.common.data.model.TinkerBlockStateProvider;
+import slimeknights.tconstruct.common.data.model.TinkerItemModelProvider;
+import slimeknights.tconstruct.common.data.model.TinkerSpriteSourceProvider;
+import slimeknights.tconstruct.common.data.render.RenderFluidProvider;
+import slimeknights.tconstruct.common.data.render.RenderItemProvider;
 import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.library.json.condition.TagDifferencePresentCondition;
 import slimeknights.tconstruct.library.json.condition.TagIntersectionPresentCondition;
@@ -82,7 +89,9 @@ import slimeknights.tconstruct.shared.item.TinkerBookItem;
 import slimeknights.tconstruct.shared.item.TinkerBookItem.BookType;
 import slimeknights.tconstruct.shared.particle.FluidParticleData;
 import slimeknights.tconstruct.tools.TinkerModifiers;
+import slimeknights.tconstruct.shared.data.CommonRecipeProvider;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static slimeknights.tconstruct.TConstruct.getResource;
@@ -226,7 +235,19 @@ public final class TinkerCommons extends TinkerModule {
 
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
-    // Runtime-first 1.21 port: providers are migrated separately.
+    DataGenerator generator = event.getGenerator();
+    PackOutput output = generator.getPackOutput();
+    ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+    CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
+    boolean client = event.includeClient();
+    generator.addProvider(client, new ModelSpriteProvider(output, existingFileHelper));
+    generator.addProvider(client, new TinkerSpriteSourceProvider(output, lookupProvider, existingFileHelper));
+    generator.addProvider(client, new TinkerItemModelProvider(output, existingFileHelper));
+    generator.addProvider(client, new TinkerBlockStateProvider(output, existingFileHelper));
+    generator.addProvider(client, new RenderFluidProvider(output));
+    generator.addProvider(client, new RenderItemProvider(output));
+    generator.getPackGenerator(event.includeServer(), "tconstruct_common", "")
+             .addProvider(packOutput -> new CommonRecipeProvider(packOutput, lookupProvider));
   }
 
   /** Adds all relevant items to the creative tab */

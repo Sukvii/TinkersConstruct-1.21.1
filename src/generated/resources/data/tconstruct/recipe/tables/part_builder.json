@@ -15,8 +15,10 @@
     "ww"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:part_builder"
   },
-  "show_notification": true,
-  "texture": "w"
+  "texture": {
+    "tag": "tconstruct:planklike"
+  }
 }

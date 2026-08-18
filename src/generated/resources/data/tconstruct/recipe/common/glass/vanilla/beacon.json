@@ -1,15 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "neoforge:conditions": [
     {
       "type": "tconstruct:config",
       "prop": "glass_recipe_fix"
     }
   ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
-      "tag": "c:glass/colorless"
+      "tag": "c:glass_blocks/colorless"
     },
     "O": {
       "item": "minecraft:obsidian"
@@ -24,7 +24,7 @@
     "OOO"
   ],
   "result": {
+    "count": 1,
     "id": "minecraft:beacon"
-  },
-  "show_notification": true
+  }
 }

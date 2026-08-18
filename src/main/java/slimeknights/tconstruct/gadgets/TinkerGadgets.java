@@ -20,6 +20,7 @@ import slimeknights.mantle.registration.RegistryObject;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.common.TinkerModule;
+import slimeknights.tconstruct.gadgets.data.GadgetRecipeProvider;
 import slimeknights.tconstruct.gadgets.block.FoodCakeBlock;
 import slimeknights.tconstruct.gadgets.block.FoodCakeBlock.EffectCombination;
 import slimeknights.tconstruct.gadgets.block.InvertedCakeBlock;
@@ -159,7 +160,9 @@ public final class TinkerGadgets extends TinkerModule {
 
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
-    // Runtime-first 1.21 port: providers are migrated separately.
+    DataGenerator generator = event.getGenerator();
+    generator.getPackGenerator(event.includeServer(), "tconstruct_gadgets", "")
+             .addProvider(packOutput -> new GadgetRecipeProvider(packOutput, event.getLookupProvider()));
   }
 
   /** Adds all relevant items to the creative tab, called by general tab */

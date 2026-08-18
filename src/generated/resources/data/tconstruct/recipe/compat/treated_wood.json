@@ -1,9 +1,4 @@
 {
-  "type": "tconstruct:casting_basin",
-  "cast": {
-    "tag": "minecraft:planks"
-  },
-  "cast_consumed": true,
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
@@ -15,6 +10,11 @@
       "tag": "c:creosote"
     }
   ],
+  "type": "tconstruct:casting_basin",
+  "cast": {
+    "tag": "minecraft:planks"
+  },
+  "cast_consumed": true,
   "cooling_time": 100,
   "fluid": {
     "amount": 125,

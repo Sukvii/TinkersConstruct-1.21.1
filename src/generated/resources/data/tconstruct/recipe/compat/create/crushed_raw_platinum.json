@@ -1,8 +1,4 @@
 {
-  "type": "tconstruct:melting",
-  "ingredient": {
-    "item": "create:crushed_raw_platinum"
-  },
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
@@ -13,6 +9,10 @@
       "item": "create:crushed_raw_platinum"
     }
   ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "tconstruct:compat/create/crushed_raw_platinum"
+  },
   "result": {
     "amount": 90,
     "tag": "c:molten_platinum"

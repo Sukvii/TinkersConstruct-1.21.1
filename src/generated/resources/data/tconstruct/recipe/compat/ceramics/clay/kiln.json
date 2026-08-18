@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "ceramics"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "ceramics:kiln"
+    "tag": "tconstruct:compat/ceramics/kiln"
   },
   "result": {
     "amount": 4250,

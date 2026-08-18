@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
   "type": "tconstruct:melting",
   "byproducts": [
     {
@@ -6,14 +12,8 @@
       "tag": "c:molten_gold"
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "ceramics"
-    }
-  ],
   "ingredient": {
-    "item": "ceramics:golden_bricks_slab"
+    "tag": "tconstruct:compat/ceramics/golden_bricks_slab"
   },
   "result": {
     "amount": 500,

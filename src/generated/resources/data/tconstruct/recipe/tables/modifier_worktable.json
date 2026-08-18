@@ -16,8 +16,10 @@
     "r r"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:modifier_worktable"
   },
-  "show_notification": true,
-  "texture": "r"
+  "texture": {
+    "tag": "tconstruct:workstation_rock"
+  }
 }

@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "ceramics"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "ceramics:unfired_porcelain"
+    "tag": "tconstruct:compat/ceramics/unfired_porcelain"
   },
   "result": {
     "amount": 250,

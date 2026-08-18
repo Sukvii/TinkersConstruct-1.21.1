@@ -1,17 +1,17 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "ceramics"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": [
     {
-      "item": "ceramics:unfired_clay_bucket"
+      "tag": "tconstruct:compat/ceramics/unfired_clay_bucket"
     },
     {
-      "item": "ceramics:clay_cistern"
+      "tag": "tconstruct:compat/ceramics/clay_cistern"
     }
   ],
   "result": {

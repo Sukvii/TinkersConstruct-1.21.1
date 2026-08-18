@@ -11,6 +11,6 @@
     "fluid": "tconstruct:fiery_liquid"
   },
   "input": {
-    "item": "twilightforest:fiery_tears"
+    "tag": "tconstruct:compat/twilightforest/fiery_tears"
   }
 }

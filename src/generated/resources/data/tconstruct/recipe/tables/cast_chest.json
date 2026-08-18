@@ -21,7 +21,7 @@
     "bBb"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:cast_chest"
-  },
-  "show_notification": true
+  }
 }
