@@ -3,6 +3,7 @@ package slimeknights.tconstruct.library.data.tinkering;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.OrCondition;
@@ -226,7 +226,7 @@ public abstract class AbstractFluidEffectProvider extends GenericDataProvider {
       for (int i = 0; i < names.length; i++) {
         conditions[i+1] = new TagFilledCondition<>(ItemTags.create(commonResource("ingots/" + names[i])));
       }
-      return addCondition(new OrCondition(conditions));
+      return addCondition(new OrCondition(java.util.List.of(conditions)));
     }
 
     /** Adds an effect to the given fluid */
@@ -336,7 +336,7 @@ public abstract class AbstractFluidEffectProvider extends GenericDataProvider {
     private JsonObject build(ResourceLocation id) {
       JsonObject json = new JsonObject();
       if (!conditions.isEmpty()) {
-        json.add("conditions", CraftingHelper.serialize(conditions.toArray(new ICondition[0])));
+        json.add("conditions", ICondition.LIST_CODEC.encodeStart(JsonOps.INSTANCE, conditions).result().orElseThrow());
       }
       if (blockEffects.isEmpty() && entityEffects.isEmpty()) {
         throw new IllegalStateException("Must have at least 1 effect");

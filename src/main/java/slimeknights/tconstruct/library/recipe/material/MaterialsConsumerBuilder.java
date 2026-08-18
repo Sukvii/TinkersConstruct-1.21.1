@@ -1,21 +1,25 @@
 package slimeknights.tconstruct.library.recipe.material;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import slimeknights.mantle.recipe.data.ConsumerWrapperBuilder;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
-import slimeknights.tconstruct.tables.TinkerTables;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-/** Special variant of {@link ConsumerWrapperBuilder} for {@link ShapedMaterialsRecipe} and {@link ShapelessMaterialsRecipe} */
+/** Adds material metadata to a vanilla shaped or shapeless recipe before it is serialized. */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MaterialsConsumerBuilder {
   private final String parts;
@@ -44,45 +48,40 @@ public class MaterialsConsumerBuilder {
     return this;
   }
 
-  /** Builds the wrapped consumer */
-  public Consumer<FinishedRecipe> build(Consumer<FinishedRecipe> consumer) {
-    return (recipe) -> consumer.accept(new Wrapped(recipe, materials, parts, partCount));
+  /** Builds a RecipeOutput wrapper that replaces the vanilla recipe with the material-aware type. */
+  public RecipeOutput build(RecipeOutput output) {
+    List<MaterialVariantId> extraMaterials = List.copyOf(materials);
+    return new RecipeOutput() {
+      @Override
+      public void accept(ResourceLocation id, Recipe<?> recipe, AdvancementHolder advancement, ICondition... conditions) {
+        Recipe<?> wrapped;
+        if (partCount > 0) {
+          wrapped = new ShapelessMaterialsRecipe((ShapelessRecipe) recipe, partCount, extraMaterials);
+        } else {
+          wrapped = new ShapedMaterialsRecipe((ShapedRecipe) recipe, shapedParts((ShapedRecipe) recipe, parts), extraMaterials);
+        }
+        output.accept(id, wrapped, advancement, conditions);
+      }
+
+      @Override
+      public Advancement.Builder advancement() {
+        return output.advancement();
+      }
+    };
   }
 
-  private record Wrapped(FinishedRecipe original, List<MaterialVariantId> materials, String parts, int partCount) implements FinishedRecipe {
-    @Override
-    public ResourceLocation getId() {
-      return original.getId();
-    }
-
-    @Override
-    public RecipeSerializer<?> getType() {
-      return partCount > 0 ? TinkerTables.shapelessMaterialsRecipeSerializer.get() : TinkerTables.shapedMaterialsRecipeSerializer.get();
-    }
-
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-      original.serializeRecipeData(json);
-      if (!materials.isEmpty()) {
-        json.add(ShapedMaterialsRecipe.Serializer.MATERIAL_FIELD.key(), ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS.serialize(materials));
+  private static List<Ingredient> shapedParts(ShapedRecipe recipe, String pattern) {
+    JsonObject json = ShapedRecipe.Serializer.CODEC.codec().encodeStart(JsonOps.INSTANCE, recipe)
+      .getOrThrow(JsonParseException::new).getAsJsonObject();
+    JsonObject key = json.getAsJsonObject("key");
+    List<Ingredient> parts = new ArrayList<>(pattern.length());
+    for (int i = 0; i < pattern.length(); i++) {
+      String symbol = pattern.substring(i, i + 1);
+      if (key == null || !key.has(symbol)) {
+        throw new IllegalStateException("Parts references undefined symbol '" + symbol + "'");
       }
-      if (!parts.isEmpty()) {
-        json.addProperty("parts", parts);
-      } else {
-        json.addProperty("parts", partCount);
-      }
+      parts.add(Ingredient.CODEC_NONEMPTY.parse(JsonOps.INSTANCE, key.get(symbol)).getOrThrow(JsonParseException::new));
     }
-
-    @Nullable
-    @Override
-    public JsonObject serializeAdvancement() {
-      return original.serializeAdvancement();
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getAdvancementId() {
-      return original.getAdvancementId();
-    }
+    return List.copyOf(parts);
   }
 }
