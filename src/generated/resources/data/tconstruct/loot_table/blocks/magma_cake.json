@@ -1,4 +1,4 @@
 {
-    "type":  "minecraft:block",
-    "random_sequence":  "tconstruct:blocks/magma_cake"
+  "type": "minecraft:block",
+  "random_sequence": "tconstruct:blocks/magma_cake"
 }

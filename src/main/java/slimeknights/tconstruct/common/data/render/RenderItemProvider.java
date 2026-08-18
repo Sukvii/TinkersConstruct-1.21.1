@@ -26,7 +26,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
     String castingTable = "templates/casting_table";
     block(TinkerSmeltery.searedTable).variant(castingTable);
     block(TinkerSmeltery.scorchedTable).variant(castingTable);
-    RenderItem.Builder itemBuilder = RenderItem.builder().center(8, 15.5f, 8).size(14).x(270).y(180).transform(TinkerItemDisplays.CASTING_TABLE);
+    RenderItem.Builder itemBuilder = RenderItem.builder().center(8, 15.5f, 8).size(14).x(270).y(180).transform(TinkerItemDisplays.CASTING_TABLE.getValue());
     entry(castingTable, List.of(
       itemBuilder.build(),
       itemBuilder.size(14.1f).build()
@@ -36,7 +36,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
     String castingBasin = "templates/casting_basin";
     block(TinkerSmeltery.searedBasin).variant(castingBasin);
     block(TinkerSmeltery.scorchedBasin).variant(castingBasin);
-    itemBuilder = RenderItem.builder().center(8, 10, 8).size(11.95f).transform(TinkerItemDisplays.CASTING_BASIN);
+    itemBuilder = RenderItem.builder().center(8, 10, 8).size(11.95f).transform(TinkerItemDisplays.CASTING_BASIN.getValue());
     entry(castingBasin, List.of(
       itemBuilder.build(),
       itemBuilder.size(12).build()
@@ -44,7 +44,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
 
     // tables
     // crafting station
-    itemBuilder = RenderItem.builder().size(2).transform(TinkerItemDisplays.TABLE);
+    itemBuilder = RenderItem.builder().size(2).transform(TinkerItemDisplays.TABLE.getValue());
     block(TinkerTables.craftingStation).variant(List.of(
       itemBuilder.center( 5, 17,  5).build(),
       itemBuilder.center( 8, 17,  5).build(),
@@ -88,7 +88,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
       itemBuilder.center(4.5f, 17.5f, 12.5f).build()
     ));
     // melter
-    itemBuilder = RenderItem.builder().size(7.5f).transform(TinkerItemDisplays.MELTER);
+    itemBuilder = RenderItem.builder().size(7.5f).transform(TinkerItemDisplays.MELTER.getValue());
     block(TinkerSmeltery.searedMelter).variant(List.of(
       itemBuilder.center( 8, 12, 12).build(),
       itemBuilder.center( 4, 12,  4).build(),
@@ -97,7 +97,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
     String fluidCannon = "templates/fluid_cannon";
     String fluidCannonUp = "templates/fluid_cannon_up";
     String fluidCannonDown = "templates/fluid_cannon_down";
-    itemBuilder = RenderItem.builder().size(7.5f).transform(TinkerItemDisplays.FLUID_CANNON);
+    itemBuilder = RenderItem.builder().size(7.5f).transform(TinkerItemDisplays.FLUID_CANNON.getValue());
     entry(fluidCannon, List.of(itemBuilder.center(8, 4, 16).build()));
     entry(fluidCannonUp, List.of(itemBuilder.center(8, 16, 8).x(270).build()));
     entry(fluidCannonDown, List.of(itemBuilder.center(8, 0, 8).x(90).build()));
@@ -115,7 +115,7 @@ public class RenderItemProvider extends BlockStateDataMapProvider<List<RenderIte
       .variant(List.of(itemBuilder.center(8, 1, 8).x(90).build())).when(FACING, Direction.DOWN);
 
     // proxy tank
-    block(TinkerSmeltery.scorchedProxyTank).variant(List.of(RenderItem.builder().size(12f).transform(TinkerItemDisplays.MELTER).center(8, 9, 8).build())).end();
+    block(TinkerSmeltery.scorchedProxyTank).variant(List.of(RenderItem.builder().size(12f).transform(TinkerItemDisplays.MELTER.getValue()).center(8, 9, 8).build())).end();
 
     // casting tank
     block(TinkerSmeltery.searedCastingTank).variant(castingTable);

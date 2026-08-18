@@ -18,7 +18,6 @@ import slimeknights.mantle.data.predicate.item.ItemPredicate;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.json.predicate.TinkerPredicate;
-import slimeknights.tconstruct.shared.command.subcommand.GenerateMeltingRecipesCommand;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 
 import java.util.LinkedHashMap;
@@ -36,7 +35,7 @@ public class ConfigurationDataProvider extends GenericDataProvider {
   @Override
   public CompletableFuture<?> run(CachedOutput output) {
     // config for which items to generate melting recipes for and which items to ignore
-    JsonObject meltingRecipes = config(GenerateMeltingRecipesCommand.MELTING_CONFIGURATION);
+    JsonObject meltingRecipes = config(TConstruct.getResource("command/generate_melting_recipes.json"));
     item(meltingRecipes, "melt", ItemPredicate.or(
       ItemPredicate.tag(TinkerTags.Items.MODIFIABLE),
       ItemPredicate.tag(TinkerTags.Items.BOOKS),

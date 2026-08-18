@@ -128,6 +128,15 @@ import static slimeknights.tconstruct.common.TinkerTags.Items.WORN_ARMOR;
 
 @SuppressWarnings({"unchecked", "removal"})
 public class ItemTagProvider extends ItemTagsProvider {
+  private static final TagKey<Block> STAINED_GLASS_BLOCKS = TagKey.create(Registries.BLOCK, commonResource("stained_glass"));
+  private static final TagKey<Block> STAINED_GLASS_PANE_BLOCKS = TagKey.create(Registries.BLOCK, commonResource("stained_glass_panes"));
+  private static final TagKey<Item> STAINED_GLASS_ITEMS = TagKey.create(Registries.ITEM, commonResource("stained_glass"));
+  private static final TagKey<Item> STAINED_GLASS_PANE_ITEMS = TagKey.create(Registries.ITEM, commonResource("stained_glass_panes"));
+  private static final TagKey<Item> COMMON_HEADS = TagKey.create(Registries.ITEM, commonResource("heads"));
+  private static final TagKey<Item> COMMON_ARMORS_BOOTS = TagKey.create(Registries.ITEM, commonResource("armors/boots"));
+  private static final TagKey<Item> COMMON_ARMORS_LEGGINGS = TagKey.create(Registries.ITEM, commonResource("armors/leggings"));
+  private static final TagKey<Item> COMMON_ARMORS_CHESTPLATES = TagKey.create(Registries.ITEM, commonResource("armors/chestplates"));
+  private static final TagKey<Item> COMMON_ARMORS_HELMETS = TagKey.create(Registries.ITEM, commonResource("armors/helmets"));
   /** Twlight forest uncrafting table blacklist */
   private static final TagKey<Item> BANNED_UNCRAFTABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("twilightforest", "banned_uncraftables"));
   private final Function<ResourceLocation,IntrinsicTagAppender<Item>> MAKE_TAG = tag -> tag(ItemTags.create(tag));
@@ -142,6 +151,8 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.addWorld();
     this.addSmeltery();
     this.addTools();
+    this.addTwilightForestCompat();
+    this.addRecipeCompat();
   }
 
   @SuppressWarnings("unchecked")
@@ -199,13 +210,13 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.copy(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS);
 
     // glass
-    copy(Tags.Blocks.GLASS_SILICA, Tags.Items.GLASS_SILICA);
-    copy(Tags.Blocks.GLASS_TINTED, Tags.Items.GLASS_TINTED);
+    copy(Tags.Blocks.GLASS_BLOCKS_CHEAP, Tags.Items.GLASS_BLOCKS_CHEAP);
+    copy(Tags.Blocks.GLASS_BLOCKS_TINTED, Tags.Items.GLASS_BLOCKS_TINTED);
     copy(TinkerTags.Blocks.GLASS_PANES_SILICA, TinkerTags.Items.GLASS_PANES_SILICA);
-    copy(Tags.Blocks.GLASS_COLORLESS, Tags.Items.GLASS_COLORLESS);
+    copy(Tags.Blocks.GLASS_BLOCKS_COLORLESS, Tags.Items.GLASS_BLOCKS_COLORLESS);
     copy(Tags.Blocks.GLASS_PANES_COLORLESS, Tags.Items.GLASS_PANES_COLORLESS);
-    copy(Tags.Blocks.STAINED_GLASS, Tags.Items.STAINED_GLASS);
-    copy(Tags.Blocks.STAINED_GLASS_PANES, Tags.Items.STAINED_GLASS_PANES);
+    copy(STAINED_GLASS_BLOCKS, STAINED_GLASS_ITEMS);
+    copy(STAINED_GLASS_PANE_BLOCKS, STAINED_GLASS_PANE_ITEMS);
     for (DyeColor color : DyeColor.values()) {
       ResourceLocation name = commonResource("glass/" + color.getSerializedName());
       copy(TagKey.create(Registries.BLOCK, name), TagKey.create(Registries.ITEM, name));
@@ -250,6 +261,8 @@ public class ItemTagProvider extends ItemTagsProvider {
       TinkerWorld.earthGeode.asItem(), TinkerWorld.skyGeode.asItem(), TinkerWorld.ichorGeode.asItem(), TinkerWorld.enderGeode.asItem()
     );
 
+    this.tag(TinkerTags.Items.TREE_ATTACHMENTS).add(TinkerWorld.slimeSapling.get(FoliageType.ENDER).asItem());
+
     // items to fully hide from JEI
     IntrinsicTagAppender<Item> hidden = tag(HIDDEN_IN_RECIPE_VIEWERS);
     hidden.add(
@@ -274,7 +287,7 @@ public class ItemTagProvider extends ItemTagsProvider {
   }
 
   private void addWorld() {
-    IntrinsicTagAppender<Item> heads = this.tag(Tags.Items.HEADS);
+    IntrinsicTagAppender<Item> heads = this.tag(COMMON_HEADS);
     heads.add(Items.PIGLIN_HEAD);
     TinkerWorld.heads.forEach(head -> heads.add(head.asItem()));
 
@@ -328,6 +341,76 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.copy(BlockTags.CEILING_HANGING_SIGNS, ItemTags.HANGING_SIGNS);
   }
 
+  /** Optional item tags used by data recipes that integrate with Twilight Forest. */
+  private void addTwilightForestCompat() {
+    optionalCompat("naga_chestplate", "naga_chestplate");
+    optionalCompat("naga_leggings", "naga_leggings");
+    optionalCompat("naga_scale", "naga_scale");
+    optionalCompat("ironwood_axe", "ironwood_axe", "ironwood_pickaxe");
+    optionalCompat("ironwood_sword", "ironwood_sword", "ironwood_hoe");
+    optionalCompat("ironwood_shovel", "ironwood_shovel");
+    optionalCompat("ironwood_helmet", "ironwood_helmet");
+    optionalCompat("ironwood_chestplate", "ironwood_chestplate");
+    optionalCompat("ironwood_leggings", "ironwood_leggings");
+    optionalCompat("ironwood_boots", "ironwood_boots");
+    optionalCompat("arctic_helmet", "arctic_helmet");
+    optionalCompat("arctic_chestplate", "arctic_chestplate");
+    optionalCompat("arctic_leggings", "arctic_leggings");
+    optionalCompat("arctic_boots", "arctic_boots");
+    optionalCompat("arctic_fur", "arctic_fur");
+    optionalCompat("yeti_helmet", "yeti_helmet");
+    optionalCompat("yeti_chestplate", "yeti_chestplate");
+    optionalCompat("yeti_leggings", "yeti_leggings");
+    optionalCompat("yeti_boots", "yeti_boots");
+    optionalCompat("alpha_yeti_fur", "alpha_yeti_fur");
+    optionalCompat("fiery_blood", "fiery_blood");
+    optionalCompat("fiery_tears", "fiery_tears");
+  }
+
+  private void optionalCompat(String tagName, String... itemNames) {
+    optionalCompatTag("twilightforest", tagName, itemNames);
+  }
+
+  /** Optional item tags used by the data recipe compatibility integrations. */
+  private void addRecipeCompat() {
+    // The minotaur axe is only registered when Twilight Forest is present, so
+    // keep its conditional equipment output registry-safe during datagen.
+    this.tag(TagKey.create(Registries.ITEM, TConstruct.getResource("compat/twilightforest/minotaur_axe")))
+        .addOptional(TConstruct.getResource("minotaur_axe"));
+    optionalCompatItems("tools_complement", "netherite_excavator", "netherite_hammer");
+    optionalCompatItems("oreberriesreplanted", "copper_oreberry", "iron_oreberry", "gold_oreberry", "tin_oreberry", "aluminum_oreberry",
+                        "lead_oreberry", "silver_oreberry", "nickel_oreberry", "zinc_oreberry", "osmium_oreberry", "uranium_oreberry");
+    optionalCompatItems("railcraft", "spike_maul");
+    optionalCompatItems("twilightforest", "block_and_chain");
+    optionalCompatItems("create", "andesite_alloy", "crushed_raw_iron", "crushed_raw_gold", "crushed_raw_copper", "crushed_raw_zinc",
+                        "crushed_raw_tin", "crushed_raw_aluminum", "crushed_raw_lead", "crushed_raw_silver", "crushed_raw_nickel",
+                        "crushed_raw_platinum", "crushed_raw_osmium", "crushed_raw_uranium");
+    optionalCompatItems("farmersdelight", "wheat_dough");
+    optionalCompatItems("ceramics",
+      "empty_clay_bucket", "cracked_empty_clay_bucket", "unfired_clay_plate", "clay_faucet", "clay_channel", "unfired_clay_bucket", "clay_cistern",
+      "dark_bricks_slab", "dragon_bricks_slab", "terracotta_faucet", "terracotta_channel", "dark_bricks", "dark_bricks_stairs", "dark_bricks_wall",
+      "dragon_bricks", "dragon_bricks_stairs", "dragon_bricks_wall", "kiln", "lava_bricks_slab", "lava_bricks", "lava_bricks_stairs", "lava_bricks_wall",
+      "terracotta_gauge", "clay_helmet", "clay_chestplate", "clay_leggings", "clay_boots", "unfired_porcelain", "unfired_faucet", "unfired_channel",
+      "unfired_cistern", "unfired_porcelain_block", "porcelain_brick", "porcelain_bricks_slab", "monochrome_bricks_slab", "marine_bricks_slab",
+      "rainbow_bricks_slab", "porcelain_faucet", "porcelain_channel", "porcelain_bricks", "porcelain_bricks_stairs", "porcelain_bricks_wall",
+      "monochrome_bricks", "monochrome_bricks_stairs", "monochrome_bricks_wall", "marine_bricks", "marine_bricks_stairs", "marine_bricks_wall",
+      "rainbow_bricks", "rainbow_bricks_stairs", "rainbow_bricks_wall", "golden_bricks_slab", "golden_bricks", "golden_bricks_stairs",
+      "golden_bricks_wall", "porcelain_gauge", "white_porcelain");
+  }
+
+  private void optionalCompatItems(String namespace, String... itemNames) {
+    for (String itemName : itemNames) {
+      optionalCompatTag(namespace, itemName, itemName);
+    }
+  }
+
+  private void optionalCompatTag(String namespace, String tagName, String... itemNames) {
+    IntrinsicTagAppender<Item> tag = this.tag(TagKey.create(Registries.ITEM, TConstruct.getResource("compat/" + namespace + "/" + tagName)));
+    for (String itemName : itemNames) {
+      tag.addOptional(ResourceLocation.fromNamespaceAndPath(namespace, itemName));
+    }
+  }
+
   private void addTools() {
     // stone
     addToolTags(TinkerTools.pickaxe,      MULTIPART_TOOL, DURABILITY, HARVEST_PRIMARY, STONE_HARVEST, MELEE_WEAPON,  INTERACTABLE_RIGHT, AOE, CLUSTER_MAX_HARVESTABLES, SMALL_TOOLS, BONUS_SLOTS, ItemTags.PICKAXES);
@@ -372,7 +455,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     addArmorTags(TinkerTools.travelersGear, SINGLEPART_TOOL, DURABILITY, BONUS_SLOTS, DYEABLE, TRIM, ItemTags.FREEZE_IMMUNE_WEARABLES);
     addArmorTags(TinkerTools.plateArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, DYEABLE, TRIM);
     addArmorTags(TinkerTools.slimesuit,     DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, UNRECYCLABLE);
-    addToolTags(TinkerTools.slimeWings, DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, CHESTPLATES, Tags.Items.ARMORS_CHESTPLATES);
+    addToolTags(TinkerTools.slimeWings, DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, CHESTPLATES, COMMON_ARMORS_CHESTPLATES);
     addToolTags(TinkerTools.slimesuit.get(ArmorItem.Type.HELMET), SWAPPABLE_SKULLS);
 
     // shields
@@ -448,7 +531,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.tag(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("parry", "excluded_shields"))).addTag(HELD);
 
     // kamas are a shear type, when broken we don't pass it to loot tables
-    this.tag(Tags.Items.SHEARS).add(TinkerTools.kama.get());
+    this.tag(Tags.Items.TOOLS_SHEAR).add(TinkerTools.kama.get());
     // mark kama and scythe for mods like thermal to use
     this.tag(TinkerTags.Items.SCYTHES).add(TinkerTools.kama.get(), TinkerTools.scythe.get());
     // nothing to blacklist, just want the empty tag so it appears in datapacks
@@ -491,11 +574,11 @@ public class ItemTagProvider extends ItemTagsProvider {
 
     // contains any ground stones
     this.tag(TinkerTags.Items.STONESHIELDS)
-        .addTag(Tags.Items.STONE)
-        .addTag(Tags.Items.COBBLESTONE)
-        .addTag(Tags.Items.SANDSTONE)
+        .addTag(Tags.Items.STONES)
+        .addTag(Tags.Items.COBBLESTONES)
+        .addTag(Tags.Items.SANDSTONE_BLOCKS)
         .addTag(Tags.Items.END_STONES)
-        .addTag(Tags.Items.GRAVEL) // for shovels and axes to use
+        .addTag(Tags.Items.GRAVELS) // for shovels and axes to use
         .add(Items.NETHERRACK, Items.BASALT, Items.POLISHED_BASALT, Items.BLACKSTONE, Items.POLISHED_BLACKSTONE);
     this.tag(TinkerTags.Items.FIREBALLS).add(Items.FIRE_CHARGE);
     this.tag(TinkerTags.Items.TOOL_INVENTORY_BLACKLIST)
@@ -772,15 +855,17 @@ public class ItemTagProvider extends ItemTagsProvider {
       case LEGGINGS -> LEGGINGS;
       case CHESTPLATE -> CHESTPLATES;
       case HELMET -> HELMETS;
+      default -> throw new IllegalArgumentException("Unsupported armor slot: " + slotType);
     };
   }
 
   private TagKey<Item> getForgeArmorTag(ArmorItem.Type slotType) {
     return switch (slotType) {
-      case BOOTS -> Tags.Items.ARMORS_BOOTS;
-      case LEGGINGS -> Tags.Items.ARMORS_LEGGINGS;
-      case CHESTPLATE -> Tags.Items.ARMORS_CHESTPLATES;
-      case HELMET -> Tags.Items.ARMORS_HELMETS;
+      case BOOTS -> COMMON_ARMORS_BOOTS;
+      case LEGGINGS -> COMMON_ARMORS_LEGGINGS;
+      case CHESTPLATE -> COMMON_ARMORS_CHESTPLATES;
+      case HELMET -> COMMON_ARMORS_HELMETS;
+      default -> throw new IllegalArgumentException("Unsupported armor slot: " + slotType);
     };
   }
 

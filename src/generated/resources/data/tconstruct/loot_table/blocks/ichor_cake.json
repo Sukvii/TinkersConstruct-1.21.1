@@ -1,4 +1,4 @@
 {
-    "type":  "minecraft:block",
-    "random_sequence":  "tconstruct:blocks/ichor_cake"
+  "type": "minecraft:block",
+  "random_sequence": "tconstruct:blocks/ichor_cake"
 }
