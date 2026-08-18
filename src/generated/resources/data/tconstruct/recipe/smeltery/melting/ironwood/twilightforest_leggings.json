@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:ironwood_leggings"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:ironwood_leggings"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:ironwood_leggings"
+    "tag": "tconstruct:compat/twilightforest/ironwood_leggings"
   },
   "result": {
     "amount": 630,

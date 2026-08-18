@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:damagable_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "twilightforest:knightmetal_sword"
     }
   ],
+  "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "item": "twilightforest:knightmetal_sword"
+    "tag": "tconstruct:compat/twilightforest/knightmetal_sword"
   },
   "result": {
     "amount": 180,

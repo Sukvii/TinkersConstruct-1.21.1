@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "allomancy:bendalloy_flakes"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "allomancy:bendalloy_flakes"
+    "tag": "tconstruct:compat/allomancy/bendalloy_flakes"
   },
   "result": {
     "amount": 30,

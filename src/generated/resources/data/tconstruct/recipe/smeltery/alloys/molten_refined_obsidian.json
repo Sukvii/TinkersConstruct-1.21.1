@@ -1,5 +1,4 @@
 {
-  "type": "tconstruct:alloy",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
@@ -10,6 +9,7 @@
       "tag": "c:ingots/osmium"
     }
   ],
+  "type": "tconstruct:alloy",
   "inputs": [
     {
       "amount": 250,

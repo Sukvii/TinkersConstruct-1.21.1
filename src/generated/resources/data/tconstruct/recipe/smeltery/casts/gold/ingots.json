@@ -12,7 +12,9 @@
     },
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:fake_ingot"
+      "match": {
+        "item": "tconstruct:fake_ingot"
+      }
     }
   ],
   "cast_consumed": true,

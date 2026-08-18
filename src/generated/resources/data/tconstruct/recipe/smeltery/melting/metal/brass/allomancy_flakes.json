@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "allomancy:brass_flakes"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "allomancy:brass_flakes"
+    "tag": "tconstruct:compat/allomancy/brass_flakes"
   },
   "result": {
     "amount": 30,

@@ -2,6 +2,7 @@ package slimeknights.tconstruct.smeltery.data;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -9,7 +10,6 @@ import net.neoforged.neoforge.common.conditions.ItemExistsCondition;
 import slimeknights.mantle.fluid.transfer.AbstractFluidContainerTransferProvider;
 import slimeknights.mantle.fluid.transfer.EmptyFluidContainerTransfer;
 import slimeknights.mantle.fluid.transfer.FillFluidContainerTransfer;
-import slimeknights.mantle.recipe.data.ItemNameIngredient;
 import slimeknights.mantle.recipe.helper.FluidOutput;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.registration.object.FluidObject;
@@ -37,8 +37,8 @@ public class FluidContainerTransferProvider extends AbstractFluidContainerTransf
     // fiery bottles
     String tf = "twilightforest";
     FluidOutput fieryBottle = TinkerFluids.fieryLiquid.result(FluidValues.BOTTLE);
-    addContainerlessEmpty("fiery_blood", tf, fieryBottle);
-    addContainerlessEmpty("fiery_tears", tf, fieryBottle);
+    addContainerlessEmpty("fiery_blood", tf, Ingredient.of(ItemTags.create(TConstruct.getResource("compat/twilightforest/fiery_blood"))), fieryBottle);
+    addContainerlessEmpty("fiery_tears", tf, Ingredient.of(ItemTags.create(TConstruct.getResource("compat/twilightforest/fiery_tears"))), fieryBottle);
   }
 
   /** Adds a recipe for a bottle that fills with 250mb of fluid, emptying is assumed handled */
@@ -48,9 +48,9 @@ public class FluidContainerTransferProvider extends AbstractFluidContainerTransf
 
   /** Adds a recipe to empty an item, returning no container */
   @SuppressWarnings("removal")
-  protected void addContainerlessEmpty(String name, String domain, FluidOutput fluid) {
+  protected void addContainerlessEmpty(String name, String domain, Ingredient input, FluidOutput fluid) {
     ResourceLocation id = ResourceLocation.fromNamespaceAndPath(domain, name);
-    addTransfer(domain + '_' + name, new EmptyFluidContainerTransfer(ItemNameIngredient.from(id), ItemOutput.EMPTY, fluid), new ItemExistsCondition(id));
+    addTransfer(domain + '_' + name, new EmptyFluidContainerTransfer(input, ItemOutput.EMPTY, fluid), new ItemExistsCondition(id));
   }
 
   @Override

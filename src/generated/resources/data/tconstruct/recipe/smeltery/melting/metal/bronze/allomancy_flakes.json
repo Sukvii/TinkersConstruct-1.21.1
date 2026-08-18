@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "allomancy:bronze_flakes"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "allomancy:bronze_flakes"
+    "tag": "tconstruct:compat/allomancy/bronze_flakes"
   },
   "result": {
     "amount": 30,

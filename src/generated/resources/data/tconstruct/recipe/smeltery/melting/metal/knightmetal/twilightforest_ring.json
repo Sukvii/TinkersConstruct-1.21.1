@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "twilightforest:knightmetal_ring"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "twilightforest:knightmetal_ring"
+    "tag": "tconstruct:compat/twilightforest/knightmetal_ring"
   },
   "result": {
     "amount": 360,

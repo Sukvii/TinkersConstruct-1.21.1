@@ -1,16 +1,16 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "c:storage_blocks/raw_aluminum"
+    }
+  ],
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
       "amount": 810,
       "rate": "metal",
       "tag": "c:molten_iron"
-    }
-  ],
-  "neoforge:conditions": [
-    {
-      "type": "mantle:tag_filled",
-      "tag": "c:storage_blocks/raw_aluminum"
     }
   ],
   "ingredient": {

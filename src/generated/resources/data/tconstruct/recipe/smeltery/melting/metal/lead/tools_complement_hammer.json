@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:damagable_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "tools_complement:lead_hammer"
     }
   ],
+  "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "item": "tools_complement:lead_hammer"
+    "tag": "tconstruct:compat/tools_complement/lead_hammer"
   },
   "result": {
     "amount": 1170,

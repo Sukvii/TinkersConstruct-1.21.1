@@ -10,17 +10,14 @@
     },
     "T": {
       "type": "tconstruct:no_container",
-      "match": {
-        "type": "neoforge:compound",
-        "children": [
+      "match": [
         {
           "item": "tconstruct:scorched_ingot_gauge"
         },
         {
           "item": "tconstruct:scorched_fuel_gauge"
         }
-        ]
-      }
+      ]
     }
   },
   "pattern": [
@@ -29,7 +26,7 @@
     "CCC"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:scorched_fluid_cannon"
-  },
-  "show_notification": true
+  }
 }

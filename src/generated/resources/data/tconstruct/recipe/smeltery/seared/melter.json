@@ -7,17 +7,14 @@
     },
     "G": {
       "type": "tconstruct:no_container",
-      "match": {
-        "type": "neoforge:compound",
-        "children": [
+      "match": [
         {
           "item": "tconstruct:seared_fuel_gauge"
         },
         {
           "item": "tconstruct:seared_ingot_gauge"
         }
-        ]
-      }
+      ]
     }
   },
   "pattern": [
@@ -25,7 +22,7 @@
     "BBB"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:seared_melter"
-  },
-  "show_notification": true
+  }
 }

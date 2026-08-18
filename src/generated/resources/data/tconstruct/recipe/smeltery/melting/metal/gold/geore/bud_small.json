@@ -1,16 +1,16 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "c:geore_small_buds/gold"
+    }
+  ],
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
       "amount": 90,
       "rate": "metal",
       "tag": "c:molten_cobalt"
-    }
-  ],
-  "neoforge:conditions": [
-    {
-      "type": "mantle:tag_filled",
-      "tag": "c:geore_small_buds/gold"
     }
   ],
   "ingredient": {

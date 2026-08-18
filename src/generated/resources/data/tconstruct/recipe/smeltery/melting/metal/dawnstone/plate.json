@@ -1,16 +1,16 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
-    {
-      "type": "mantle:tag_filled",
-      "tag": "c:plates/dawnstone"
-    },
     {
       "type": "mantle:tag_filled",
       "registry": "minecraft:fluid",
       "tag": "c:molten_dawnstone"
+    },
+    {
+      "type": "mantle:tag_filled",
+      "tag": "c:plates/dawnstone"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
     "tag": "c:plates/dawnstone"
   },

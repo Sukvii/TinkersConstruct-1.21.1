@@ -1,14 +1,14 @@
 {
-  "type": "tconstruct:casting_table",
-  "cast": {
-    "tag": "tconstruct:casts/multi_use/gear"
-  },
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:gears/aluminum"
     }
   ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/gear"
+  },
   "cooling_time": 94,
   "fluid": {
     "amount": 360,

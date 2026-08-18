@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "allomancy:duralumin_flakes"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "allomancy:duralumin_flakes"
+    "tag": "tconstruct:compat/allomancy/duralumin_flakes"
   },
   "result": {
     "amount": 30,

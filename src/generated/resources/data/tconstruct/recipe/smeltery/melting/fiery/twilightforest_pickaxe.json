@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:fiery_pickaxe"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:fiery_pickaxe"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:fiery_pickaxe"
+    "tag": "tconstruct:compat/twilightforest/fiery_pickaxe"
   },
   "result": {
     "amount": 750,

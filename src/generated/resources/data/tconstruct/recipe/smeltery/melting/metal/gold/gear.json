@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:gears/gold"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
     "tag": "c:gears/gold"
   },

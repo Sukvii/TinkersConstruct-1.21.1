@@ -1,5 +1,4 @@
 {
-  "type": "tconstruct:alloy",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
@@ -19,6 +18,7 @@
       "tag": "c:redstone"
     }
   ],
+  "type": "tconstruct:alloy",
   "inputs": [
     {
       "amount": 270,

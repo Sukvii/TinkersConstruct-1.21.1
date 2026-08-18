@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:plates/aluminum"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
     "tag": "c:plates/aluminum"
   },

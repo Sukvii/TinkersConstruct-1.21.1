@@ -1,12 +1,4 @@
 {
-  "type": "tconstruct:ore_melting",
-  "byproducts": [
-    {
-      "amount": 540,
-      "rate": "metal",
-      "tag": "c:molten_copper"
-    }
-  ],
   "neoforge:conditions": [
     {
       "type": "mantle:tag_combination_filled",
@@ -14,6 +6,14 @@
         "c:ores/zinc",
         "c:ore_rates/dense"
       ]
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 540,
+      "rate": "metal",
+      "tag": "c:molten_copper"
     }
   ],
   "ingredient": {

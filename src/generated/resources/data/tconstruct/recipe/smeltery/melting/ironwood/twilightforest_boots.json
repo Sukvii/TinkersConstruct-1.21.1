@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:ironwood_boots"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:ironwood_boots"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:ironwood_boots"
+    "tag": "tconstruct:compat/twilightforest/ironwood_boots"
   },
   "result": {
     "amount": 360,

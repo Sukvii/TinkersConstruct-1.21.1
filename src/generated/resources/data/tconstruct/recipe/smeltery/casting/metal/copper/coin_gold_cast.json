@@ -1,14 +1,14 @@
 {
-  "type": "tconstruct:casting_table",
-  "cast": {
-    "tag": "tconstruct:casts/multi_use/coin"
-  },
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:coins/copper"
     }
   ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/coin"
+  },
   "cooling_time": 29,
   "fluid": {
     "amount": 30,

@@ -12,7 +12,7 @@
     "BBB"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:seared_heater"
-  },
-  "show_notification": true
+  }
 }

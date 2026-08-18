@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:ironwood_helmet"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:ironwood_helmet"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:ironwood_helmet"
+    "tag": "tconstruct:compat/twilightforest/ironwood_helmet"
   },
   "result": {
     "amount": 450,

@@ -1,12 +1,4 @@
 {
-  "type": "tconstruct:ore_melting",
-  "byproducts": [
-    {
-      "amount": 90,
-      "rate": "metal",
-      "tag": "c:molten_steel"
-    }
-  ],
   "neoforge:conditions": [
     {
       "type": "mantle:tag_combination_filled",
@@ -14,6 +6,14 @@
         "c:ores/iron",
         "c:ore_rates/sparse"
       ]
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 90,
+      "rate": "metal",
+      "tag": "c:molten_steel"
     }
   ],
   "ingredient": {

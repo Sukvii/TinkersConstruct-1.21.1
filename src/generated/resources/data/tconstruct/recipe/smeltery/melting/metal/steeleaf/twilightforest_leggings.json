@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:damagable_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "twilightforest:steeleaf_leggings"
     }
   ],
+  "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "item": "twilightforest:steeleaf_leggings"
+    "tag": "tconstruct:compat/twilightforest/steeleaf_leggings"
   },
   "result": {
     "amount": 630,

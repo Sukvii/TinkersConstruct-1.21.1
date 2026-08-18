@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:casting_basin",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:storage_blocks/lumium"
     }
   ],
+  "type": "tconstruct:casting_basin",
   "cooling_time": 203,
   "fluid": {
     "amount": 810,

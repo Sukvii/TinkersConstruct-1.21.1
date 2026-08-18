@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:fiery_chestplate"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:fiery_chestplate"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:fiery_chestplate"
+    "tag": "tconstruct:compat/twilightforest/fiery_chestplate"
   },
   "result": {
     "amount": 2000,

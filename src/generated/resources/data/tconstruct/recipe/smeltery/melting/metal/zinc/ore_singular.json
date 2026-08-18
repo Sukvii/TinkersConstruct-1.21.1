@@ -1,17 +1,19 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_combination_filled",
+      "ignore": "tconstruct:non_singular_ore_rates",
+      "match": [
+        "c:ores/zinc"
+      ]
+    }
+  ],
   "type": "tconstruct:ore_melting",
   "byproducts": [
     {
       "amount": 180,
       "rate": "metal",
       "tag": "c:molten_copper"
-    }
-  ],
-  "neoforge:conditions": [
-    {
-      "type": "mantle:tag_combination_filled",
-      "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "c:ores/zinc"
     }
   ],
   "ingredient": {

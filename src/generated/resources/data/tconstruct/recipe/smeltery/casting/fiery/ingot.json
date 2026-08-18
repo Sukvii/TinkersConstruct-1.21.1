@@ -1,15 +1,15 @@
 {
-  "type": "tconstruct:casting_table",
-  "cast": {
-    "tag": "c:ingots/iron"
-  },
-  "cast_consumed": true,
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:ingots/fiery"
     }
   ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "c:ingots/iron"
+  },
+  "cast_consumed": true,
   "cooling_time": 134,
   "fluid": {
     "amount": 250,

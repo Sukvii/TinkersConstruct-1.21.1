@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:damagable_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "mekanism:steel_shield"
     }
   ],
+  "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "item": "mekanism:steel_shield"
+    "tag": "tconstruct:compat/mekanism/steel_shield"
   },
   "result": {
     "amount": 540,

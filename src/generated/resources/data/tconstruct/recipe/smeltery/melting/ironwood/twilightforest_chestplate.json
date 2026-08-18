@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:ironwood_chestplate"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:ironwood_chestplate"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:ironwood_chestplate"
+    "tag": "tconstruct:compat/twilightforest/ironwood_chestplate"
   },
   "result": {
     "amount": 720,

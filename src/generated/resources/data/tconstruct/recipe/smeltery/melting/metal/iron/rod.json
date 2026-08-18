@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:rods/iron"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
     "tag": "c:rods/iron"
   },

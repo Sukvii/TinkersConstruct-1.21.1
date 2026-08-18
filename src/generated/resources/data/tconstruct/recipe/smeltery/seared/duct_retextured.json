@@ -9,13 +9,14 @@
       "tag": "c:ingots/gold"
     }
   },
-  "match_all": false,
   "pattern": [
     "C#C"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:seared_duct"
   },
-  "show_notification": true,
-  "texture": "#"
+  "texture": {
+    "tag": "tconstruct:smeltery_bricks"
+  }
 }

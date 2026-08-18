@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "oreberriesreplanted:osmium_oreberry"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "oreberriesreplanted:osmium_oreberry"
+    "tag": "tconstruct:compat/oreberriesreplanted/osmium_oreberry"
   },
   "result": {
     "amount": 10,

@@ -9,15 +9,16 @@
       "tag": "c:ingots/copper"
     }
   },
-  "match_all": false,
   "pattern": [
     "C",
     "#",
     "C"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:seared_chute"
   },
-  "show_notification": true,
-  "texture": "#"
+  "texture": {
+    "tag": "tconstruct:smeltery_bricks"
+  }
 }

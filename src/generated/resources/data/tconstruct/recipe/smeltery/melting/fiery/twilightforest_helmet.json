@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:fiery_helmet"
+    }
+  ],
   "type": "tconstruct:damagable_melting",
   "byproducts": [
     {
@@ -7,14 +13,8 @@
       "unit_size": 10
     }
   ],
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:item_exists",
-      "item": "twilightforest:fiery_helmet"
-    }
-  ],
   "ingredient": {
-    "item": "twilightforest:fiery_helmet"
+    "tag": "tconstruct:compat/twilightforest/fiery_helmet"
   },
   "result": {
     "amount": 1250,

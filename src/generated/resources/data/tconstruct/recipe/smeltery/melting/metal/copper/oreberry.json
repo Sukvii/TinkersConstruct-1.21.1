@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "oreberriesreplanted:copper_oreberry"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "oreberriesreplanted:copper_oreberry"
+    "tag": "tconstruct:compat/oreberriesreplanted/copper_oreberry"
   },
   "result": {
     "amount": 10,

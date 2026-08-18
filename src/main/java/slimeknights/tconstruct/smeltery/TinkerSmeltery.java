@@ -125,6 +125,8 @@ import slimeknights.tconstruct.smeltery.block.entity.controller.AlloyerBlockEnti
 import slimeknights.tconstruct.smeltery.block.entity.controller.FoundryBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.controller.MelterBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.controller.SmelteryBlockEntity;
+import slimeknights.tconstruct.smeltery.data.FluidContainerTransferProvider;
+import slimeknights.tconstruct.smeltery.data.SmelteryRecipeProvider;
 import slimeknights.tconstruct.smeltery.item.CopperCanItem;
 import slimeknights.tconstruct.smeltery.item.CopperCanFluidHandler;
 import slimeknights.tconstruct.smeltery.item.DummyMaterialItem;
@@ -474,7 +476,12 @@ public final class TinkerSmeltery extends TinkerModule {
 
   @SubscribeEvent
   void gatherData(final GatherDataEvent event) {
-    // Runtime-first 1.21 port: providers are migrated separately.
+    boolean server = event.includeServer();
+    DataGenerator generator = event.getGenerator();
+    PackOutput packOutput = generator.getPackOutput();
+    generator.getPackGenerator(server, "tconstruct_smeltery", "")
+             .addProvider(output -> new SmelteryRecipeProvider(output, event.getLookupProvider()));
+    generator.addProvider(server, new FluidContainerTransferProvider(packOutput));
   }
 
   @SubscribeEvent

@@ -5,50 +5,38 @@
     {
       "item": "minecraft:magma_block"
     },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ]
-    },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ]
-    },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ]
-    },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ]
-    },
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
     {
       "item": "minecraft:gravel"
     },

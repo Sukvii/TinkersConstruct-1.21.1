@@ -5,17 +5,14 @@
     {
       "item": "minecraft:magma_cream"
     },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ]
-    },
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
     {
       "item": "minecraft:gravel"
     }

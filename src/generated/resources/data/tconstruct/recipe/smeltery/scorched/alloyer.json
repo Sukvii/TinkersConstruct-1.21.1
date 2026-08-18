@@ -7,17 +7,14 @@
     },
     "G": {
       "type": "tconstruct:no_container",
-      "match": {
-        "type": "neoforge:compound",
-        "children": [
+      "match": [
         {
           "item": "tconstruct:scorched_ingot_gauge"
         },
         {
           "item": "tconstruct:scorched_fuel_gauge"
         }
-        ]
-      }
+      ]
     }
   },
   "pattern": [
@@ -25,7 +22,7 @@
     "BBB"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:scorched_alloyer"
-  },
-  "show_notification": true
+  }
 }

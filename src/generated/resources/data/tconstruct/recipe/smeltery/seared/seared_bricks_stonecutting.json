@@ -1,7 +1,9 @@
 {
   "type": "minecraft:stonecutting",
-  "count": 1,
   "ingredient": [
+    {
+      "item": "tconstruct:seared_stone"
+    },
     {
       "type": "neoforge:difference",
       "base": {
@@ -10,12 +12,10 @@
       "subtracted": {
         "item": "tconstruct:seared_bricks"
       }
-    },
-    {
-      "item": "tconstruct:seared_stone"
     }
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:seared_bricks"
   }
 }

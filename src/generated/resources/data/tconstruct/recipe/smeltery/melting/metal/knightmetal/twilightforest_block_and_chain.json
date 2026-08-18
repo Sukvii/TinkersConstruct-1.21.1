@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:damagable_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "twilightforest:block_and_chain"
     }
   ],
+  "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "item": "twilightforest:block_and_chain"
+    "tag": "tconstruct:compat/twilightforest/block_and_chain"
   },
   "result": {
     "amount": 1440,

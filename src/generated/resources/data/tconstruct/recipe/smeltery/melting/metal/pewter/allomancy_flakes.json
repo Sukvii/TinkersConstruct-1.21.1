@@ -1,13 +1,13 @@
 {
-  "type": "tconstruct:melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:item_exists",
       "item": "allomancy:pewter_flakes"
     }
   ],
+  "type": "tconstruct:melting",
   "ingredient": {
-    "item": "allomancy:pewter_flakes"
+    "tag": "tconstruct:compat/allomancy/pewter_flakes"
   },
   "result": {
     "amount": 30,
