@@ -5,14 +5,18 @@
   "inputs": [
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:adze_head"
+      "match": {
+        "item": "tconstruct:adze_head"
+      }
     },
     {
       "tag": "c:ingots/steel"
     },
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:tool_binding"
+      "match": {
+        "item": "tconstruct:tool_binding"
+      }
     }
   ],
   "level": 1,

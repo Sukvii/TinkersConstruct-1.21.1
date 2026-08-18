@@ -1,19 +1,17 @@
 package slimeknights.tconstruct.tools.recipe.severing;
 
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import slimeknights.mantle.recipe.data.AbstractRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.SeveringRecipe;
+import slimeknights.tconstruct.tools.TinkerModifiers;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /** Builder for severing recipes that have only the base chance and looting bonus as fields */
@@ -37,32 +35,30 @@ public class SpecialSeveringRecipeBuilder extends AbstractRecipeBuilder<SpecialS
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(serializer)));
+  public void save(RecipeOutput output) {
+    save(output, Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(serializer)));
   }
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
-    consumer.accept(new Finished(id, null));
+  public void save(RecipeOutput output, ResourceLocation id) {
+    output.accept(id, create(id), null);
   }
 
-  /** Finished recipe instance */
-  private class Finished extends AbstractFinishedRecipe {
-    public Finished(ResourceLocation id, @Nullable ResourceLocation advancementId) {
-      super(id, advancementId);
+  /** Creates the concrete recipe expected by the registered loadable serializer. */
+  private SeveringRecipe create(ResourceLocation id) {
+    if (serializer == TinkerModifiers.playerBeheadingSerializer.get()) {
+      return new PlayerBeheadingRecipe(id, baseChance, lootingBonus);
     }
-
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-      json.addProperty("per_level_chance", baseChance);
-      json.addProperty("looting_bonus", lootingBonus);
+    if (serializer == TinkerModifiers.snowGolemBeheadingSerializer.get()) {
+      return new SnowGolemBeheadingRecipe(id, baseChance, lootingBonus);
     }
-
-    @Override
-    public RecipeSerializer<?> getType() {
-      return serializer;
+    if (serializer == TinkerModifiers.mooshroomDemushroomingSerializer.get()) {
+      return new MooshroomDemushroomingRecipe(id, baseChance, lootingBonus);
     }
+    if (serializer == TinkerModifiers.sheepShearing.get()) {
+      return new SheepShearingRecipe(id, baseChance, lootingBonus);
+    }
+    throw new IllegalArgumentException("Unsupported special severing serializer: " + serializer);
   }
 }

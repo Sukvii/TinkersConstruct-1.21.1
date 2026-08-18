@@ -5,14 +5,18 @@
   "inputs": [
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:bow_limb"
+      "match": {
+        "item": "tconstruct:bow_limb"
+      }
     },
     {
       "item": "tconstruct:seared_fluid_cannon"
     },
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:bow_limb"
+      "match": {
+        "item": "tconstruct:bow_limb"
+      }
     }
   ],
   "level": {

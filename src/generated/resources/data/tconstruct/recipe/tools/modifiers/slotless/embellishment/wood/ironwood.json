@@ -1,12 +1,12 @@
 {
-  "type": "tconstruct:swappable_modifier",
-  "allow_crystal": false,
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:ingots/ironwood"
     }
   ],
+  "type": "tconstruct:swappable_modifier",
+  "allow_crystal": false,
   "inputs": [
     {
       "tag": "c:ingots/ironwood"

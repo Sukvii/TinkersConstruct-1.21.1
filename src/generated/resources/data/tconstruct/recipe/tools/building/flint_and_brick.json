@@ -5,19 +5,20 @@
     {
       "item": "minecraft:flint"
     },
-    {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "tconstruct:seared_brick"
-        },
-        {
-          "item": "tconstruct:scorched_brick"
-        }
-      ]
-    }
+    [
+      {
+        "item": "tconstruct:seared_brick"
+      },
+      {
+        "item": "tconstruct:scorched_brick"
+      }
+    ]
   ],
   "result": {
+    "components": {
+      "minecraft:custom_data": {}
+    },
+    "count": 1,
     "id": "tconstruct:flint_and_brick"
   }
 }

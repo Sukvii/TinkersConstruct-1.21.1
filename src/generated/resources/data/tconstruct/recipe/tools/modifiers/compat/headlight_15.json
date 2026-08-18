@@ -1,12 +1,12 @@
 {
-  "type": "tconstruct:swappable_modifier",
-  "allow_crystal": false,
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "headlight"
     }
   ],
+  "type": "tconstruct:swappable_modifier",
+  "allow_crystal": false,
   "inputs": [
     {
       "item": "minecraft:leather"

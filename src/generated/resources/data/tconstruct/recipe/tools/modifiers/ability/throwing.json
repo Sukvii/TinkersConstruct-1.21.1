@@ -5,14 +5,18 @@
   "inputs": [
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:bow_limb"
+      "match": {
+        "item": "tconstruct:bow_limb"
+      }
     },
     {
       "tag": "c:ingots/cinderslime"
     },
     {
       "type": "tconstruct:material",
-      "item": "tconstruct:bow_grip"
+      "match": {
+        "item": "tconstruct:bow_grip"
+      }
     }
   ],
   "level": 1,

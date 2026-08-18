@@ -1,5 +1,4 @@
 {
-  "type": "tconstruct:material_fluid",
   "neoforge:conditions": [
     {
       "type": "neoforge:or",
@@ -23,6 +22,7 @@
       ]
     }
   ],
+  "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 90,
     "tag": "c:molten_nicrosil"

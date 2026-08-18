@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:material",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:storage_blocks/aluminum"
     }
   ],
+  "type": "tconstruct:material",
   "ingredient": {
     "tag": "c:storage_blocks/aluminum"
   },

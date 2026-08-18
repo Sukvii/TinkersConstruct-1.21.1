@@ -1,5 +1,4 @@
 {
-  "type": "tconstruct:material_fluid",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
@@ -7,6 +6,7 @@
       "tag": "c:creosote"
     }
   ],
+  "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 125,
     "tag": "c:creosote"

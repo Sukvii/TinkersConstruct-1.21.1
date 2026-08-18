@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:material_melting",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:ingots/aluminum"
     }
   ],
+  "type": "tconstruct:material_melting",
   "input": "tconstruct:aluminum",
   "result": {
     "amount": 90,

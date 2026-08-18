@@ -1,12 +1,12 @@
 {
-  "type": "tconstruct:swappable_modifier",
-  "allow_crystal": false,
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:treated_wood"
     }
   ],
+  "type": "tconstruct:swappable_modifier",
+  "allow_crystal": false,
   "inputs": [
     {
       "tag": "c:treated_wood"

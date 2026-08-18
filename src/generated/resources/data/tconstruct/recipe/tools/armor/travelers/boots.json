@@ -24,11 +24,13 @@
             }
           ]
         },
-        "value": 1.0
+        "value": 1
       },
       {
         "type": "tconstruct:material",
-        "item": "tconstruct:fake_ingot",
+        "match": {
+          "item": "tconstruct:fake_ingot"
+        },
         "material": {
           "type": "tconstruct:stat_type",
           "stat_type": "tconstruct:plating_boots"
@@ -39,13 +41,46 @@
       "tag": "c:leathers"
     }
   },
-  "parts": "c",
+  "parts": [
+    [
+      {
+        "type": "tconstruct:material_value",
+        "material": {
+          "type": "mantle:and",
+          "predicates": [
+            {
+              "type": "mantle:or",
+              "predicates": [
+                "tconstruct:castable",
+                "tconstruct:composite"
+              ]
+            },
+            {
+              "type": "tconstruct:stat_type",
+              "stat_type": "tconstruct:plating_boots"
+            }
+          ]
+        },
+        "value": 1
+      },
+      {
+        "type": "tconstruct:material",
+        "match": {
+          "item": "tconstruct:fake_ingot"
+        },
+        "material": {
+          "type": "tconstruct:stat_type",
+          "stat_type": "tconstruct:plating_boots"
+        }
+      }
+    ]
+  ],
   "pattern": [
     "c c",
     "l l"
   ],
   "result": {
+    "count": 1,
     "id": "tconstruct:travelers_boots"
-  },
-  "show_notification": true
+  }
 }

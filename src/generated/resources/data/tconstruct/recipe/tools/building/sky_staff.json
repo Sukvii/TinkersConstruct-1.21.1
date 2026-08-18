@@ -18,7 +18,10 @@
     " W "
   ],
   "result": {
+    "components": {
+      "minecraft:custom_data": {}
+    },
+    "count": 1,
     "id": "tconstruct:sky_staff"
-  },
-  "show_notification": true
+  }
 }

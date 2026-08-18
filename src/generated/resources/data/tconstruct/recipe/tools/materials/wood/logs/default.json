@@ -1,12 +1,14 @@
 {
-  "type": "tconstruct:material",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:wood_variants/logs",
-      "match": "minecraft:logs"
+      "match": [
+        "minecraft:logs"
+      ]
     }
   ],
+  "type": "tconstruct:material",
   "ingredient": {
     "type": "neoforge:difference",
     "base": {

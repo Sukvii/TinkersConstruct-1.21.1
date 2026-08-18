@@ -1,11 +1,11 @@
 {
-  "type": "tconstruct:material_melting",
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
       "tag": "c:ingots/osmium"
     }
   ],
+  "type": "tconstruct:material_melting",
   "input": "tconstruct:osmium",
   "result": {
     "amount": 90,

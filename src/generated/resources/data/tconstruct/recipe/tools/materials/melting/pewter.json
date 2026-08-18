@@ -1,5 +1,4 @@
 {
-  "type": "tconstruct:material_melting",
   "neoforge:conditions": [
     {
       "type": "neoforge:or",
@@ -19,6 +18,7 @@
       ]
     }
   ],
+  "type": "tconstruct:material_melting",
   "input": "tconstruct:pewter",
   "result": {
     "amount": 90,

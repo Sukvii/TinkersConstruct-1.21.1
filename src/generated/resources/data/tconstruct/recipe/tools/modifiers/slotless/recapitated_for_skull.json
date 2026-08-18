@@ -5,7 +5,7 @@
     {
       "type": "neoforge:difference",
       "base": {
-        "tag": "c:heads"
+        "tag": "minecraft:skulls"
       },
       "subtracted": {
         "item": "minecraft:dragon_head"
