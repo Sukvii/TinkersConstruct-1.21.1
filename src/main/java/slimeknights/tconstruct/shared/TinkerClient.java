@@ -50,6 +50,13 @@ import slimeknights.tconstruct.library.client.modifiers.model.ModifierModel;
 import slimeknights.tconstruct.library.client.modifiers.model.TankModifierModel;
 import slimeknights.tconstruct.library.client.modifiers.model.TraitModel;
 import slimeknights.tconstruct.library.client.modifiers.model.TrimModifierModel;
+import slimeknights.tconstruct.library.client.data.spritetransformer.FramesSpriteTransformer;
+import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToColorMapping;
+import slimeknights.tconstruct.library.client.data.spritetransformer.GreyToSpriteTransformer;
+import slimeknights.tconstruct.library.client.data.spritetransformer.IColorMapping;
+import slimeknights.tconstruct.library.client.data.spritetransformer.ISpriteTransformer;
+import slimeknights.tconstruct.library.client.data.spritetransformer.OffsettingSpriteTransformer;
+import slimeknights.tconstruct.library.client.data.spritetransformer.RecolorSpriteTransformer;
 
 import java.util.function.Consumer;
 
@@ -68,6 +75,11 @@ public class TinkerClient {
     // needs to register listeners early enough for minecraft to load
     ModifierIconManager.init();
     MaterialRenderInfoLoader.init();
+    IColorMapping.SERIALIZER.registerDeserializer(GreyToColorMapping.NAME, GreyToColorMapping.DESERIALIZER);
+    ISpriteTransformer.SERIALIZER.registerDeserializer(FramesSpriteTransformer.NAME, FramesSpriteTransformer.DESERIALIZER);
+    ISpriteTransformer.SERIALIZER.registerDeserializer(OffsettingSpriteTransformer.NAME, OffsettingSpriteTransformer.DESERIALIZER);
+    ISpriteTransformer.SERIALIZER.registerDeserializer(RecolorSpriteTransformer.NAME, RecolorSpriteTransformer.DESERIALIZER);
+    GreyToSpriteTransformer.init();
 
     // add the recipe cache invalidator to the client
     Consumer<RecipesUpdatedEvent> recipesUpdated = event -> RecipeCacheInvalidator.reload(true);

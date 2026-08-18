@@ -37,15 +37,6 @@ sourceSets.main {
         srcDir 'src/generated/resources'
         exclude '.cache'
         exclude 'assets/tconstruct/debug'
-        // Minecraft 1.21 renamed these vanilla data-pack directories. Their
-        // migrated singular copies are produced by the porting scripts.
-        exclude 'data/tconstruct/recipes/**'
-        exclude 'data/tconstruct/advancements/**'
-        exclude 'data/tconstruct/loot_tables/**'
-        // The generated c tags supersede the stale Forge namespace. NeoForge's
-        // global loot modifier index is likewise migrated to data/neoforge.
-        exclude 'data/forge/tags/**'
-        exclude 'data/forge/loot_modifiers/**'
     }
     java {
         // These integrations have no NeoForge 1.21.1 API artifact yet. They are
@@ -54,48 +45,6 @@ sourceSets.main {
         exclude 'slimeknights/tconstruct/plugin/DietPlugin.java'
         exclude 'slimeknights/tconstruct/plugin/DummmmmmyPlugin.java'
         exclude 'slimeknights/tconstruct/plugin/ImmersiveEngineeringPlugin.java'
-        // Runtime-first port: the 1.20 FinishedRecipe/provider tree is kept in
-        // source control but excluded until it is converted to 1.21 RecipeOutput.
-        exclude 'slimeknights/tconstruct/common/data/**'
-        exclude 'slimeknights/tconstruct/fluids/data/**'
-        exclude 'slimeknights/tconstruct/gadgets/data/**'
-        exclude 'slimeknights/tconstruct/library/data/**'
-        // Sprite transformers are also consumed at runtime by the material
-        // texture command, so only isolate the actual client providers.
-        exclude 'slimeknights/tconstruct/library/client/data/AbstractArmorModelProvider.java'
-        exclude 'slimeknights/tconstruct/library/client/data/GenericTextureGenerator.java'
-        exclude 'slimeknights/tconstruct/library/client/data/material/**'
-        exclude 'slimeknights/tconstruct/library/client/data/util/DataGenSpriteReader.java'
-        exclude 'slimeknights/tconstruct/library/client/data/spritetransformer/**'
-        exclude 'slimeknights/tconstruct/library/client/materials/MaterialGeneratorInfo.java'
-        exclude 'slimeknights/tconstruct/shared/client/ClientGeneratePartTexturesCommand.java'
-        exclude 'slimeknights/tconstruct/shared/network/GeneratePartTexturesPacket.java'
-        exclude 'slimeknights/tconstruct/shared/command/subcommand/GeneratePartTexturesCommand.java'
-        exclude 'slimeknights/tconstruct/shared/command/subcommand/GenerateMeltingRecipesCommand.java'
-        exclude 'slimeknights/tconstruct/shared/command/subcommand/GenerateHiddenFluidsCommand.java'
-        exclude 'slimeknights/tconstruct/**/*RecipeBuilder.java'
-        exclude 'slimeknights/tconstruct/tables/recipe/TinkerStationPartSwappingBuilder.java'
-        exclude 'slimeknights/tconstruct/library/recipe/fuel/MeltingFuelBuilder.java'
-        exclude 'slimeknights/tconstruct/library/recipe/material/ShapedMaterialConsumerBuilder.java'
-        exclude 'slimeknights/tconstruct/library/recipe/partbuilder/recycle/*Builder.java'
-        exclude 'slimeknights/tconstruct/library/recipe/material/MaterialsConsumerBuilder.java'
-        exclude 'slimeknights/tconstruct/library/recipe/partbuilder/recycle/PartBuilderToolRecycle.java'
-        exclude 'slimeknights/tconstruct/shared/data/**'
-        exclude { details ->
-            if (!details.file.isFile()) return false
-            def path = details.file.path.replace('\\', '/')
-            return path.contains('/slimeknights/tconstruct/smeltery/data/') &&
-                    !path.endsWith('/smeltery/data/SmelteryCompat.java')
-        }
-        exclude 'slimeknights/tconstruct/tables/data/**'
-        exclude { details ->
-            if (!details.file.isFile()) return false
-            def path = details.file.path.replace('\\', '/')
-            return path.contains('/slimeknights/tconstruct/tools/data/') &&
-                    !path.endsWith('/tools/data/ModifierIds.java') &&
-                    !path.endsWith('/tools/data/material/MaterialIds.java')
-        }
-        exclude 'slimeknights/tconstruct/world/data/**'
     }
 }
 
