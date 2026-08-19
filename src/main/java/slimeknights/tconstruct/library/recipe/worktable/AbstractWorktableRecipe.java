@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.worktable;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -26,13 +27,14 @@ import java.util.List;
  * Default implementation of modifier worktable recipes, taking a list of inputs
  */
 @RequiredArgsConstructor
-public abstract class AbstractWorktableRecipe implements IModifierWorktableRecipe {
+public abstract class AbstractWorktableRecipe implements IModifierWorktableRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final Ingredient DEFAULT_TOOLS = Ingredient.of(TinkerTags.Items.MODIFIABLE);
   protected static final LoadableField<Ingredient,AbstractWorktableRecipe> TOOL_FIELD = IngredientLoadable.DISALLOW_EMPTY.defaultField("tools", DEFAULT_TOOLS, true, r -> r.toolRequirement);
   protected static final LoadableField<List<SizedIngredient>,AbstractWorktableRecipe> INPUTS_FIELD = SizedIngredient.LOADABLE.list(1).requiredField("inputs", r -> r.inputs);
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   protected final Ingredient toolRequirement;
   protected final List<SizedIngredient> inputs;
 
@@ -42,6 +44,11 @@ public abstract class AbstractWorktableRecipe implements IModifierWorktableRecip
 
   public AbstractWorktableRecipe(ResourceLocation id, List<SizedIngredient> inputs) {
     this(id, Ingredient.of(TinkerTags.Items.MODIFIABLE), inputs);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

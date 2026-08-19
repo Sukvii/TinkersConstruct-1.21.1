@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.recipe.tinkerstation.building;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +38,7 @@ import java.util.List;
 
 /** Common logic for different implementations of material swapping. */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class MaterialSwappingRecipe implements ITinkerStationRecipe {
+public abstract class MaterialSwappingRecipe implements ITinkerStationRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   protected static final RecordField<Ingredient, MaterialSwappingRecipe> TOOLS_FIELD = IngredientLoadable.DISALLOW_EMPTY.requiredField("tools", r -> r.tools);
   protected static final RecordField<Integer, MaterialSwappingRecipe> STACK_SIZE_FIELD = IntLoadable.FROM_ONE.defaultField("max_stack_size", ITinkerStationRecipe.DEFAULT_TOOL_STACK_SIZE, true, r -> r.maxStackSize);
   protected static final RecordField<List<SizedIngredient>, MaterialSwappingRecipe> EXTRA_REQUIREMENTS_FIELD = SizedIngredient.LOADABLE.list(0).defaultField("extra_requirements", List.of(), r -> r.extraRequirements);
@@ -47,13 +48,19 @@ public abstract class MaterialSwappingRecipe implements ITinkerStationRecipe {
   protected static final RecipeResult<LazyToolStack> INVALID_MATERIAL = RecipeResult.failure(TConstruct.makeTranslationKey("recipe", "part_swapping.invalid_material"));
 
   @Getter
-  protected final ResourceLocation id;
+  @NonNull
+  protected ResourceLocation id;
   /** Tools that may use this recipe */
   protected final Ingredient tools;
   /** Max stack size that can be swapped at once */
   protected final int maxStackSize;
   /** Additional ingredients that must be present to perform this part swap. */
   protected final List<SizedIngredient> extraRequirements;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   @Override
   public int shrinkToolSlotBy() {

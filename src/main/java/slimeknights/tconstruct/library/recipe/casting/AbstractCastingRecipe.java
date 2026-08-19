@@ -9,11 +9,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import slimeknights.mantle.data.loadable.common.IngredientLoadable;
 import slimeknights.mantle.data.loadable.field.LoadableField;
 import slimeknights.mantle.data.loadable.primitive.BooleanLoadable;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 
 import javax.annotation.Nonnull;
 
 /** Shared logic between item and material casting */
-public abstract class AbstractCastingRecipe implements ICastingRecipe {
+public abstract class AbstractCastingRecipe implements ICastingRecipe, IRecipeIdAware {
   /* Common fields */
   protected static final LoadableField<Ingredient,AbstractCastingRecipe> CAST_FIELD = IngredientLoadable.ALLOW_EMPTY.defaultField("cast", Ingredient.EMPTY, AbstractCastingRecipe::getCast);
   protected static final LoadableField<Boolean,AbstractCastingRecipe> CAST_CONSUMED_FIELD = BooleanLoadable.INSTANCE.defaultField("cast_consumed", false, false, AbstractCastingRecipe::isConsumed);
@@ -22,7 +23,7 @@ public abstract class AbstractCastingRecipe implements ICastingRecipe {
   @Getter @Nonnull
   private final RecipeType<?> type;
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   @Getter
   private final String group;
   /** 'cast' item for recipe (doesn't have to be an actual 'cast') */
@@ -40,6 +41,11 @@ public abstract class AbstractCastingRecipe implements ICastingRecipe {
     this.cast = cast;
     this.consumed = consumed;
     this.switchSlots = switchSlots;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

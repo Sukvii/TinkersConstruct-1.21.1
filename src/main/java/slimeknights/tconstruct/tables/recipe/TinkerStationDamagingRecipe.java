@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tables.recipe;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +26,7 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.tables.TinkerTables;
 
 @RequiredArgsConstructor
-public class TinkerStationDamagingRecipe implements ITinkerStationRecipe {
+public class TinkerStationDamagingRecipe implements ITinkerStationRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<TinkerStationDamagingRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     IngredientLoadable.DISALLOW_EMPTY.requiredField("ingredient", r -> r.ingredient),
@@ -34,9 +35,15 @@ public class TinkerStationDamagingRecipe implements ITinkerStationRecipe {
   private static final RecipeResult<LazyToolStack> BROKEN = RecipeResult.failure(TConstruct.makeTranslationKey("recipe", "damaging.broken"));
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   private final Ingredient ingredient;
   private final int damageAmount;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   @Override
   public boolean matches(ITinkerStationContainer inv, Level world) {

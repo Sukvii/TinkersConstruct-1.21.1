@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.recipe.tinkerstation.building;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -55,7 +56,7 @@ import java.util.Objects;
  * TODO 1.21: extend {@link MaterialSwappingRecipe} to automatically provide part swapping here.
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ToolBuildingRecipe implements ITinkerStationRecipe {
+public class ToolBuildingRecipe implements ITinkerStationRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   // placement of recipes in JEI
   public static final int X_OFFSET = -6;
   public static final int Y_OFFSET = -15;
@@ -76,7 +77,8 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
     ToolBuildingRecipe::new);
 
   @Getter
-  protected final ResourceLocation id;
+  @NonNull
+  protected ResourceLocation id;
   @Getter
   protected final String group;
   /** Tool result */
@@ -99,6 +101,11 @@ public class ToolBuildingRecipe implements ITinkerStationRecipe {
   protected List<List<ItemStack>> allToolParts;
   protected List<ItemStack> hiddenInputs;
   protected List<ItemStack> displayOutput;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   @Deprecated(forRemoval = true)
   public ToolBuildingRecipe(ResourceLocation id, String group, IModifiable output, int outputCount, @Nullable ResourceLocation layoutSlot, List<Ingredient> ingredients) {

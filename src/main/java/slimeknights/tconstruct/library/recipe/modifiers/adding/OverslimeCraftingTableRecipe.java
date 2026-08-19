@@ -17,6 +17,7 @@ import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModule;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.tools.TinkerModifiers;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /** Recipe for applying overslime in the crafting table */
-public class OverslimeCraftingTableRecipe extends CustomRecipe {
+public class OverslimeCraftingTableRecipe extends CustomRecipe implements IRecipeIdAware {
   public static final RecordLoadable<OverslimeCraftingTableRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     IngredientLoadable.DISALLOW_EMPTY.defaultField("tools", Ingredient.of(TinkerTags.Items.DURABILITY), r -> r.tools),
@@ -33,15 +34,27 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
     IntLoadable.FROM_ONE.requiredField("restore_amount", r -> r.restoreAmount),
     OverslimeCraftingTableRecipe::new);
 
+  private ResourceLocation id;
   private final Ingredient tools;
   private final Ingredient ingredient;
   private final int restoreAmount;
 
   public OverslimeCraftingTableRecipe(ResourceLocation id, Ingredient tools, Ingredient ingredient, int restoreAmount) {
     super(CraftingBookCategory.EQUIPMENT);
+    this.id = id;
     this.tools = tools;
     this.ingredient = ingredient;
     this.restoreAmount = restoreAmount;
+  }
+
+  @Override
+  public ResourceLocation getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /** Result from {@link #findTool(CraftingContainer, Predicate, Ingredient)} */

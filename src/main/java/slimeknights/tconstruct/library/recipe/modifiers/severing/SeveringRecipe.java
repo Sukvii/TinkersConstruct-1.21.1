@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.modifiers.severing;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +25,7 @@ import slimeknights.tconstruct.tools.TinkerModifiers;
  * Recipe to convert an entity into a head or other item for the severing modifier
  */
 @RequiredArgsConstructor
-public class SeveringRecipe implements ICustomOutputRecipe<IEmptyContainer> {
+public class SeveringRecipe implements ICustomOutputRecipe<IEmptyContainer>, slimeknights.mantle.recipe.IRecipeIdAware {
   protected static LoadableField<EntityIngredient,SeveringRecipe> ENTITY_FIELD = EntityIngredient.LOADABLE.requiredField("entity", r -> r.ingredient);
   protected static LoadableField<Float,SeveringRecipe> BASE_CHANCE_FIELD = FloatLoadable.PERCENT.defaultField("per_level_chance", 0.05f, true, r -> r.baseChance);
   protected static LoadableField<Float,SeveringRecipe> LOOTING_BONUS_FIELD = FloatLoadable.PERCENT.defaultField("looting_bonus", 0.01f, true, r -> r.lootingBonus);
@@ -36,7 +37,8 @@ public class SeveringRecipe implements ICustomOutputRecipe<IEmptyContainer> {
     SeveringRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   @Getter
   protected final EntityIngredient ingredient;
   protected final ItemOutput output;
@@ -47,6 +49,11 @@ public class SeveringRecipe implements ICustomOutputRecipe<IEmptyContainer> {
   @Deprecated(forRemoval = true)
   public SeveringRecipe(ResourceLocation id, EntityIngredient ingredient, ItemOutput output) {
     this(id, ingredient, output, 0.05f, 0.01f);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /**

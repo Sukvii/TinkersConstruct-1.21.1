@@ -37,13 +37,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Recipe to add a banner to a shield */
-public class BannerModifierRecipe implements ITinkerStationRecipe, IMultiRecipe<IDisplayModifierRecipe> {
+public class BannerModifierRecipe implements ITinkerStationRecipe, IMultiRecipe<IDisplayModifierRecipe>, slimeknights.mantle.recipe.IRecipeIdAware {
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
 
   public BannerModifierRecipe(ResourceLocation id) {
     this.id = id;
     ModifierRecipeLookup.addRecipeModifier(null, TinkerModifiers.banner);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

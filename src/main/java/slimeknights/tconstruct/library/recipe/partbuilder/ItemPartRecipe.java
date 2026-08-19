@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Recipe to craft an ordinary item using the part builder
  */
-public class ItemPartRecipe implements IDisplayPartBuilderRecipe {
+public class ItemPartRecipe implements IDisplayPartBuilderRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<ItemPartRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     MaterialVariantId.LOADABLE.defaultField("material", IMaterial.UNKNOWN_ID, r -> r.material.getVariant()),
@@ -42,7 +42,7 @@ public class ItemPartRecipe implements IDisplayPartBuilderRecipe {
     });
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   @Getter
   private final MaterialVariant material;
   @Getter
@@ -59,6 +59,11 @@ public class ItemPartRecipe implements IDisplayPartBuilderRecipe {
     this.patternItem = patternItem;
     this.cost = cost;
     this.result = result;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

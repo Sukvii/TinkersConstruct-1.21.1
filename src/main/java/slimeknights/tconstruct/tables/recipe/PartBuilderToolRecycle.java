@@ -3,6 +3,7 @@ package slimeknights.tconstruct.tables.recipe;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
@@ -58,7 +59,7 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")  // Forge is dumb
 @RequiredArgsConstructor
-public class PartBuilderToolRecycle implements IPartBuilderRecipe, IMultiRecipe<DisplayPartRecipe> {
+public class PartBuilderToolRecycle implements IPartBuilderRecipe, IMultiRecipe<DisplayPartRecipe>, slimeknights.mantle.recipe.IRecipeIdAware {
   /** Title for the screen */
   private static final Component TOOL_RECYCLING = TConstruct.makeTranslation("recipe", "tool_recycling");
   /** General instructions for recycling */
@@ -77,10 +78,16 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe, IMultiRecipe<
     PartBuilderToolRecycle::new);
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   private final SizedIngredient toolRequirement;
   private final Ingredient pattern;
   private final List<IMaterialItem> parts;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   /** @deprecated use the full constructor with an explicit parts list. */
   @Deprecated(forRemoval = true)

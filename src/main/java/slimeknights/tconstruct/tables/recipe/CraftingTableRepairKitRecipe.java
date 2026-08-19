@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
@@ -28,9 +29,22 @@ import slimeknights.tconstruct.tables.TinkerTables;
 import javax.annotation.Nullable;
 
 /** Recipe using repair kits in the crafting table */
-public class CraftingTableRepairKitRecipe extends CustomRecipe {
+public class CraftingTableRepairKitRecipe extends CustomRecipe implements IRecipeIdAware {
+  private ResourceLocation id;
+
   public CraftingTableRepairKitRecipe(ResourceLocation id) {
     super(CraftingBookCategory.EQUIPMENT);
+    this.id = id;
+  }
+
+  @Override
+  public ResourceLocation getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /**

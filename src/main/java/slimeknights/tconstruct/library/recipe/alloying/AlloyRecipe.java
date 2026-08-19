@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.alloying;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -11,6 +12,7 @@ import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.primitive.BooleanLoadable;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.mantle.recipe.ICustomOutputRecipe;
 import slimeknights.mantle.recipe.helper.FluidOutput;
 import slimeknights.mantle.recipe.ingredient.FluidIngredient;
@@ -25,7 +27,7 @@ import java.util.List;
  * Base class for alloying recipes
  */
 @RequiredArgsConstructor
-public class AlloyRecipe implements ICustomOutputRecipe<IAlloyTank> {
+public class AlloyRecipe implements ICustomOutputRecipe<IAlloyTank>, IRecipeIdAware {
   public static final RecordLoadable<AlloyRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     AlloyIngredient.LOADABLE.list(2).requiredField("inputs", r -> r.inputs),
@@ -34,7 +36,8 @@ public class AlloyRecipe implements ICustomOutputRecipe<IAlloyTank> {
     AlloyRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   /**
    * List of input ingredients.
    * Order matters, as if a fluid matches multiple ingredients it may produce unexpected behavior.
@@ -47,6 +50,11 @@ public class AlloyRecipe implements ICustomOutputRecipe<IAlloyTank> {
   /** Required temperature to craft this */
   @Getter
   private final int temperature;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   /** Gets the result of this recipe */
   public FluidStack getOutput() {

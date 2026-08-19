@@ -26,7 +26,7 @@ import slimeknights.tconstruct.tools.TinkerModifiers;
 /**
  * Shared logic for main types of salvage recipes
  */
-public class ModifierSalvage implements ICustomOutputRecipe<IEmptyContainer> {
+public class ModifierSalvage implements ICustomOutputRecipe<IEmptyContainer>, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<ModifierSalvage> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     IngredientLoadable.DISALLOW_EMPTY.requiredField("tools", r -> r.toolIngredient),
@@ -38,7 +38,7 @@ public class ModifierSalvage implements ICustomOutputRecipe<IEmptyContainer> {
     ModifierSalvage::new);
 
   @Getter
-  protected final ResourceLocation id;
+  protected ResourceLocation id;
   /** Ingredient determining tools matched by this */
   protected final Ingredient toolIngredient;
   /** Max size of the tool for this modifier. If the tool size is smaller, the salvage bonus will be reduced */
@@ -60,6 +60,11 @@ public class ModifierSalvage implements ICustomOutputRecipe<IEmptyContainer> {
     this.level = level;
     this.slots = slots;
     ModifierRecipeLookup.addSalvage(this);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /**

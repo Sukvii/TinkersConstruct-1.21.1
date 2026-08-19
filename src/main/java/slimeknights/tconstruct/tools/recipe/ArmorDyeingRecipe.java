@@ -36,13 +36,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /** Recipe to dye travelers gear */
-public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDisplayModifierRecipe> {
+public class ArmorDyeingRecipe implements ITinkerStationRecipe, IMultiRecipe<IDisplayModifierRecipe>, slimeknights.mantle.recipe.IRecipeIdAware {
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
 
   public ArmorDyeingRecipe(ResourceLocation id) {
     this.id = id;
     ModifierRecipeLookup.addRecipeModifier(null, TinkerModifiers.dyed);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

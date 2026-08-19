@@ -17,9 +17,10 @@ import slimeknights.mantle.recipe.ICommonRecipe;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 
 /** Recipe to combine two items on the top of a casting table, changing the first */
-public class MoldingRecipe implements ICommonRecipe<IMoldingContainer> {
+public class MoldingRecipe implements ICommonRecipe<IMoldingContainer>, IRecipeIdAware {
   public static final RecordLoadable<MoldingRecipe> LOADER = RecordLoadable.create(
     LoadableRecipeSerializer.TYPED_SERIALIZER.requiredField(),
     ContextKey.ID.requiredField(),
@@ -34,7 +35,7 @@ public class MoldingRecipe implements ICommonRecipe<IMoldingContainer> {
   @Getter
   private final RecipeSerializer<?> serializer;
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   @Getter
   private final Ingredient material;
   @Getter
@@ -51,6 +52,11 @@ public class MoldingRecipe implements ICommonRecipe<IMoldingContainer> {
     this.pattern = pattern;
     this.patternConsumed = pattern != Ingredient.EMPTY && patternConsumed;
     this.recipeOutput = recipeOutput;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

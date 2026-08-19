@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.recipe.casting.container;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,6 +21,7 @@ import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.recipe.IMultiRecipe;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
 import slimeknights.tconstruct.library.recipe.casting.DisplayCastingRecipe;
@@ -34,8 +34,7 @@ import java.util.List;
 /**
  * Casting recipe that takes an arbitrary fluid for a given amount and fills a container
  */
-@RequiredArgsConstructor
-public class ContainerFillingRecipe implements ICastingRecipe, IMultiRecipe<DisplayCastingRecipe> {
+public class ContainerFillingRecipe implements ICastingRecipe, IMultiRecipe<DisplayCastingRecipe>, IRecipeIdAware {
   public static final RecordLoadable<ContainerFillingRecipe> LOADER = RecordLoadable.create(
     LoadableRecipeSerializer.TYPED_SERIALIZER.requiredField(), ContextKey.ID.requiredField(), LoadableRecipeSerializer.RECIPE_GROUP,
     IntLoadable.FROM_ONE.requiredField("fluid_amount", r -> r.fluidAmount),
@@ -45,11 +44,24 @@ public class ContainerFillingRecipe implements ICastingRecipe, IMultiRecipe<Disp
   @Getter
   private final TypeAwareRecipeSerializer<?> serializer;
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   @Getter
   private final String group;
   private final int fluidAmount;
   private final Item container;
+
+  public ContainerFillingRecipe(TypeAwareRecipeSerializer<?> serializer, ResourceLocation id, String group, int fluidAmount, Item container) {
+    this.serializer = serializer;
+    this.id = id;
+    this.group = group;
+    this.fluidAmount = fluidAmount;
+    this.container = container;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   @Override
   public RecipeType<?> getType() {

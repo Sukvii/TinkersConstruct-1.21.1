@@ -45,7 +45,7 @@ import static slimeknights.tconstruct.library.recipe.modifiers.adding.IDisplayMo
 import static slimeknights.tconstruct.library.recipe.modifiers.adding.IDisplayModifierRecipe.withModifiers;
 
 /** Shared logic between modifier and incremental modifier recipes */
-public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, IDisplayModifierRecipe {
+public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, IDisplayModifierRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   /** Error for when the tool has does not have enough existing levels of this modifier, has a single parameter, modifier with level */
   protected static final String KEY_MIN_LEVEL = TConstruct.makeTranslationKey("recipe", "modifier.min_level");
   protected static final String KEY_MIN_LEVEL_TRAITS = KEY_MIN_LEVEL + ".traits";
@@ -68,7 +68,7 @@ public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, ID
 
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   /** Ingredient representing the required tool, typically a tag */
   protected final Ingredient toolRequirement;
   /** Max size of the tool for this modifier. If the tool size is smaller, the stack will reduce by less */
@@ -98,6 +98,11 @@ public abstract class AbstractModifierRecipe implements ITinkerStationRecipe, ID
     this.allowCrystal = allowCrystal;
     this.checkTraitLevel = checkTraitLevel;
     ModifierRecipeLookup.addRecipeModifier(SlotCount.type(slots), this.result);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

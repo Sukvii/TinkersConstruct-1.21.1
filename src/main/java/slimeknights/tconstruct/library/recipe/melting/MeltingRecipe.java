@@ -14,6 +14,7 @@ import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.field.LoadableField;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.mantle.recipe.helper.FluidOutput;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.tconstruct.common.config.Config;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * Recipe to melt an ingredient into a specific fuel
  */
-public class MeltingRecipe implements IMeltingRecipe {
+public class MeltingRecipe implements IMeltingRecipe, IRecipeIdAware {
   /* Reusable fields */
   protected static final LoadableField<Ingredient, MeltingRecipe> INPUT = IngredientLoadable.DISALLOW_EMPTY.requiredField("ingredient", MeltingRecipe::getInput);
   protected static final LoadableField<FluidOutput, MeltingRecipe> OUTPUT = FluidOutput.Loadable.REQUIRED.requiredField("result", r -> r.output);
@@ -38,7 +39,7 @@ public class MeltingRecipe implements IMeltingRecipe {
   public static final RecordLoadable<MeltingRecipe> LOADER = RecordLoadable.create(ContextKey.ID.requiredField(), LoadableRecipeSerializer.RECIPE_GROUP, INPUT, OUTPUT, TEMPERATURE, TIME, BYPRODUCTS, MeltingRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   @Getter
   protected final String group;
   @Getter
@@ -68,6 +69,11 @@ public class MeltingRecipe implements IMeltingRecipe {
     if (addLookup) {
       MeltingRecipeLookup.addMeltingFluid(input, output, temperature);
     }
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

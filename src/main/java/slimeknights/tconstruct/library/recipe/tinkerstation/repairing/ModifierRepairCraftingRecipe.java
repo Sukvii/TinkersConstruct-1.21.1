@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -28,10 +29,11 @@ import slimeknights.tconstruct.tools.TinkerModifiers;
 
 import java.util.function.Predicate;
 
-public class ModifierRepairCraftingRecipe extends CustomRecipe implements IModifierRepairRecipe {
+public class ModifierRepairCraftingRecipe extends CustomRecipe implements IModifierRepairRecipe, IRecipeIdAware {
   public static final RecordLoadable<ModifierRepairCraftingRecipe> LOADER = RecordLoadable.create(ContextKey.ID.requiredField(), MODIFIER_FIELD, INGREDIENT_FIELD, REPAIR_AMOUNT_FIELD, ModifierRepairCraftingRecipe::new);
   private static final Predicate<ItemStack> TOOLS = stack -> stack.is(TinkerTags.Items.DURABILITY);
 
+  private ResourceLocation id;
   @Getter
   private final ModifierId modifier;
   @Getter
@@ -40,9 +42,20 @@ public class ModifierRepairCraftingRecipe extends CustomRecipe implements IModif
   private final int repairAmount;
   public ModifierRepairCraftingRecipe(ResourceLocation idIn, ModifierId modifier, Ingredient ingredient, int repairAmount) {
     super(CraftingBookCategory.EQUIPMENT);
+    this.id = idIn;
     this.modifier = modifier;
     this.ingredient = ingredient;
     this.repairAmount = repairAmount;
+  }
+
+  @Override
+  public ResourceLocation getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

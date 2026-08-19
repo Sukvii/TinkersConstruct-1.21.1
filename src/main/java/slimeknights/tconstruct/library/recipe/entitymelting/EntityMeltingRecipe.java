@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.entitymelting;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +26,7 @@ import java.util.Collection;
  * Recipe to melt an entity into a fluid
  */
 @RequiredArgsConstructor
-public class EntityMeltingRecipe implements ICustomOutputRecipe<IEmptyContainer> {
+public class EntityMeltingRecipe implements ICustomOutputRecipe<IEmptyContainer>, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<EntityMeltingRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     EntityIngredient.LOADABLE.requiredField("entity", r -> r.ingredient),
@@ -34,12 +35,18 @@ public class EntityMeltingRecipe implements ICustomOutputRecipe<IEmptyContainer>
     EntityMeltingRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  @NonNull
+  private ResourceLocation id;
   @Getter
   private final EntityIngredient ingredient;
   private final FluidOutput output;
   @Getter
   private final int damage;
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
+  }
 
   /**
    * Checks if the recipe matches the given type

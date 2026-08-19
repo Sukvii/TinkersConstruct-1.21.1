@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Recipe to get the material from an ingredient
  */
-public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer>, IMaterialValue {
+public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer>, IMaterialValue, slimeknights.mantle.recipe.IRecipeIdAware {
   /** Empty material instance for the cache */
   @SuppressWarnings("removal")
   public static final MaterialRecipe EMPTY = new MaterialRecipe(ResourceLocation.parse("missingno"), "", Ingredient.EMPTY, 0, 0, IMaterial.UNKNOWN_ID, ItemOutput.EMPTY);
@@ -47,7 +47,7 @@ public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer
   public static final float INGOTS_PER_REPAIR = 3f;
 
   @Getter
-  protected final ResourceLocation id;
+  protected ResourceLocation id;
   @Getter
   protected final String group;
   @Getter
@@ -80,6 +80,11 @@ public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer
 
     // save recipe into the cache
     MaterialRecipeCache.registerRecipe(this);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /* Basic */

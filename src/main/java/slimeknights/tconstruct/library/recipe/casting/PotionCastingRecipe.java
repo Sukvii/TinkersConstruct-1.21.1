@@ -22,6 +22,7 @@ import slimeknights.mantle.data.loadable.field.LoadableField;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.recipe.IMultiRecipe;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
 import slimeknights.mantle.recipe.ingredient.FluidIngredient;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Recipe for casting a fluid onto an item, copying the fluid NBT to the item
  */
-public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<DisplayCastingRecipe> {
+public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<DisplayCastingRecipe>, IRecipeIdAware {
   protected static final LoadableField<FluidIngredient, PotionCastingRecipe> FLUID_FIELD = FluidIngredient.LOADABLE.requiredField("fluid", r -> r.fluid);
   protected static final LoadableField<Integer, PotionCastingRecipe> COOLING_TIME_FIELD = IntLoadable.FROM_ONE.defaultField("cooling_time", 5, r -> r.coolingTime);
   public static final RecordLoadable<PotionCastingRecipe> LOADER = RecordLoadable.create(
@@ -45,7 +46,7 @@ public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<Display
   @Getter
   protected final TypeAwareRecipeSerializer<?> serializer;
   @Getter
-  protected final ResourceLocation id;
+  protected ResourceLocation id;
   @Getter
   protected final String group;
   /** Input on the casting table, always consumed */
@@ -66,6 +67,11 @@ public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<Display
     this.result = result;
     this.coolingTime = coolingTime;
     CastingRecipeLookup.registerCastable(result);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

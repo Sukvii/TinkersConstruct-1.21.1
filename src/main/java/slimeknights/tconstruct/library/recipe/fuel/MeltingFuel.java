@@ -13,6 +13,7 @@ import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.recipe.ICustomOutputRecipe;
 import slimeknights.mantle.recipe.ingredient.FluidIngredient;
+import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.TankType;
@@ -23,7 +24,7 @@ import java.util.List;
  * Recipe for a fuel for the melter or smeltery
  */
 @Getter
-public class MeltingFuel implements ICustomOutputRecipe<IFluidContainer> {
+public class MeltingFuel implements ICustomOutputRecipe<IFluidContainer>, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<MeltingFuel> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     FluidIngredient.LOADABLE.defaultField("fluid", FluidIngredient.EMPTY, r -> r.input),
@@ -38,7 +39,7 @@ public class MeltingFuel implements ICustomOutputRecipe<IFluidContainer> {
       return fuel;
     });
 
-  private final ResourceLocation id;
+  private ResourceLocation id;
   private final FluidIngredient input;
   private final int duration;
   private final int temperature;
@@ -50,8 +51,19 @@ public class MeltingFuel implements ICustomOutputRecipe<IFluidContainer> {
     this.duration = duration;
     this.temperature = temperature;
     this.rate = rate;
-    // register this recipe with the lookup
-    MeltingFuelLookup.addFuel(this);
+    // Loadable recipes receive their real ID after the RecipeHolder is created.
+    if (!LoadableRecipeSerializer.UNBOUND_ID.equals(id)) {
+      MeltingFuelLookup.addFuel(this);
+    }
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    boolean wasUnbound = LoadableRecipeSerializer.UNBOUND_ID.equals(this.id);
+    this.id = id;
+    if (wasUnbound && !LoadableRecipeSerializer.UNBOUND_ID.equals(id)) {
+      MeltingFuelLookup.addFuel(this);
+    }
   }
 
   /* Recipe methods */

@@ -13,6 +13,7 @@ import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.recipe.IMultiRecipe;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.mantle.recipe.helper.FluidOutput;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Recipe to melt all castable tool parts of a given material
  */
-public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<MeltingRecipe> {
+public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<MeltingRecipe>, IRecipeIdAware {
   public static final RecordLoadable<MaterialMeltingRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     MaterialVariantId.LOADABLE.requiredField("input", r -> r.input.getVariant()),
@@ -37,7 +38,7 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
     MaterialMeltingRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   private final MaterialVariant input;
   private final int temperature;
   private final FluidOutput result;
@@ -49,6 +50,11 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
     this.temperature = temperature;
     this.result = result;
     this.byproducts = byproducts;
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /** @deprecated use {@link #MaterialMeltingRecipe(ResourceLocation,MaterialVariantId,int,FluidOutput,List)} */

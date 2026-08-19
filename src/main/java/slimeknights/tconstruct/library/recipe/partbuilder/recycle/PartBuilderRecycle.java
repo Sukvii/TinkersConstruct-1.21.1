@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 import static slimeknights.tconstruct.tables.recipe.PartBuilderToolRecycle.NO_MODIFIERS;
 
 /** Recipe for recycling a vanilla tool or a tinkers tool with no materials in the part builder */
-public class PartBuilderRecycle implements IPartBuilderRecipe, IMultiRecipe<DisplayPartRecipe> {
+public class PartBuilderRecycle implements IPartBuilderRecipe, IMultiRecipe<DisplayPartRecipe>, slimeknights.mantle.recipe.IRecipeIdAware {
   /** Title for the screen */
   private static final Component RECYCLING = TConstruct.makeTranslation("recipe", "recycling");
   /** General instructions for recycling */
@@ -52,7 +52,7 @@ public class PartBuilderRecycle implements IPartBuilderRecipe, IMultiRecipe<Disp
     PartBuilderRecycle::new);
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   private final Ingredient tool;
   private final Ingredient pattern;
   private final Map<Pattern,ItemOutput> results;
@@ -64,6 +64,11 @@ public class PartBuilderRecycle implements IPartBuilderRecipe, IMultiRecipe<Disp
     this.pattern = pattern;
     this.results = results;
     this.resultCount = results.values().stream().mapToInt(ItemOutput::getCount).sum();
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

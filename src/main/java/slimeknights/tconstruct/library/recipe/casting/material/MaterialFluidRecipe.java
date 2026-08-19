@@ -18,13 +18,14 @@ import slimeknights.tconstruct.library.materials.definition.MaterialVariant;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.casting.ICastingContainer;
+import slimeknights.mantle.recipe.IRecipeIdAware;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 /** Recipe defining casting and composite fluids for a given input */
-public class MaterialFluidRecipe implements ICustomOutputRecipe<ICastingContainer> {
+public class MaterialFluidRecipe implements ICustomOutputRecipe<ICastingContainer>, IRecipeIdAware {
   public static final RecordLoadable<MaterialFluidRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     FluidIngredient.LOADABLE.requiredField("fluid", r -> r.fluid),
@@ -36,7 +37,7 @@ public class MaterialFluidRecipe implements ICustomOutputRecipe<ICastingContaine
   public static final MaterialFluidRecipe EMPTY = new MaterialFluidRecipe(TConstruct.getResource("missingno"), FluidIngredient.EMPTY, 0, null, IMaterial.UNKNOWN_ID);
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   private final FluidIngredient fluid;
   @Getter
   private final int temperature;
@@ -54,6 +55,11 @@ public class MaterialFluidRecipe implements ICustomOutputRecipe<ICastingContaine
     this.input = inputId == null ? null : MaterialVariant.of(inputId);
     this.output = MaterialVariant.of(outputId);
     MaterialCastingLookup.registerFluid(this);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /** Checks if this recipe is valid for the given fluid and material */

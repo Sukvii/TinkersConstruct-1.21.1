@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.recipe.partbuilder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.minecraft.core.RegistryAccess;
@@ -38,7 +39,7 @@ import java.util.stream.Stream;
  * Recipe to make a tool part from a material item in the part builder
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class PartRecipe implements IPartBuilderRecipe, IMultiRecipe<IDisplayPartBuilderRecipe> {
+public class PartRecipe implements IPartBuilderRecipe, IMultiRecipe<IDisplayPartBuilderRecipe>, slimeknights.mantle.recipe.IRecipeIdAware {
   public static final RecordLoadable<PartRecipe> LOADER = RecordLoadable.create(
     ContextKey.ID.requiredField(),
     LoadableRecipeSerializer.RECIPE_GROUP,
@@ -51,7 +52,8 @@ public class PartRecipe implements IPartBuilderRecipe, IMultiRecipe<IDisplayPart
     PartRecipe::new);
 
   @Getter
-  protected final ResourceLocation id;
+  @NonNull
+  protected ResourceLocation id;
   @Getter
   protected final String group;
   @Getter
@@ -73,6 +75,11 @@ public class PartRecipe implements IPartBuilderRecipe, IMultiRecipe<IDisplayPart
   @Deprecated(forRemoval = true)
   public PartRecipe(ResourceLocation id, String group, Pattern pattern, Ingredient patternItem, int cost, IMaterialItem output, int outputCount) {
     this(id, group, pattern, patternItem, cost, false, output, outputCount);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   @Override

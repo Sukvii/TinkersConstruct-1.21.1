@@ -37,7 +37,7 @@ import static slimeknights.tconstruct.library.recipe.modifiers.adding.IDisplayMo
 /**
  * Recipe to add overslime to a tool
  */
-public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayModifierRecipe {
+public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayModifierRecipe, slimeknights.mantle.recipe.IRecipeIdAware {
   private static final RecipeResult<LazyToolStack> AT_CAPACITY = RecipeResult.failure(TConstruct.makeTranslationKey("recipe", "overslime.at_capacity"));
   private static final String KEY_AMOUNT = TConstruct.makeTranslationKey("recipe", "modifier.amount");
   public static final RecordLoadable<OverslimeModifierRecipe> LOADER = RecordLoadable.create(
@@ -48,7 +48,7 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
     OverslimeModifierRecipe::new);
 
   @Getter
-  private final ResourceLocation id;
+  private ResourceLocation id;
   private final Ingredient tools;
   private final Ingredient ingredient;
   private final int restoreAmount;
@@ -60,6 +60,11 @@ public class OverslimeModifierRecipe implements ITinkerStationRecipe, IDisplayMo
     this.ingredient = ingredient;
     this.restoreAmount = restoreAmount;
     ModifierRecipeLookup.addRecipeModifier(null, TinkerModifiers.overslime);
+  }
+
+  @Override
+  public void setId(ResourceLocation id) {
+    this.id = id;
   }
 
   /** @deprecated use {@link #OverslimeModifierRecipe(ResourceLocation, Ingredient, Ingredient, int)} */
