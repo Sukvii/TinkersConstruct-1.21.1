@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.netty.handler.codec.DecoderException;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,6 +38,8 @@ public class UpdateModifiersPacket implements IThreadsafePacket {
   private final Map<Enchantment,Modifier> enchantmentMap;
   /** Collection of all enchantment tag mappings */
   private final Map<TagKey<Enchantment>, Modifier> enchantmentTagMappings;
+  /** Registry access for the dynamic enchantments used by the packet */
+  private RegistryAccess registryAccess;
 
   /** Ensures both the modifiers and redirects lists are calculated, allows one packet to be used multiple times without redundant work */
   private void ensureCalculated() {
@@ -76,6 +79,7 @@ public class UpdateModifiersPacket implements IThreadsafePacket {
   }
 
   public UpdateModifiersPacket(FriendlyByteBuf buffer) {
+    registryAccess = ((RegistryFriendlyByteBuf)buffer).registryAccess();
     // read in modifiers
     int size = buffer.readVarInt();
     Map<ModifierId,Modifier> modifiers = new HashMap<>();
@@ -126,6 +130,7 @@ public class UpdateModifiersPacket implements IThreadsafePacket {
 
   @Override
   public void encode(FriendlyByteBuf buffer) {
+    registryAccess = ((RegistryFriendlyByteBuf)buffer).registryAccess();
     ensureCalculated();
     // write modifiers
     buffer.writeVarInt(modifiers.size());
@@ -168,6 +173,6 @@ public class UpdateModifiersPacket implements IThreadsafePacket {
 
   @Override
   public void handleThreadsafe(PacketContext context) {
-    ModifierManager.INSTANCE.updateModifiersFromServer(allModifiers, tags, enchantmentMap, enchantmentTagMappings);
+    ModifierManager.INSTANCE.updateModifiersFromServer(allModifiers, tags, enchantmentMap, enchantmentTagMappings, registryAccess);
   }
 }

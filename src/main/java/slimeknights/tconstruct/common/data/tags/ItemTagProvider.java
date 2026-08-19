@@ -186,6 +186,11 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.tag(TinkerTags.Items.NUGGETS_NETHERITE).add(TinkerMaterials.netheriteNugget.get());
     this.tag(TinkerTags.Items.NUGGETS_NETHERITE_SCRAP).add(TinkerMaterials.debrisNugget.get());
 
+    // NeoForge does not provide the vanilla storage block tags that Forge supplied for quartz and amethyst.
+    // Keep these common tags populated so recipes using the upstream tags remain available.
+    this.tag(TagKey.create(Registries.ITEM, commonResource("storage_blocks/quartz"))).add(Items.QUARTZ_BLOCK);
+    this.tag(TagKey.create(Registries.ITEM, commonResource("storage_blocks/amethyst"))).add(Items.AMETHYST_BLOCK);
+
     this.tag(TinkerTags.Items.STEEL_SHARD).add(TinkerWorld.steelShard.get());
     this.tag(TinkerTags.Items.COBALT_SHARD).add(TinkerWorld.cobaltShard.get());
     this.tag(TinkerTags.Items.KNIGHTMETAL_SHARD).add(TinkerWorld.knightmetalShard.get());
