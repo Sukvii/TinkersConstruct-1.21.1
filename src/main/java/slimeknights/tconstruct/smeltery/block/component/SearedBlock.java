@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredica
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathType;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.tconstruct.smeltery.block.entity.component.SmelteryComponentBlockEntity;
 
 import javax.annotation.Nullable;
@@ -56,7 +55,9 @@ public class SearedBlock extends Block implements EntityBlock {
         }
       } else {
         // block changed, tell the master then ditch the block entity
-        BlockEntityHelper.get(SmelteryComponentBlockEntity.class, world, pos).ifPresent(te -> te.notifyMasterOfChange(pos, newState));
+        if (world.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity te) {
+          te.notifyMasterOfChange(pos, newState);
+        }
         world.removeBlockEntity(pos);
       }
     }

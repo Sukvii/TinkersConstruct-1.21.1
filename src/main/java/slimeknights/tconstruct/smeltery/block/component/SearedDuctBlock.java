@@ -25,7 +25,6 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.HitResult;
 import slimeknights.mantle.block.InventoryBlock;
 import slimeknights.mantle.block.RetexturedBlock;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.mantle.util.RetexturedHelper;
 import slimeknights.tconstruct.smeltery.block.entity.component.DuctBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.component.SmelteryComponentBlockEntity;
@@ -54,15 +53,15 @@ public class SearedDuctBlock extends InventoryBlock {
   @Override
   @Deprecated
   public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-    if (!newState.is(this)) {
-      BlockEntityHelper.get(SmelteryComponentBlockEntity.class, worldIn, pos).ifPresent(te -> te.notifyMasterOfChange(pos, newState));
+    if (!newState.is(this) && worldIn.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity te) {
+      te.notifyMasterOfChange(pos, newState);
     }
     super.onRemove(state, worldIn, pos, newState, isMoving);
   }
 
   @Override
   public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag pFlag) {
-    RetexturedHelper.addTooltip(stack, tooltip);
+    RetexturedHelper.addTooltip(stack, tooltip, pFlag);
   }
 
   @Override

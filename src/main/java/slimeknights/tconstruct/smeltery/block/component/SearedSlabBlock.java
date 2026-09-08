@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.tconstruct.smeltery.block.entity.component.SmelteryComponentBlockEntity;
 
 import javax.annotation.Nullable;
@@ -29,8 +28,8 @@ public class SearedSlabBlock extends SlabBlock implements EntityBlock {
   @Override
   @Deprecated
   public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-    if (!newState.is(this)) {
-      BlockEntityHelper.get(SmelteryComponentBlockEntity.class, worldIn, pos).ifPresent(te -> te.notifyMasterOfChange(pos, newState));
+    if (!newState.is(this) && worldIn.getBlockEntity(pos) instanceof SmelteryComponentBlockEntity te) {
+      te.notifyMasterOfChange(pos, newState);
     }
     super.onRemove(state, worldIn, pos, newState, isMoving);
   }
