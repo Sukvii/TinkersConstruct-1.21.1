@@ -298,7 +298,7 @@ public class ModifierEvents {
   static void bounceOnFall(LivingFallEvent event) {
     LivingEntity living = event.getEntity();
     // using fall distance as the event distance could be reduced by jump boost
-    if (living == null || (living.getDeltaMovement().y > -0.3 && living.fallDistance < 3)) {
+    if (living == null || (living.fallDistance < 3 && living.getDeltaMovement().y > -0.3) || living.fallDistance <= 0.5f + living.getAttributeValue(Attributes.STEP_HEIGHT)) {
       return;
     }
     // can the entity bounce?
@@ -441,14 +441,15 @@ public class ModifierEvents {
       EntityType<?> projectileType = projectile.getType();
       if (TinkerEffects.needsEnderferenceOverride(target) && !projectileType.is(TinkerTags.EntityTypes.ENDERFERENCE_ARROW_BLACKLIST) && projectile instanceof AbstractArrow arrow) {
         // first, give up if we reached pierce capacity, and ensure list are created
-        if (arrow.getPierceLevel() > 0) {
+        int pierce = arrow.getPierceLevel();
+        if (pierce > 0) {
           if (arrow.piercingIgnoreEntityIds == null) {
             arrow.piercingIgnoreEntityIds = new IntOpenHashSet(5);
           }
           if (arrow.piercedAndKilledEntities == null) {
             arrow.piercedAndKilledEntities = Lists.newArrayListWithCapacity(5);
           }
-          if (arrow.piercingIgnoreEntityIds.size() >= arrow.getPierceLevel() + 1) {
+          if (arrow.piercingIgnoreEntityIds.size() >= pierce + 1) {
             ReusableProjectile.discard(projectile);
             event.setCanceled(true);
             return;
@@ -478,7 +479,7 @@ public class ModifierEvents {
 
         // hurt the enderman
         if (target.hurt(damageSource, (float) damage)) {
-          if (!level.isClientSide && arrow.getPierceLevel() <= 0) {
+          if (!level.isClientSide && pierce <= 0) {
             target.setArrowCount(target.getArrowCount() + 1);
           }
 
@@ -504,7 +505,7 @@ public class ModifierEvents {
           }
 
           arrow.playSound(arrow.soundEvent, 1.0F, 1.2F / (target.getRandom().nextFloat() * 0.2F + 0.9F));
-          if (arrow.getPierceLevel() <= 0) {
+        if (pierce <= 0) {
             ReusableProjectile.discard(projectile);
           }
         } else {

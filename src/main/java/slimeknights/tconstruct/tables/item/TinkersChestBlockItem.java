@@ -9,7 +9,6 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.tconstruct.tables.block.entity.chest.TinkersChestBlockEntity;
 
 import javax.annotation.Nullable;
@@ -29,7 +28,9 @@ public class TinkersChestBlockItem extends BlockItem {
     boolean result = super.updateCustomBlockEntityTag(pos, worldIn, player, stack, state);
     if (stack.has(DataComponents.DYED_COLOR)) {
       int color = getColor(stack);
-      BlockEntityHelper.get(TinkersChestBlockEntity.class, worldIn, pos).ifPresent(te -> te.setColor(color));
+      if (worldIn.getBlockEntity(pos) instanceof TinkersChestBlockEntity te) {
+        te.setColor(color);
+      }
     }
     return result;
   }

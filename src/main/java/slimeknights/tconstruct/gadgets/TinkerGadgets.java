@@ -15,6 +15,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import slimeknights.mantle.registration.RegistryObject;
 import slimeknights.mantle.registration.object.EnumObject;
@@ -26,13 +27,17 @@ import slimeknights.tconstruct.gadgets.block.FoodCakeBlock.EffectCombination;
 import slimeknights.tconstruct.gadgets.block.InvertedCakeBlock;
 import slimeknights.tconstruct.gadgets.block.PunjiBlock;
 import slimeknights.tconstruct.gadgets.capability.PiggybackCapability;
+import slimeknights.tconstruct.gadgets.entity.DispenseFancyArmorStand;
 import slimeknights.tconstruct.gadgets.entity.EFLNEntity;
+import slimeknights.tconstruct.gadgets.entity.FancyArmorStandEntity;
+import slimeknights.tconstruct.gadgets.entity.FancyArmorStandEntity.StandType;
 import slimeknights.tconstruct.gadgets.entity.FancyItemFrameEntity;
 import slimeknights.tconstruct.gadgets.entity.FrameType;
 import slimeknights.tconstruct.gadgets.entity.GlowballEntity;
 import slimeknights.tconstruct.gadgets.entity.shuriken.FlintShurikenEntity;
 import slimeknights.tconstruct.gadgets.entity.shuriken.QuartzShurikenEntity;
 import slimeknights.tconstruct.gadgets.item.EFLNItem;
+import slimeknights.tconstruct.gadgets.item.FancyArmorStandItem;
 import slimeknights.tconstruct.gadgets.item.FancyItemFrameItem;
 import slimeknights.tconstruct.gadgets.item.GlowBallItem;
 import slimeknights.tconstruct.gadgets.item.PiggyBackPackItem;
@@ -60,6 +65,7 @@ public final class TinkerGadgets extends TinkerModule {
    */
   public static final ItemObject<PiggyBackPackItem> piggyBackpack = ITEMS.register("piggy_backpack", () -> new PiggyBackPackItem(new Properties().stacksTo(16)));
   public static final EnumObject<FrameType,FancyItemFrameItem> itemFrame = ITEMS.registerEnum(FrameType.values(), "item_frame", (type) -> new FancyItemFrameItem(ITEM_PROPS, (world, pos, dir) -> new FancyItemFrameEntity(world, pos, dir, type)));
+  public static final EnumObject<StandType,FancyArmorStandItem> armorStand = ITEMS.registerEnum(StandType.values(), "armor_stand", type -> new FancyArmorStandItem(new Properties().stacksTo(16), type));
 
   // throwballs
   @Deprecated
@@ -103,6 +109,11 @@ public final class TinkerGadgets extends TinkerModule {
       .setTrackingRange(10)
       .setUpdateInterval(Integer.MAX_VALUE)
       .setShouldReceiveVelocityUpdates(false)
+  );
+  public static final RegistryObject<EntityType<FancyArmorStandEntity>> armorStandEntity = ENTITIES.register("armor_stand", () ->
+    EntityType.Builder.<FancyArmorStandEntity>of(FancyArmorStandEntity::new, MobCategory.MISC)
+      .sized(0.5F, 1.975F)
+      .clientTrackingRange(10)
   );
   @Deprecated
   public static final RegistryObject<EntityType<GlowballEntity>> glowBallEntity = ENTITIES.register("glow_ball", () ->
@@ -155,7 +166,13 @@ public final class TinkerGadgets extends TinkerModule {
       DispenserBlock.registerBehavior(efln, new ShootProjectileDispenserBehavior(eflnEntity.get()));
       DispenserBlock.registerBehavior(flintShuriken, new ShootProjectileDispenserBehavior(flintShurikenEntity.get()));
       DispenserBlock.registerBehavior(quartzShuriken, new ShootProjectileDispenserBehavior(quartzShurikenEntity.get()));
+      armorStand.forEach((type, item) -> DispenserBlock.registerBehavior(item, new DispenseFancyArmorStand(type)));
     });
+  }
+
+  @SubscribeEvent
+  void entityAttributes(EntityAttributeCreationEvent event) {
+    event.put(armorStandEntity.get(), FancyArmorStandEntity.createLivingAttributes().build());
   }
 
   @SubscribeEvent
@@ -168,7 +185,16 @@ public final class TinkerGadgets extends TinkerModule {
   /** Adds all relevant items to the creative tab, called by general tab */
   public static void addTabItems(ItemDisplayParameters itemDisplayParameters, Output output) {
     output.accept(punji);
-    accept(output, itemFrame);
+    output.accept(armorStand.get(StandType.BAMBOO));
+    output.accept(itemFrame.get(FrameType.CLEAR));
+    output.accept(armorStand.get(StandType.CLEAR));
+    output.accept(armorStand.get(StandType.BONE));
+    output.accept(armorStand.get(StandType.NECROTIC_BONE));
+    output.accept(itemFrame.get(FrameType.GOLD));
+    output.accept(itemFrame.get(FrameType.REVERSED_GOLD));
+    output.accept(itemFrame.get(FrameType.DIAMOND));
+    output.accept(itemFrame.get(FrameType.MANYULLYN));
+    output.accept(itemFrame.get(FrameType.NETHERITE));
     output.accept(piggyBackpack);
     accept(output, cake);
     output.accept(magmaCake);

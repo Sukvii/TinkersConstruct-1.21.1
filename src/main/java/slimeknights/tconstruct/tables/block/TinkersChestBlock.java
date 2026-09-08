@@ -8,7 +8,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType.BlockEntitySupplier;
 import net.minecraft.world.level.block.state.BlockState;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.tconstruct.tables.block.entity.chest.TinkersChestBlockEntity;
 
 public class TinkersChestBlock extends ChestBlock {
@@ -19,11 +18,9 @@ public class TinkersChestBlock extends ChestBlock {
   @Override
   public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state) {
     ItemStack stack = new ItemStack(this);
-    BlockEntityHelper.get(TinkersChestBlockEntity.class, world, pos).ifPresent(te -> {
-      if (te.hasColor()) {
-        stack.set(DataComponents.DYED_COLOR, new DyedItemColor(te.getColor(), true));
-      }
-    });
+    if (world.getBlockEntity(pos) instanceof TinkersChestBlockEntity te && te.hasColor()) {
+      stack.set(DataComponents.DYED_COLOR, new DyedItemColor(te.getColor(), true));
+    }
     return stack;
   }
 }

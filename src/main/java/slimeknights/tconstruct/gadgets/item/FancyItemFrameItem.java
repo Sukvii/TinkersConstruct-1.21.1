@@ -1,8 +1,10 @@
 package slimeknights.tconstruct.gadgets.item;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -10,10 +12,12 @@ import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class FancyItemFrameItem extends Item {
 
@@ -22,6 +26,11 @@ public class FancyItemFrameItem extends Item {
   public FancyItemFrameItem(Properties props, TriFunction<? extends HangingEntity, Level, BlockPos, Direction> entityProvider) {
     super(props);
     this.entityProvider = entityProvider;
+  }
+
+  @Override
+  public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    tooltip.add(Component.translatable(getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY));
   }
 
   /**

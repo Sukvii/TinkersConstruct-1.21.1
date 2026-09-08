@@ -262,6 +262,12 @@ public class ToolAttackContext {
       return this;
     }
 
+    /** Changes the base damage for a special attack source. */
+    public Builder addBaseDamage(float damage) {
+      baseDamage += damage;
+      return this;
+    }
+
     /** Sets the cooldown */
     public Builder cooldown(float cooldown) {
       if (cooldown > 1 || cooldown < 0) {
