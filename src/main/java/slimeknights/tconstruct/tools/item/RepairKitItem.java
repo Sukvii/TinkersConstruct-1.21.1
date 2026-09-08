@@ -77,7 +77,7 @@ public class RepairKitItem extends MaterialItem implements IRepairKitItem {
         ToolStack tool = ToolStack.from(toolItem);
         MaterialId material = getMaterial(stack).getId();
         // tool must be damaged for us to repair it, and we must have a material
-        if (tool.getDamage() > 0 && material != IMaterial.UNKNOWN_ID) {
+        if (tool.getDamage() > 0 && material != MaterialId.UNKNOWN) {
           // ask the tool how much this material is worth
           float amount = MaterialRepairToolHook.repairAmount(tool, material);
           if (amount > 0) {

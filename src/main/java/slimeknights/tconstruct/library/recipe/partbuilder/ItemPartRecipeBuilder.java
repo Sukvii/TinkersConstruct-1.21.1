@@ -19,7 +19,7 @@ public class ItemPartRecipeBuilder extends AbstractRecipeBuilder<ItemPartRecipeB
   private final ItemOutput result;
   @Setter @Accessors(chain = true)
   private Ingredient patternItem = IPartBuilderRecipe.DEFAULT_PATTERNS;
-  private MaterialId materialId = IMaterial.UNKNOWN_ID;
+  private MaterialId materialId = MaterialId.UNKNOWN;
   private int cost = 0;
 
   /** Sets the material Id and cost */

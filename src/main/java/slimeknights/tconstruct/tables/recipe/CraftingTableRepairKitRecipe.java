@@ -105,7 +105,7 @@ public class CraftingTableRepairKitRecipe extends CustomRecipe implements IRecip
     }
     // if the material is invalid
     MaterialId inputMaterial = IMaterialItem.getMaterialFromStack(inputs.repairKit).getId();
-    if (inputMaterial.equals(IMaterial.UNKNOWN_ID)) {
+    if (inputMaterial.equals(MaterialId.UNKNOWN)) {
       return false;
     }
     // tool must be damaged and be repairable with this material

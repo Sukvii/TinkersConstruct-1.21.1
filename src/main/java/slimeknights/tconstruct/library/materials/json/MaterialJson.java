@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.materials.json;
 
 import lombok.Data;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.tconstruct.library.json.JsonRedirect;
 
@@ -19,6 +20,8 @@ public class MaterialJson {
   private final Integer tier;
   @Nullable
   private final Integer sortOrder;
+  @Nullable
+  private final Rarity rarity;
   @Nullable
   private final Boolean hidden;
   @Nullable

@@ -41,6 +41,8 @@ import slimeknights.tconstruct.test.BaseMcTest;
 import slimeknights.tconstruct.test.TestHelper;
 import slimeknights.tconstruct.test.TestHelper.ToolDefinitionStats;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -149,6 +151,12 @@ class UpdateToolDefinitionDataPacketTest extends BaseMcTest {
 
     // slots
     VolatileDataToolHook volatileHook = parsed.getHook(ToolHooks.VOLATILE_DATA);
+    assertThat(volatileHook).isInstanceOf(VolatileDataToolHook.AllMerger.class);
+    Collection<VolatileDataToolHook> collection = ((VolatileDataToolHook.AllMerger) volatileHook).modules();
+    assertThat(collection).hasSize(2);
+    Iterator<VolatileDataToolHook> iterator = collection.iterator();
+    assertThat(iterator.next()).isInstanceOf(PartStatsModule.class);
+    volatileHook = iterator.next();
     assertThat(volatileHook).isInstanceOf(ToolSlotsModule.class);
     Map<SlotType,Integer> slots = ((ToolSlotsModule) volatileHook).slots();
     assertThat(slots).hasSize(2);

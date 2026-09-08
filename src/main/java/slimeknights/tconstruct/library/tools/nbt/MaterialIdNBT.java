@@ -46,7 +46,7 @@ public class MaterialIdNBT {
    */
   public MaterialVariantId getMaterial(int index) {
     if (index >= materials.size() || index < 0) {
-      return IMaterial.UNKNOWN_ID;
+      return MaterialId.UNKNOWN;
     }
     return materials.get(index);
   }

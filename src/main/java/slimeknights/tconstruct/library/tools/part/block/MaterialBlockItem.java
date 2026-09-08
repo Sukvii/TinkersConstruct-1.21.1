@@ -1,13 +1,15 @@
 package slimeknights.tconstruct.library.tools.part.block;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.tools.part.IMaterialItem;
 import slimeknights.tconstruct.library.tools.part.MaterialItem;
@@ -32,6 +34,15 @@ public class MaterialBlockItem extends BlockItem implements IMaterialItem {
     return MaterialItem.getName(this, stack);
   }
 
+  public Rarity getRarity(ItemStack stack) {
+    return MaterialRegistry.getMaterial(getMaterial(stack).getId()).getRarity();
+  }
+
+  @Override
+  public boolean isFoil(ItemStack stack) {
+    return MaterialRegistry.getInstance().isInTag(getMaterial(stack).getId(), TinkerTags.Materials.SHINY);
+  }
+
   @Override
   public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
     MaterialItem.appendHoverText(this, stack, tooltip, flag);
@@ -46,9 +57,8 @@ public class MaterialBlockItem extends BlockItem implements IMaterialItem {
 
   @Override
   public void verifyComponentsAfterLoad(ItemStack stack) {
-    CompoundTag tag = ItemStackUtil.getTag(stack);
-    if (tag != null) {
-      MaterialItem.verifyTag(tag);
+    if (ItemStackUtil.getTag(stack) != null) {
+      ItemStackUtil.mutateTag(stack, MaterialItem::verifyTag);
     }
   }
 }

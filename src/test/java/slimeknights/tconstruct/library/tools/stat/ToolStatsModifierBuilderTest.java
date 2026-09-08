@@ -4,6 +4,8 @@ import net.minecraft.world.item.Tiers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.library.tools.nbt.StatsNBT;
+import slimeknights.tconstruct.library.tools.stat.impl.IntegerToolStat;
+import slimeknights.tconstruct.library.tools.stat.impl.PercentToolStat;
 import slimeknights.tconstruct.test.BaseMcTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -136,5 +138,13 @@ class ToolStatsModifierBuilderTest extends BaseMcTest {
     ToolStats.ATTACK_DAMAGE.add(builder, 4096);
     StatsNBT nbt = builder.build();
     assertThat(nbt.get(ToolStats.ATTACK_DAMAGE)).isEqualTo(ToolStats.ATTACK_DAMAGE.getMaxValue());
+  }
+
+  @Test
+  void integerAndPercentStats_formatDisplayValues() {
+    assertThat(ToolStats.DURABILITY.formatValue(1.9f).getString()).endsWith("1");
+    assertThat(ToolStats.WATER_INERTIA.formatValue(0.6f).getString()).endsWith("60%");
+    assertThat(ToolStats.DURABILITY).isInstanceOf(IntegerToolStat.class);
+    assertThat(ToolStats.WATER_INERTIA).isInstanceOf(PercentToolStat.class);
   }
 }

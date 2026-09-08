@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Rarity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.TConstruct;
@@ -41,6 +42,7 @@ class MaterialManagerTest extends BaseMcTest {
     assertThat(testMaterial.isCraftable()).isTrue();
     assertThat(testMaterial.getTier()).isEqualTo(15);
     assertThat(testMaterial.getSortOrder()).isEqualTo(4);
+    assertThat(testMaterial.getRarity()).isEqualTo(Rarity.EPIC);
     assertThat(testMaterial.isHidden()).isTrue();
   }
 
@@ -57,7 +59,25 @@ class MaterialManagerTest extends BaseMcTest {
     assertThat(testMaterial.isCraftable()).isFalse();
     assertThat(testMaterial.getTier()).isEqualTo(0);
     assertThat(testMaterial.getSortOrder()).isEqualTo(100);
+    assertThat(testMaterial.getRarity()).isEqualTo(Rarity.COMMON);
     assertThat(testMaterial.isHidden()).isFalse();
+  }
+
+  @Test
+  void loadExplicitRarity_overridesTierDefault() {
+    Map<ResourceLocation, JsonElement> splashList = fileLoader.loadFilesAsSplashlist("explicit_rarity");
+
+    materialManager.apply(splashList, mock(ResourceManager.class), mock(ProfilerFiller.class));
+
+    Collection<IMaterial> allMaterials = materialManager.getAllMaterials();
+    assertThat(allMaterials).hasSize(1);
+    assertThat(allMaterials.iterator().next().getRarity()).isEqualTo(Rarity.RARE);
+  }
+
+  @Test
+  void unknownMaterial_usesCommonRarity() {
+    assertThat(MaterialId.UNKNOWN).isEqualTo(IMaterial.UNKNOWN.getIdentifier());
+    assertThat(IMaterial.UNKNOWN.getRarity()).isEqualTo(Rarity.COMMON);
   }
 
   @Test

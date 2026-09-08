@@ -18,6 +18,7 @@ import slimeknights.tconstruct.library.tools.nbt.IToolContext;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolDataNBT;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /** Module for setting a tool's display rarity. */
@@ -45,7 +46,7 @@ public record RarityModule(Rarity rarity) implements VolatileDataModifierHook, M
   public static Rarity getRarity(ItemStack stack) {
     int rarity = ModifierUtil.getVolatileInt(stack, RARITY);
     Rarity[] values = Rarity.values();
-    return values[Mth.clamp(rarity, 0, values.length)];
+    return values[Mth.clamp(rarity, 0, values.length - 1)];
   }
 
   /** Retains the highest rarity written to volatile tool data. */
@@ -54,5 +55,13 @@ public record RarityModule(Rarity rarity) implements VolatileDataModifierHook, M
     if (rarity.ordinal() > current) {
       volatileData.putInt(RARITY, rarity.ordinal());
     }
+  }
+
+  /** Gets the larger rarity, treating a missing previous value as common. */
+  public static Rarity max(@Nullable Rarity prev, Rarity rarity) {
+    if (prev == null || rarity.ordinal() > prev.ordinal()) {
+      return rarity;
+    }
+    return prev;
   }
 }
