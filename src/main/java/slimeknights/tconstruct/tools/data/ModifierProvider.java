@@ -104,7 +104,9 @@ import slimeknights.tconstruct.library.modifiers.modules.behavior.AttributeModul
 import slimeknights.tconstruct.library.modifiers.modules.behavior.AttributeModule.TooltipStyle;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.BlockItemProviderModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.ConditionalStatModule;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.EdibleModule;
+import slimeknights.tconstruct.library.modifiers.modules.interaction.edible.EdibleConsumeDurabilityModule;
+import slimeknights.tconstruct.library.modifiers.modules.interaction.edible.EdibleModule;
+import slimeknights.tconstruct.library.modifiers.modules.interaction.edible.EdibleRepresentativeItemModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.InfinityModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.MaterialRepairModule;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.ReduceToolDamageModule;
@@ -145,6 +147,7 @@ import slimeknights.tconstruct.library.modifiers.modules.display.MaterialVariant
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantNameModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ShowInteractionSourceModule;
+import slimeknights.tconstruct.library.modifiers.modules.display.StatTooltipModule;
 import slimeknights.tconstruct.library.modifiers.modules.mining.ConditionalMiningSpeedModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorLevelModule;
 import slimeknights.tconstruct.library.modifiers.modules.util.BooleanPredicate;
@@ -932,6 +935,12 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
     // internal
     buildModifier(ModifierIds.overslimeFriend).tooltipDisplay(TooltipDisplay.NEVER);
     buildModifier(ModifierIds.snowBoots).addModule(new VolatileFlagModule(ModifiableArmorItem.SNOW_BOOTS)).levelDisplay(ModifierLevelDisplay.NO_LEVELS);
+    buildModifier(TinkerModifiers.edible).priority(40).tooltipDisplay(TooltipDisplay.NEVER)
+      .addModule(EdibleModule.INSTANCE)
+      .addModule(new ModifierTraitModule(ModifierIds.edibleTooltip, 1, true));
+    buildModifier(ModifierIds.edibleTooltip).tooltipDisplay(TooltipDisplay.NEVER)
+      .addModule(new StatTooltipModule<>(EdibleModule.HUNGER))
+      .addModule(new StatTooltipModule<>(EdibleModule.SATURATION));
 
     // traits - tier 1
     buildModifier(ModifierIds.cultivated).addModule(RepairModule.builder().eachLevel(0.5f));
@@ -1236,10 +1245,15 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
       .addModule(StatBoostModule.multiplyBase(OverslimeModule.OVERSLIME_STAT).eachLevel(0.5f));
     buildModifier(ModifierIds.crumbling).addModule(ConditionalMiningSpeedModule.builder().blocks(BlockPredicate.REQUIRES_TOOL.inverted()).allowIneffective().eachLevel(1f));
     buildModifier(ModifierIds.enhanced).priority(60).addModule(UPGRADE);
+    buildModifier(TinkerModifiers.edible).tooltipDisplay(TooltipDisplay.NEVER)
+      .addModule(EdibleModule.INSTANCE);
     buildModifier(ModifierIds.tasty).priority(40)
-      .addModule(new EdibleModule(TinkerCommons.bacon, LevelingInt.flat(16), new LevelingInt(5, 5), LevelingValue.eachLevel(0.15f)))
+      .addModule(EdibleModule.EDIBLE_TRAIT)
+      .addModule(new EdibleRepresentativeItemModule(TinkerCommons.bacon))
+      .addModule(new EdibleConsumeDurabilityModule(new LevelingInt(5, 5)))
       .addModule(StatBoostModule.add(EdibleModule.HUNGER).eachLevel(1))
-      .addModule(StatBoostModule.add(EdibleModule.SATURATION).flat(0.6f));
+      .addModule(StatBoostModule.add(EdibleModule.SATURATION).flat(0.6f))
+      .addModule(StatBoostModule.add(EdibleModule.COUNTER_CHANCE).eachLevel(0.15f));
     buildModifier(ModifierIds.crystalbound)
       .addModule(RestrictAngleModule.INSTANCE)
       .addModule(StatBoostModule.add(ToolStats.VELOCITY).toolTag(TinkerTags.Items.RANGED).eachLevel(0.1f))

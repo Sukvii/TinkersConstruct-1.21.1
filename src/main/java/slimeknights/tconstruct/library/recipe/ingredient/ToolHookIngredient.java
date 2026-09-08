@@ -77,6 +77,7 @@ public class ToolHookIngredient implements ICustomIngredient {
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public Stream<ItemStack> getItems() {
     Stream<ItemStack> matches = StreamSupport.stream(BuiltInRegistries.ITEM.getTagOrEmpty(tag).spliterator(), false)
       .map(Holder::value)

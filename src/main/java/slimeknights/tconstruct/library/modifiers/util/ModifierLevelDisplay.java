@@ -7,6 +7,7 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.data.loadable.record.SingletonLoader;
 import slimeknights.mantle.data.registry.DefaultingLoaderRegistry;
 import slimeknights.mantle.data.registry.GenericLoaderRegistry.IHaveLoader;
+import slimeknights.tconstruct.library.json.LevelingInt;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.utils.RomanNumeralHelper;
 
@@ -116,6 +117,32 @@ public interface ModifierLevelDisplay extends IHaveLoader {
     @Override
     public Component nameForLevel(Modifier modifier, int level) {
       return apply.nameForLevel(modifier, Math.min(level, cap));
+    }
+  }
+
+  /** Displays the modifier name using another level mapping. */
+  record MapLevel(LevelingInt level, ModifierLevelDisplay apply) implements ModifierLevelDisplay {
+    public static final RecordLoadable<MapLevel> LOADER = RecordLoadable.create(
+      LevelingInt.LOADABLE.requiredField("level", MapLevel::level),
+      ModifierLevelDisplay.LOADER.defaultField("apply", MapLevel::apply),
+      MapLevel::new);
+
+    public MapLevel(LevelingInt level) {
+      this(level, DEFAULT);
+    }
+
+    public MapLevel(int flat, int eachLevel) {
+      this(new LevelingInt(flat, eachLevel));
+    }
+
+    @Override
+    public RecordLoadable<MapLevel> getLoader() {
+      return LOADER;
+    }
+
+    @Override
+    public Component nameForLevel(Modifier modifier, int level) {
+      return apply.nameForLevel(modifier, this.level.computeForLevel(level));
     }
   }
 }

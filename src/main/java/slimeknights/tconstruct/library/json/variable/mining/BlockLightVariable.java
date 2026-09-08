@@ -27,6 +27,7 @@ public record BlockLightVariable(@Nullable LightLayer lightLayer, float fallback
     BlockLightVariable::new);
 
   @Override
+  @Deprecated
   public float getValue(IToolStackView tool, @Nullable BreakSpeed event, @Nullable Player player, @Nullable Direction sideHit) {
     if (player != null) {
       // use block position if possible player position otherwise

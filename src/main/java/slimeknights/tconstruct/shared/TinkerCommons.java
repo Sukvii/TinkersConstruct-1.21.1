@@ -39,6 +39,7 @@ import slimeknights.mantle.registration.RegistryObject;
 import slimeknights.mantle.data.predicate.block.BlockPredicate;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.mantle.data.predicate.entity.LivingEntityPredicate;
+import slimeknights.mantle.data.predicate.fluid.FluidPredicate;
 import slimeknights.mantle.data.predicate.item.ItemPredicate;
 import slimeknights.mantle.item.EdibleItem;
 import slimeknights.mantle.registration.object.EnumObject;
@@ -67,6 +68,7 @@ import slimeknights.tconstruct.library.json.predicate.HarvestTierPredicate;
 import slimeknights.tconstruct.library.json.predicate.HasMobEffectPredicate;
 import slimeknights.tconstruct.library.json.predicate.TinkerPredicate;
 import slimeknights.tconstruct.library.recipe.ingredient.BlockTagIngredient;
+import slimeknights.tconstruct.library.recipe.ingredient.InstrumentIngredient;
 import slimeknights.tconstruct.library.recipe.ingredient.NoContainerIngredient;
 import slimeknights.tconstruct.library.utils.SlimeBounceHandler;
 import slimeknights.tconstruct.shared.block.BetterPaneBlock;
@@ -168,6 +170,8 @@ public final class TinkerCommons extends TinkerModule {
     INGREDIENT_TYPES.register("no_container", () -> NoContainerIngredient.TYPE);
   public static final RegistryObject<IngredientType<BlockTagIngredient>> blockTagIngredient =
     INGREDIENT_TYPES.register("block_tag", () -> BlockTagIngredient.TYPE);
+  public static final RegistryObject<IngredientType<InstrumentIngredient>> instrumentIngredient =
+    INGREDIENT_TYPES.register("instrument", () -> InstrumentIngredient.TYPE);
 
   /* Loot conditions */
   public static final RegistryObject<LootItemConditionType> lootConfig = LOOT_CONDITIONS.register(ConfigEnabledCondition.ID.getPath(), () -> new LootItemConditionType(ConfigEnabledCondition.CODEC));
@@ -230,6 +234,8 @@ public final class TinkerCommons extends TinkerModule {
       BlockPredicate.LOADER.register(getResource("can_melt"), TinkerPredicate.CAN_MELT_BLOCK.getLoader());
       BlockPredicate.LOADER.register(getResource("harvest_tier"), HarvestTierPredicate.LOADER);
       BlockPredicate.LOADER.register(getResource("variable_range"), BlockVariableRangePredicate.LOADER);
+      // fluid
+      FluidPredicate.LOADER.register(getResource("fuel"), TinkerPredicate.FUEL.getLoader());
     }
   }
 

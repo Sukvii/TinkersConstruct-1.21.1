@@ -44,6 +44,7 @@ public record VolatileIntModule(ResourceLocation flag, LevelingInt value, Modifi
   }
 
   @Override
+  @Deprecated
   public void onProjectileLaunch(IToolStackView tool, ModifierEntry modifier, LivingEntity shooter, Projectile projectile, @Nullable AbstractArrow arrow, ModDataNBT persistentData, boolean primary) {
     if (condition.matches(tool, modifier)) {
       persistentData.putInt(flag, persistentData.getInt(flag) + value.compute(modifier.getEffectiveLevel()));

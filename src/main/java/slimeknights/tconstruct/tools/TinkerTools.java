@@ -46,6 +46,7 @@ import slimeknights.tconstruct.library.json.predicate.tool.HasToolHookPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.PersistentDataPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.StatInRangePredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.StatInSetPredicate;
+import slimeknights.tconstruct.library.json.predicate.tool.ToolActionPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolContextPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolStackItemPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolStackPredicate;
@@ -57,7 +58,7 @@ import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
-import slimeknights.tconstruct.library.modifiers.modules.behavior.EdibleModule;
+import slimeknights.tconstruct.library.modifiers.modules.interaction.edible.EdibleModule;
 import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModule;
 import slimeknights.tconstruct.library.recipe.ingredient.ToolHookIngredient;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
@@ -100,6 +101,7 @@ import slimeknights.tconstruct.library.tools.definition.module.material.Material
 import slimeknights.tconstruct.library.tools.definition.module.material.MaterialTraitsModule;
 import slimeknights.tconstruct.library.tools.definition.module.material.PartStatsModule;
 import slimeknights.tconstruct.library.tools.definition.module.material.PartsModule;
+import slimeknights.tconstruct.library.tools.definition.module.material.RemappingMaterialsModule;
 import slimeknights.tconstruct.library.tools.definition.module.material.StatlessPartRepairModule;
 import slimeknights.tconstruct.library.tools.definition.module.material.ToolMaterialHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveModule;
@@ -193,6 +195,13 @@ public final class TinkerTools extends TinkerModule {
   /*
    * Items
    */
+  /**
+   * Independent properties for armor. Do not share the unstackable properties
+   * used by tools: {@link net.minecraft.world.item.TieredItem} mutates those
+   * properties to add a durability component during construction.
+   */
+  private static final Item.Properties ARMOR_PROPS = new Item.Properties().durability(-1);
+
   public static final ItemObject<ModifiableItem> pickaxe = ITEMS.register("pickaxe", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.PICKAXE));
   public static final ItemObject<ModifiableItem> sledgeHammer = ITEMS.register("sledge_hammer", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.SLEDGE_HAMMER));
   public static final ItemObject<ModifiableItem> veinHammer = ITEMS.register("vein_hammer", () -> new ModifiableItem(UNSTACKABLE_PROPS, ToolDefinitions.VEIN_HAMMER));
@@ -243,15 +252,15 @@ public final class TinkerTools extends TinkerModule {
   }
 
   // armor
-  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, UNSTACKABLE_PROPS));
-  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, UNSTACKABLE_PROPS));
+  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, ARMOR_PROPS));
+  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, ARMOR_PROPS));
   public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> slimesuit = new EnumObject.Builder<ArmorItem.Type,ModifiableArmorItem>(ArmorItem.Type.class)
-    .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, SlimeskullItem.MODEL_LOCATION, UNSTACKABLE_PROPS)))
+    .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, SlimeskullItem.MODEL_LOCATION, ARMOR_PROPS)))
     // TODO 1.21: rename to slime chestplate as we no longer need the migration
-    .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("slimy_chestplate", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, UNSTACKABLE_PROPS)))
-    .putAll(ITEMS.registerEnum("slime", new ArmorItem.Type[] {ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}, type -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, type, UNSTACKABLE_PROPS)))
+    .put(ArmorItem.Type.CHESTPLATE, ITEMS.register("slimy_chestplate", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, ARMOR_PROPS)))
+    .putAll(ITEMS.registerEnum("slime", new ArmorItem.Type[] {ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}, type -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, type, ARMOR_PROPS)))
     .build();
-  public static final ItemObject<MultilayerArmorItem> slimeWings = ITEMS.register("slime_wings", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, UNSTACKABLE_PROPS, ArmorDefinitions.SLIME_WINGS, TinkerTools.slimeWings.getId()));
+  public static final ItemObject<MultilayerArmorItem> slimeWings = ITEMS.register("slime_wings", () -> new MultilayerArmorItem(ArmorDefinitions.SLIMESUIT, ArmorItem.Type.CHESTPLATE, ARMOR_PROPS, ArmorDefinitions.SLIME_WINGS, TinkerTools.slimeWings.getId()));
 
   // shields
   public static final ItemObject<ModifiableItem> travelersShield = ITEMS.register("travelers_shield", () -> new ModifiableItem(UNSTACKABLE_PROPS, ArmorDefinitions.TRAVELERS_SHIELD));
@@ -325,8 +334,10 @@ public final class TinkerTools extends TinkerModule {
       ToolStats.register(OverslimeModule.OVERSLIME_STAT);
       ToolStats.register(ToolTankHelper.CAPACITY_STAT);
       ToolStats.register(ToolEnergyCapability.MAX_STAT);
-      ToolStats.register(EdibleModule.HUNGER);
-      ToolStats.register(EdibleModule.SATURATION);
+      ToolStats.registerConditional(EdibleModule.HUNGER);
+      ToolStats.registerConditional(EdibleModule.SATURATION);
+      ToolStats.register(EdibleModule.EAT_DURATION);
+      ToolStats.registerConditional(EdibleModule.COUNTER_CHANCE);
 
       ToolModule.LOADER.register(getResource("empty"), ToolModule.EMPTY.getLoader());
       // tool definition components
@@ -349,6 +360,7 @@ public final class TinkerTools extends TinkerModule {
       ToolModule.LOADER.register(getResource("tool_parts"), PartsModule.LOADER);
       ToolModule.LOADER.register(getResource("material_repair"), MaterialRepairModule.LOADER);
       ToolModule.LOADER.register(getResource("default_materials"), DefaultMaterialsModule.LOADER);
+      ToolModule.LOADER.register(getResource("remapping_materials"), RemappingMaterialsModule.LOADER);
       ToolModule.LOADER.register(getResource("statless_part_repair"), StatlessPartRepairModule.LOADER);
       // aoe
       AreaOfEffectIterator.LOADER.register(getResource("empty"), AreaOfEffectIterator.EMPTY.getLoader());
@@ -387,6 +399,7 @@ public final class TinkerTools extends TinkerModule {
       ToolStackPredicate.LOADER.register(getResource("stat_in_set"), StatInSetPredicate.LOADER);
       ToolStackPredicate.LOADER.register(getResource("has_volatile_key"), VolatileDataPredicate.LOADER);
       ToolStackPredicate.LOADER.register(getResource("variable_range"), ToolVariableRangePredicate.LOADER);
+      ToolStackPredicate.LOADER.register(getResource("tool_action"), ToolActionPredicate.LOADER);
     }
   }
 

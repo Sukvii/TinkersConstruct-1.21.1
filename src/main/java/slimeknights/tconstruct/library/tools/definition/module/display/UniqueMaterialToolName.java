@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.library.client.materials.MaterialTooltipCache;
-import slimeknights.tconstruct.library.materials.definition.IMaterial;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.module.HookProvider;
@@ -48,6 +47,7 @@ public record UniqueMaterialToolName(int index) implements ToolNameHook, ToolMod
   }
 
   @Override
+  @Deprecated
   public Component getDisplayName(ToolDefinition definition, ItemStack stack, @Nullable IToolStackView tool) {
     String key = stack.getItem().getDescriptionId();
     MaterialVariantId material = ToolNameHook.getTool(stack, tool).getMaterials().get(index).getVariant();

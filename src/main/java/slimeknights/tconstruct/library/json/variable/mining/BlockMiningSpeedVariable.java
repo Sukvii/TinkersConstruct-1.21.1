@@ -23,6 +23,7 @@ public record BlockMiningSpeedVariable(BlockVariable block, float fallback) impl
     BlockMiningSpeedVariable::new);
 
   @Override
+  @Deprecated
   public float getValue(IToolStackView tool, @Nullable BreakSpeed event, @Nullable Player player, @Nullable Direction sideHit) {
     if (event != null) {
       return block.getValue(event.getState());

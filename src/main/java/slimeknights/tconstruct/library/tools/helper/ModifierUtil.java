@@ -38,6 +38,7 @@ import slimeknights.tconstruct.tools.TinkerTools;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -302,6 +303,9 @@ public final class ModifierUtil {
   public interface FoodConsumer {
     /** Called when food is eaten to notify compat that food was eaten */
     void onConsume(Player player, ItemStack stack, int hunger, float saturation);
+
+    /** Called when a list of representative foods is eaten at once. */
+    default void onConsume(Player player, List<ItemStack> stacks, int hunger, float saturation) {}
   }
 
   /** Instance of the current food consumer, will be either no-op or an implementation calling the Diet API, never null. */

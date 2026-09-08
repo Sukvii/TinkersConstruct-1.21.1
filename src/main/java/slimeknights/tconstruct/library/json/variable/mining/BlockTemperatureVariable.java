@@ -19,6 +19,7 @@ public record BlockTemperatureVariable(float fallback) implements MiningSpeedVar
     BlockTemperatureVariable::new);
 
   @Override
+  @Deprecated
   public float getValue(IToolStackView tool, @Nullable BreakSpeed event, @Nullable Player player, @Nullable Direction sideHit) {
     if (player != null) {
       // use block position if possible player position otherwise
