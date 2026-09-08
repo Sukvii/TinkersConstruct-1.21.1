@@ -33,6 +33,7 @@ import slimeknights.tconstruct.library.modifiers.hook.interaction.UsingToolModif
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
+import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
@@ -88,7 +89,7 @@ public record SlurpingModule(LevelingValue strength, LevelingInt duration) imple
       if (!entity.level().isClientSide) {
         Player player = asPlayer(entity);
         int consumed = slurp(fluid, modifier, entity, player, FluidAction.EXECUTE);
-        if (consumed > 0 && (player == null || !player.isCreative())) {
+        if (consumed > 0 && ModifierUtil.consumesResources(player)) {
           fluid.shrink(consumed);
           TANK_HELPER.setFluid(tool, fluid);
         }

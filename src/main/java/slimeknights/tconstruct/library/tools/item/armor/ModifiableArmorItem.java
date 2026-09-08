@@ -3,7 +3,6 @@ package slimeknights.tconstruct.library.tools.item.armor;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -17,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -157,9 +157,8 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   @Override
   public void verifyComponentsAfterLoad(ItemStack stack) {
-    CompoundTag nbt = ItemStackUtil.getTag(stack);
-    if (nbt != null) {
-      ToolStack.verifyTag(this, nbt, getToolDefinition());
+    if (ItemStackUtil.getTag(stack) != null) {
+      ItemStackUtil.mutateTag(stack, nbt -> ToolStack.verifyTag(this, nbt, getToolDefinition()));
     }
   }
 
@@ -195,7 +194,7 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   }
 
 
-  /* Indestructible items */
+  /* Item entity */
 
   @Override
   public boolean hasCustomEntity(ItemStack stack) {
@@ -206,6 +205,11 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   @Override
   public Entity createEntity(Level level, Entity original, ItemStack stack) {
     return IndestructibleItemEntity.createFrom(level, original, stack);
+  }
+
+  @Override
+  public void onDestroyed(ItemEntity entity) {
+    ToolInventoryCapability.onDestroyed(entity);
   }
 
 
@@ -219,6 +223,11 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   public boolean canBeDepleted() {
     return true;
+  }
+
+  @Override
+  public boolean canBeDepleted(ItemStack stack) {
+    return canBeDepleted();
   }
 
   @Override
@@ -236,9 +245,10 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
 
   @Override
   public void setDamage(ItemStack stack, int damage) {
-    if (stack.isDamageableItem()) {
-      ToolStack.from(stack).setDamage(damage);
-      stack.set(DataComponents.DAMAGE, damage);
+    if (canBeDepleted()) {
+      ToolStack tool = ToolStack.from(stack);
+      tool.setDamage(damage);
+      stack.set(DataComponents.DAMAGE, tool.getDamage());
     }
   }
 

@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -51,6 +51,7 @@ import slimeknights.tconstruct.library.modifiers.hook.interaction.SlotStackModif
 import slimeknights.tconstruct.library.modifiers.hook.interaction.UsingToolModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
+import slimeknights.tconstruct.library.tools.capability.inventory.ToolInventoryCapability;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.display.ToolNameHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveToolHook;
@@ -143,9 +144,8 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
 
   @Override
   public void verifyComponentsAfterLoad(ItemStack stack) {
-    CompoundTag nbt = ItemStackUtil.getTag(stack);
-    if (nbt != null) {
-      ToolStack.verifyTag(this, nbt, getToolDefinition());
+    if (ItemStackUtil.getTag(stack) != null) {
+      ItemStackUtil.mutateTag(stack, nbt -> ToolStack.verifyTag(this, nbt, getToolDefinition()));
     }
   }
 
@@ -169,7 +169,7 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
 
-  /* Indestructible items */
+  /* Item entity */
 
   @Override
   public boolean hasCustomEntity(ItemStack stack) {
@@ -180,6 +180,11 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   @Override
   public Entity createEntity(Level world, Entity original, ItemStack stack) {
     return IndestructibleItemEntity.createFrom(world, original, stack);
+  }
+
+  @Override
+  public void onDestroyed(ItemEntity entity) {
+    ToolInventoryCapability.onDestroyed(entity);
   }
 
 
@@ -193,6 +198,11 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
 
   public boolean canBeDepleted() {
     return true;
+  }
+
+  @Override
+  public boolean canBeDepleted(ItemStack stack) {
+    return canBeDepleted();
   }
 
   @Override
@@ -211,8 +221,9 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   @Override
   public void setDamage(ItemStack stack, int damage) {
     if (canBeDepleted()) {
-      ToolStack.from(stack).setDamage(damage);
-      stack.set(DataComponents.DAMAGE, damage);
+      ToolStack tool = ToolStack.from(stack);
+      tool.setDamage(damage);
+      stack.set(DataComponents.DAMAGE, tool.getDamage());
     }
   }
 

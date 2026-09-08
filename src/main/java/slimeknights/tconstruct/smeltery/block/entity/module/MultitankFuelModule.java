@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 /** Fuel module that supports multiple tanks, selecting just one for the fuel result */
@@ -205,30 +204,23 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
 
   @Override
   public FuelInfo getFuelInfo() {
-    // if there is no position, means we have not yet consumed fuel. Just fetch the first tank
-    // TODO: should we try to find a valid fuel tank? might be a bit confusing if they have multiple tanks in the structure before melting
-    // however, a valid tank is a lot more effort to find
-
-    // Y of big negative is how the UI syncs null
-    BlockPos mainTank = lastPos;
-    if (mainTank.getY() == NULL_POS.getY()) {
-      // if no first, return no fuel info
-      List<BlockPos> positions = tankSupplier.get();
-      if (positions.isEmpty()) {
-        return FuelInfo.EMPTY;
-      }
-      mainTank = positions.get(0);
-      assert mainTank != null;
-    }
-
-    // fetch primary fuel handler
-    if (fluidHandler == null) {
-      IFluidHandler fluidCap = getTankHandlers().get(mainTank);
+    // fetch the primary fuel handler, the tank we last pulled fuel from
+    // Y of big negative is how the UI syncs null, meaning we have not yet consumed fuel
+    if (fluidHandler == null && lastPos.getY() != NULL_POS.getY()) {
+      IFluidHandler fluidCap = getTankHandlers().get(lastPos);
       if (fluidCap != null) {
         fluidHandler = fluidCap;
-      } else {
-        // ensure handlers is set
-        fluidHandler = EmptyFluidHandler.INSTANCE;
+      }
+    }
+
+    // Promote the first tank containing fluid when the previous tank is empty or no fuel has been consumed yet.
+    if (fluidHandler == null || fluidHandler.getFluidInTank(0).isEmpty()) {
+      for (IFluidHandler tankCap : getTankHandlers().values()) {
+        if (!tankCap.getFluidInTank(0).isEmpty()) {
+          clearLastListener();
+          fluidHandler = tankCap;
+          break;
+        }
       }
     }
 
@@ -238,9 +230,9 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
     if (!info.isEmpty()) {
       // add display info from each handler
       FluidStack currentFuel = info.getFluid();
-      for (Entry<BlockPos,IFluidHandler> entry : getTankHandlers().entrySet()) {
-        if (!mainTank.equals(entry.getKey())) {
-          IFluidHandler handler = entry.getValue();
+      for (IFluidHandler handler : getTankHandlers().values()) {
+        // skip the main tank, the info above is already its contents
+        if (handler != fluidHandler) {
           // sum if empty (more capacity) or the same fluid (more amount and capacity)
           FluidStack fluid = handler.getFluidInTank(0);
           if (fluid.isEmpty()) {

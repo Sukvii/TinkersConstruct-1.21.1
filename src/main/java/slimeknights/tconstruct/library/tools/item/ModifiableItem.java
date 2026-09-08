@@ -8,7 +8,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,6 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -57,6 +57,7 @@ import slimeknights.tconstruct.library.modifiers.hook.interaction.SlotStackModif
 import slimeknights.tconstruct.library.modifiers.hook.interaction.UsingToolModifierHook;
 import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
+import slimeknights.tconstruct.library.tools.capability.inventory.ToolInventoryCapability;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.display.ToolNameHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveToolHook;
@@ -156,9 +157,8 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
 
   @Override
   public void verifyComponentsAfterLoad(ItemStack stack) {
-    CompoundTag nbt = ItemStackUtil.getTag(stack);
-    if (nbt != null) {
-      ToolStack.verifyTag(this, nbt, getToolDefinition());
+    if (ItemStackUtil.getTag(stack) != null) {
+      ItemStackUtil.mutateTag(stack, nbt -> ToolStack.verifyTag(this, nbt, getToolDefinition()));
     }
   }
 
@@ -182,7 +182,7 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   }
 
 
-  /* Indestructible items */
+  /* Item entity */
 
   @Override
   public boolean hasCustomEntity(ItemStack stack) {
@@ -193,6 +193,11 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   @Override
   public Entity createEntity(Level world, Entity original, ItemStack stack) {
     return IndestructibleItemEntity.createFrom(world, original, stack);
+  }
+
+  @Override
+  public void onDestroyed(ItemEntity entity) {
+    ToolInventoryCapability.onDestroyed(entity);
   }
 
 
@@ -214,6 +219,11 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   }
 
   @Override
+  public boolean canBeDepleted(ItemStack stack) {
+    return canBeDepleted();
+  }
+
+  @Override
   public int getMaxDamage(ItemStack stack) {
     return ToolDamageUtil.getFakeMaxDamage(stack);
   }
@@ -229,9 +239,10 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   @Override
   public void setDamage(ItemStack stack, int damage) {
     if (canBeDepleted()) {
-      ToolStack.from(stack).setDamage(damage);
+      ToolStack tool = ToolStack.from(stack);
+      tool.setDamage(damage);
       // Directly set component to trigger client sync (avoid setDamageValue which calls this method recursively)
-      stack.set(DataComponents.DAMAGE, damage);
+      stack.set(DataComponents.DAMAGE, tool.getDamage());
     }
   }
 
