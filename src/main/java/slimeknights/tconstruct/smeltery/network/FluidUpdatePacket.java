@@ -1,23 +1,20 @@
 package slimeknights.tconstruct.smeltery.network;
 
-import net.minecraft.client.Minecraft;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.network.PacketContext;
-import slimeknights.mantle.network.packet.IThreadsafePacket;
-import slimeknights.mantle.util.BlockEntityHelper;
+import slimeknights.mantle.network.packet.BlockEntityPacket;
 
-public class FluidUpdatePacket implements IThreadsafePacket {
+@RequiredArgsConstructor
+@ToString
+public class FluidUpdatePacket implements BlockEntityPacket<FluidUpdatePacket.IFluidPacketReceiver> {
 
   protected final BlockPos pos;
   protected final FluidStack fluid;
-
-  public FluidUpdatePacket(BlockPos pos, FluidStack fluid) {
-    this.pos = pos;
-    this.fluid = fluid;
-  }
 
   public FluidUpdatePacket(FriendlyByteBuf buffer) {
     this.pos = buffer.readBlockPos();
@@ -31,8 +28,18 @@ public class FluidUpdatePacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(PacketContext context) {
-    HandleClient.handle(this);
+  public BlockPos pos() {
+    return pos;
+  }
+
+  @Override
+  public Class<IFluidPacketReceiver> type() {
+    return IFluidPacketReceiver.class;
+  }
+
+  @Override
+  public void handleBlockEntity(PacketContext context, IFluidPacketReceiver be) {
+    be.updateFluidTo(fluid);
   }
 
   /** Interface to implement for anything wishing to receive fluid updates */
@@ -46,10 +53,4 @@ public class FluidUpdatePacket implements IThreadsafePacket {
     void updateFluidTo(FluidStack fluid);
   }
 
-  /** Safely runs client side only code in a method only called on client */
-  private static class HandleClient {
-    private static void handle(FluidUpdatePacket packet) {
-      BlockEntityHelper.get(IFluidPacketReceiver.class, Minecraft.getInstance().level, packet.pos).ifPresent(te -> te.updateFluidTo(packet.fluid));
-    }
-  }
 }

@@ -9,12 +9,14 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import slimeknights.mantle.block.RetexturedBlock;
-import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.mantle.util.RetexturedHelper;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
+import slimeknights.tconstruct.library.utils.ItemStackUtil;
 import slimeknights.tconstruct.smeltery.block.entity.controller.HeatingStructureBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.multiblock.MultiblockResult;
 import slimeknights.tconstruct.smeltery.network.StructureErrorPositionPacket;
@@ -34,44 +36,76 @@ public abstract class HeatingControllerBlock extends ControllerBlock {
   protected boolean openGui(Player player, Level world, BlockPos pos) {
     super.openGui(player, world, pos);
     // only need to update if holding the proper items
-    if (!world.isClientSide) {
-      BlockEntityHelper.get(HeatingStructureBlockEntity.class, world, pos).ifPresent(te -> {
-        MultiblockResult result = te.getStructureResult();
-        if (!result.isSuccess() && te.showDebugBlockBorder(player)) {
-          TinkerNetwork.getInstance().sendTo(new StructureErrorPositionPacket(pos, result.getPos()), player);
-        }
-      });
+    if (!world.isClientSide && world.getBlockEntity(pos) instanceof HeatingStructureBlockEntity te) {
+      MultiblockResult result = te.getStructureResult();
+      if (!result.isSuccess() && te.showDebugBlockBorder(player)) {
+        TinkerNetwork.getInstance().sendTo(new StructureErrorPositionPacket(pos, result.getPos()), player);
+      }
     }
     return true;
   }
 
   @Override
   protected boolean displayStatus(Player player, Level world, BlockPos pos, BlockState state) {
-    if (!world.isClientSide) {
-      BlockEntityHelper.get(HeatingStructureBlockEntity.class, world, pos).ifPresent(te -> {
-        MultiblockResult result = te.getStructureResult();
-        if (!result.isSuccess()) {
-          player.displayClientMessage(result.getMessage(), true);
-          TinkerNetwork.getInstance().sendTo(new StructureErrorPositionPacket(pos, result.getPos()), player);
-        }
-      });
+    if (!world.isClientSide && world.getBlockEntity(pos) instanceof HeatingStructureBlockEntity te) {
+      MultiblockResult result = te.getStructureResult();
+      if (!result.isSuccess()) {
+        player.displayClientMessage(result.getMessage(), true);
+        TinkerNetwork.getInstance().sendTo(new StructureErrorPositionPacket(pos, result.getPos()), player);
+      }
     }
     return true;
   }
 
   @Override
   public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag pFlag) {
-    RetexturedHelper.addTooltip(stack, tooltip);
+    RetexturedHelper.addTooltip(stack, tooltip, pFlag);
   }
 
   @Override
   public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
     super.setPlacedBy(world, pos, state, placer, stack);
-    RetexturedBlock.updateTextureBlock(world, pos, stack);
+    if (world.getBlockEntity(pos) instanceof HeatingStructureBlockEntity te) {
+      // update controller texture
+      if (ItemStackUtil.getTag(stack) != null) {
+        te.updateTexture(RetexturedHelper.getTextureName(stack));
+      }
+      // check structure
+      te.updateStructure();
+    }
+  }
+
+  @Deprecated
+  @Override
+  public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    if (!newState.is(this) && world.getBlockEntity(pos) instanceof HeatingStructureBlockEntity te) {
+      te.invalidateStructure();
+    }
+    super.onRemove(state, world, pos, newState, isMoving);
   }
 
   @Override
   public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state) {
     return RetexturedBlock.getPickBlock(world, pos, state);
+  }
+
+  /* No rotation if in a structure */
+
+  @Deprecated
+  @Override
+  public BlockState rotate(BlockState state, Rotation rotation) {
+    if (state.getValue(IN_STRUCTURE)) {
+      return state;
+    }
+    return super.rotate(state, rotation);
+  }
+
+  @Deprecated
+  @Override
+  public BlockState mirror(BlockState state, Mirror mirror) {
+    if (state.getValue(IN_STRUCTURE)) {
+      return state;
+    }
+    return super.mirror(state, mirror);
   }
 }

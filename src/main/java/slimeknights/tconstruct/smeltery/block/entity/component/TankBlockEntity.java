@@ -143,14 +143,6 @@ public class TankBlockEntity extends SmelteryComponentBlockEntity implements ITa
    */
 
   /**
-   * Sets the tag on the stack based on the contained tank
-   * @param stack  Stack
-   */
-  public void setTankTag(ItemStack stack) {
-    TankItem.setTank(stack, tank);
-  }
-
-  /**
    * Updates the tank from an NBT tag, used in the block
    * @param nbt  tank NBT
    */

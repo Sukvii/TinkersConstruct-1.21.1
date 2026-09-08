@@ -258,14 +258,6 @@ public class CastingTankBlockEntity extends TableBlockEntity implements ITankBlo
   private static final String TAG_REDSTONE = "redstone";
 
   /**
-   * Sets the tag on the stack based on the contained tank
-   * @param stack  Stack
-   */
-  public void setTankTag(ItemStack stack) {
-    TankItem.setTank(stack, tank);
-  }
-
-  /**
    * Updates the tank from an NBT tag, used in the block
    * @param nbt  tank NBT
    */

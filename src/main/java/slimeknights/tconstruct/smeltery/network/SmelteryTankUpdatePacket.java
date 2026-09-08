@@ -1,14 +1,13 @@
 package slimeknights.tconstruct.smeltery.network;
 
 import lombok.AllArgsConstructor;
-import net.minecraft.client.Minecraft;
+import lombok.ToString;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.network.PacketContext;
-import slimeknights.mantle.network.packet.IThreadsafePacket;
-import slimeknights.mantle.util.BlockEntityHelper;
+import slimeknights.mantle.network.packet.BlockEntityPacket;
 import slimeknights.tconstruct.smeltery.block.entity.tank.ISmelteryTankHandler;
 
 import java.util.ArrayList;
@@ -18,7 +17,8 @@ import java.util.List;
  * Packet sent whenever the contents of the smeltery tank change
  */
 @AllArgsConstructor
-public class SmelteryTankUpdatePacket implements IThreadsafePacket {
+@ToString
+public class SmelteryTankUpdatePacket implements BlockEntityPacket<ISmelteryTankHandler> {
   private final BlockPos pos;
   private final List<FluidStack> fluids;
 
@@ -41,13 +41,17 @@ public class SmelteryTankUpdatePacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(PacketContext context) {
-    HandleClient.handle(this);
+  public BlockPos pos() {
+    return pos;
   }
 
-  private static class HandleClient {
-    private static void handle(SmelteryTankUpdatePacket packet) {
-      BlockEntityHelper.get(ISmelteryTankHandler.class, Minecraft.getInstance().level, packet.pos).ifPresent(te -> te.updateFluidsFromPacket(packet.fluids));
-    }
+  @Override
+  public Class<ISmelteryTankHandler> type() {
+    return ISmelteryTankHandler.class;
+  }
+
+  @Override
+  public void handleBlockEntity(PacketContext context, ISmelteryTankHandler be) {
+    be.updateFluidsFromPacket(fluids);
   }
 }
