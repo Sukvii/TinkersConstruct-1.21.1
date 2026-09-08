@@ -11,15 +11,16 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import io.netty.handler.codec.DecoderException;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.library.recipe.partbuilder.Pattern;
 import slimeknights.tconstruct.library.utils.ItemStackUtil;
@@ -110,7 +111,7 @@ public abstract class LayoutIcon {
     @Override
     public JsonObject toJson() {
       JsonObject json = new JsonObject();
-      json.addProperty("item", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+      json.add("item", Loadables.ITEM.serialize(stack.getItem()));
       CompoundTag tag = ItemStackUtil.getTag(stack);
       if (tag != null) {
         json.addProperty("nbt", tag.toString());
@@ -164,8 +165,7 @@ public abstract class LayoutIcon {
         return new PatternIcon(pattern);
       }
       if (object.has("item")) {
-        var item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(GsonHelper.getAsString(object, "item")));
-        if (item == null) throw new JsonSyntaxException("Unknown layout icon item " + object.get("item"));
+        Item item = Loadables.ITEM.getIfPresent(object, "item");
         ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(object, "count", 1));
         if (object.has("nbt")) {
           try {
