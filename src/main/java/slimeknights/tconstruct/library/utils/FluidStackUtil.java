@@ -21,8 +21,12 @@ public final class FluidStackUtil {
     CustomData data = stack.get(DataComponents.CUSTOM_DATA);
     if (data == null) {
       data = CustomData.of(new CompoundTag());
-      stack.set(DataComponents.CUSTOM_DATA, data);
+    } else {
+      // FluidStack.copy() may share component values in 1.21, so detach the
+      // live tag before exposing it to a mutating caller.
+      data = data.update(tag -> {});
     }
+    stack.set(DataComponents.CUSTOM_DATA, data);
     return data.getUnsafe();
   }
 

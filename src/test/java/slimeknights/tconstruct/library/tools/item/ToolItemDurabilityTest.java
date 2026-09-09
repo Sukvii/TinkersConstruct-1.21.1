@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.tools.item;
 
+import net.minecraft.core.component.DataComponents;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
@@ -58,6 +59,15 @@ public class ToolItemDurabilityTest extends ToolItemTest {
 
     assertThat(tool.getDamage()).isEqualTo(statDurability);
     assertThat(tool.isBroken()).isTrue();
+  }
+
+  @Test
+  void testMoreThanMaxDamageMirrorsClampedComponent() {
+    int statDurability = ToolStack.from(testItemStack).getStats().getInt(ToolStats.DURABILITY);
+
+    testItemStack.setDamageValue(99999999);
+
+    assertThat(testItemStack.getOrDefault(DataComponents.DAMAGE, -1)).isEqualTo(statDurability);
   }
 
   /*

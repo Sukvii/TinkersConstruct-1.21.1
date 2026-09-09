@@ -10,13 +10,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slimeknights.tconstruct.fixture.MaterialFixture;
 import slimeknights.tconstruct.fixture.ToolDefinitionFixture;
+import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierFixture;
+import slimeknights.tconstruct.library.recipe.modifiers.adding.IDisplayModifierRecipe;
 import slimeknights.tconstruct.library.tools.SlotType;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.item.ToolItemTest;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
 import slimeknights.tconstruct.library.utils.ItemStackUtil;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -65,6 +69,49 @@ class ToolStackTest extends ToolItemTest {
   }
 
   @Test
+  void itemStackCopy_notSharedNBT() {
+    ItemStack copy = testItemStack.copy();
+    ToolStack.from(copy).setDamage(10);
+    assertThat(ToolStack.from(testItemStack).getDamage())
+      .overridingErrorMessage("Damage written to an ItemStack copy was transferred to the original stack")
+      .isEqualTo(0);
+  }
+
+  @Test
+  void itemStackCopy_tagMutationNotShared() {
+    ItemStack copy = testItemStack.copy();
+    ItemStackUtil.getOrCreateTag(copy).putBoolean("copy_only", true);
+    CompoundTag originalTag = ItemStackUtil.getTag(testItemStack);
+    assertThat(originalTag).isNotNull();
+    assertThat(originalTag.contains("copy_only")).isFalse();
+  }
+
+  @Test
+  void toolStackWriteAfterItemStackCopy_notSharedNBT() {
+    ToolStack tool = ToolStack.from(testItemStack);
+    ItemStack copy = testItemStack.copy();
+
+    tool.setDamage(10);
+
+    assertThat(ToolStack.from(copy).getDamage())
+      .overridingErrorMessage("A ToolStack write after ItemStack.copy() contaminated the copied stack")
+      .isEqualTo(0);
+  }
+
+  @Test
+  void displayModifiers_doesNotMutateSourceNBT() {
+    CompoundTag source = ItemStackUtil.getTag(testItemStack);
+    assertThat(source).isNotNull();
+    CompoundTag sourceSnapshot = source.copy();
+
+    ItemStack output = IDisplayModifierRecipe.withModifiers(testItemStack,
+      List.of(new ModifierEntry(ModifierFixture.TEST_MODIFIER_1, 1)));
+
+    assertThat(ItemStackUtil.getTag(testItemStack)).isEqualTo(sourceSnapshot);
+    assertThat(ToolStack.from(output).getUpgrades().getLevel(ModifierFixture.TEST_1)).isEqualTo(1);
+  }
+
+  @Test
   void copy_notSharedNBT() {
     ToolStack tool = ToolStack.from(testItemStack);
     ToolStack copy = tool.copy();
@@ -96,6 +143,19 @@ class ToolStackTest extends ToolItemTest {
     tool.setBrokenRaw(true);
     ItemStack stack = tool.createStack();
     assertThat(ItemStackUtil.getTag(stack)).isEqualTo(tool.getNbt());
+  }
+
+  @Test
+  void createStack_copiesNBTBetweenResults() {
+    ToolStack tool = ToolStack.from(Items.DIAMOND_PICKAXE, ToolDefinition.EMPTY, new CompoundTag());
+    ItemStack first = tool.createStack();
+    ItemStack second = tool.createStack();
+
+    ToolStack.from(first).getNbt().putBoolean("first_only", true);
+
+    CompoundTag secondTag = ItemStackUtil.getTag(second);
+    assertThat(secondTag).isNotNull();
+    assertThat(secondTag.contains("first_only")).isFalse();
   }
 
   @Test

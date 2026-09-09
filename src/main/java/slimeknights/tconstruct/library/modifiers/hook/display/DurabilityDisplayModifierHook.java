@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import slimeknights.tconstruct.library.tools.stat.ToolStats;
@@ -46,7 +47,7 @@ public interface DurabilityDisplayModifierHook {
   static boolean showDurabilityBar(ItemStack stack) {
     // don't show durability bar if the tool does not support durability
     // we don't use that feature in the base mod, but Tinkers' Things notably has a tool that uses it
-    if (!stack.isDamageableItem() || !stack.is(TinkerTags.Items.DURABILITY)) {
+    if (!IModifiable.canBeDepletedStack(stack) || !stack.is(TinkerTags.Items.DURABILITY)) {
       return false;
     }
 
@@ -58,7 +59,7 @@ public interface DurabilityDisplayModifierHook {
         return show;
       }
     }
-    return stack.isDamageableItem() && tool.getDamage() > 0;
+    return IModifiable.canBeDepletedStack(stack) && tool.getDamage() > 0;
   }
 
   /**

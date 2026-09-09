@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.tools.item;
 
 import lombok.Getter;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -104,9 +103,8 @@ public class ModifiableArrowItem extends ArrowItem implements IModifiableDisplay
 
   @Override
   public void verifyComponentsAfterLoad(ItemStack stack) {
-    CompoundTag nbt = ItemStackUtil.getTag(stack);
-    if (nbt != null) {
-      ToolStack.verifyTag(this, nbt, getToolDefinition());
+    if (ItemStackUtil.getTag(stack) != null) {
+      ItemStackUtil.mutateTag(stack, nbt -> ToolStack.verifyTag(this, nbt, getToolDefinition()));
     }
   }
 

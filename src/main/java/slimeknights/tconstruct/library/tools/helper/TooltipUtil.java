@@ -107,10 +107,7 @@ public class TooltipUtil {
   /** Sets the tool name in a way that will not be italic */
   public static void setDisplayName(ItemStack tool, String name) {
     if (name.isEmpty()) {
-      CompoundTag tag = ItemStackUtil.getTag(tool);
-      if (tag != null) {
-        tag.remove(KEY_NAME);
-      }
+      ItemStackUtil.removeTagKey(tool, KEY_NAME);
     } else {
       ItemStackUtil.getOrCreateTag(tool).putString(KEY_NAME, name);
       tool.remove(DataComponents.CUSTOM_NAME);
@@ -234,7 +231,7 @@ public class TooltipUtil {
    */
   public static void getDefaultInfo(ItemStack stack, IToolStackView tool, @Nullable Player player, List<Component> tooltips, TooltipFlag flag) {
     // shows as broken when broken, hold shift for proper durability
-    if (stack.isDamageableItem() && !tool.isUnbreakable() && tool.hasTag(TinkerTags.Items.DURABILITY)) {
+    if (IModifiable.canBeDepletedStack(stack) && !tool.isUnbreakable() && tool.hasTag(TinkerTags.Items.DURABILITY)) {
       tooltips.add(TooltipBuilder.formatDurability(tool.getCurrentDurability(), tool.getStats().getInt(ToolStats.DURABILITY), true));
     }
     // modifier tooltip

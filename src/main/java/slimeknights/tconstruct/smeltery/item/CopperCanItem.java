@@ -73,14 +73,10 @@ public class CopperCanItem extends Item {
 
   /** Removes the fluid from the given stack */
   public static void removeFluid(ItemStack stack) {
-    CompoundTag nbt = ItemStackUtil.getTag(stack);
-    if (nbt != null) {
+    ItemStackUtil.mutateTag(stack, nbt -> {
       nbt.remove(TAG_FLUID);
       nbt.remove(TAG_FLUID_TAG);
-      if (nbt.isEmpty()) {
-        ItemStackUtil.setTag(stack, null);
-      }
-    }
+    });
   }
 
   /** Sets the fluid on the given stack whether or not its valiid */

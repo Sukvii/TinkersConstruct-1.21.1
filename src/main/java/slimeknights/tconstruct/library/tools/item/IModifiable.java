@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.tools.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ItemLike;
 import slimeknights.tconstruct.TConstruct;
@@ -29,6 +30,21 @@ public interface IModifiable extends ItemLike {
 
   /** Gets the definition of this tool for building and applying modifiers */
   ToolDefinition getToolDefinition();
+
+  /**
+   * Compatibility equivalent of the removed 1.20 {@code Item#canBeDepleted}
+   * predicate. Items with custom durability rules override this method.
+   */
+  default boolean canBeDepleted(ItemStack stack) {
+    return stack.isDamageableItem();
+  }
+
+  /** Checks whether the given stack's item participates in durability logic. */
+  static boolean canBeDepletedStack(ItemStack stack) {
+    return stack.getItem() instanceof IModifiable modifiable
+      ? modifiable.canBeDepleted(stack)
+      : stack.isDamageableItem();
+  }
 
   /** Gets the tool definition for the given item, or {@link ToolDefinition#EMPTY} if its not modifiable. */
   static ToolDefinition getToolDefinition(Item item) {

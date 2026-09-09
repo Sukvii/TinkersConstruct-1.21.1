@@ -271,6 +271,7 @@ public class PartBuilderBlockEntity extends RetexturedTableBlockEntity implement
         setItem(slot, container);
       } else {
         stack.shrink(amount);
+        setChangedFast();
         ItemHandlerHelper.giveItemToPlayer(player, container);
       }
     }
