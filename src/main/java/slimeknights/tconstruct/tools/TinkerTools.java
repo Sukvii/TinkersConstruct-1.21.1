@@ -129,7 +129,7 @@ import slimeknights.tconstruct.library.utils.BlockSideHitListener;
 import slimeknights.tconstruct.library.client.data.material.GeneratorPartTextureJsonGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPaletteDebugGenerator;
 import slimeknights.tconstruct.library.client.data.material.MaterialPartTextureGenerator;
-import slimeknights.tconstruct.tables.TinkerTables;
+import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.tools.data.ArmorModelProvider;
 import slimeknights.tconstruct.tools.data.ModifierIds;
 import slimeknights.tconstruct.tools.data.StationSlotLayoutProvider;
@@ -184,7 +184,7 @@ public final class TinkerTools extends TinkerModule {
     "tools", () -> CreativeModeTab.builder().title(TConstruct.makeTranslation("itemGroup", "tools"))
                                   .icon(() -> TinkerTools.pickaxe.get().getRenderTool())
                                   .displayItems(TinkerTools::addTabItems)
-                                  .withTabsBefore(TinkerTables.tabTables.getId())
+                                  .withTabsBefore(TinkerCommons.tabGeneral.getId())
                                   .withSearchBar()
                                   .build());
 

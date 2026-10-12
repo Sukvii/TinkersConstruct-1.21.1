@@ -28,33 +28,6 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "blazing_bone": {
-      "conditions": {
-        "items": [
-          {
-            "predicates": {
-              "tconstruct:tool_stack": {
-                "type": "mantle:and",
-                "predicates": [
-                  {
-                    "type": "mantle:set",
-                    "items": [
-                      "tconstruct:slime_helmet"
-                    ]
-                  },
-                  {
-                    "type": "tconstruct:has_material",
-                    "index": 0,
-                    "material": "tconstruct:blazing_bone"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "bone": {
       "conditions": {
         "items": [
@@ -190,33 +163,6 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "glass": {
-      "conditions": {
-        "items": [
-          {
-            "predicates": {
-              "tconstruct:tool_stack": {
-                "type": "mantle:and",
-                "predicates": [
-                  {
-                    "type": "mantle:set",
-                    "items": [
-                      "tconstruct:slime_helmet"
-                    ]
-                  },
-                  {
-                    "type": "tconstruct:has_material",
-                    "index": 0,
-                    "material": "tconstruct:glass"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "gold": {
       "conditions": {
         "items": [
@@ -235,6 +181,33 @@
                     "type": "tconstruct:has_material",
                     "index": 0,
                     "material": "tconstruct:gold"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "gunpowder": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "type": "mantle:and",
+                "predicates": [
+                  {
+                    "type": "mantle:set",
+                    "items": [
+                      "tconstruct:slime_helmet"
+                    ]
+                  },
+                  {
+                    "type": "tconstruct:has_material",
+                    "index": 0,
+                    "material": "tconstruct:gunpowder"
                   }
                 ]
               }
@@ -459,33 +432,6 @@
         ]
       },
       "trigger": "minecraft:inventory_changed"
-    },
-    "venombone": {
-      "conditions": {
-        "items": [
-          {
-            "predicates": {
-              "tconstruct:tool_stack": {
-                "type": "mantle:and",
-                "predicates": [
-                  {
-                    "type": "mantle:set",
-                    "items": [
-                      "tconstruct:slime_helmet"
-                    ]
-                  },
-                  {
-                    "type": "tconstruct:has_material",
-                    "index": 0,
-                    "material": "tconstruct:venombone"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
     }
   },
   "display": {
@@ -511,7 +457,7 @@
   },
   "requirements": [
     [
-      "glass"
+      "gunpowder"
     ],
     [
       "blaze"
@@ -556,14 +502,7 @@
       "dragon_scale"
     ],
     [
-      "venombone"
-    ],
-    [
-      "blazing_bone"
-    ],
-    [
       "knightmetal"
     ]
-  ],
-  "sends_telemetry_event": true
+  ]
 }

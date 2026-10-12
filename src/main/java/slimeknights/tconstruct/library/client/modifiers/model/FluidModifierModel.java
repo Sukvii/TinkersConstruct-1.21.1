@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
@@ -31,9 +31,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** Model for a fluid in a tool. */
-public record FluidModifierModel(Material small, @Nullable Material large, ToolTankHelper tankHelper) implements SimpleModifierModel {
+public record FluidModifierModel(@Nullable Material small, @Nullable Material large, ToolTankHelper tankHelper) implements SimpleModifierModel {
   public static final RecordLoadable<FluidModifierModel> LOADER = RecordLoadable.create(
-    ModifierModel.MATERIAL_LOADABLE.requiredField("mask", FluidModifierModel::small),
+    ModifierModel.MATERIAL_LOADABLE.nullableField("mask", FluidModifierModel::small),
     ModifierModel.MATERIAL_LOADABLE.nullableField("mask_large", FluidModifierModel::large),
     ToolTankHelper.LOADABLE.defaultField("tank_helper", ToolTankHelper.TANK_HELPER, false, FluidModifierModel::tankHelper),
     FluidModifierModel::new);
@@ -47,19 +47,19 @@ public record FluidModifierModel(Material small, @Nullable Material large, ToolT
   private static final Vector3f ORIGIN = new Vector3f(-0.5f, -0.5f, -0.5f);
 
   /** Instance with default tank helper */
-  public FluidModifierModel(Material small, @Nullable Material large) {
+  public FluidModifierModel(@Nullable Material small, @Nullable Material large) {
     this(small, large, ToolTankHelper.TANK_HELPER);
   }
 
   /** Cache key for {@link #getCacheKey(IToolStackView, ModifierEntry)} */
-  private record CacheKey(Fluid fluid, @Nullable CompoundTag tag) {}
+  private record CacheKey(Fluid fluid, DataComponentPatch components) {}
 
   @Nullable
   @Override
   public Object getCacheKey(IToolStackView tool, ModifierEntry modifier) {
     FluidStack fluid = tankHelper().getFluid(tool);
     if (!fluid.isEmpty()) {
-      return new CacheKey(fluid.getFluid(), slimeknights.tconstruct.library.utils.FluidStackUtil.getTag(fluid));
+      return new CacheKey(fluid.getFluid(), fluid.getComponentsPatch());
     }
     return null;
   }

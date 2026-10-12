@@ -11,6 +11,8 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
@@ -50,6 +52,8 @@ public class TinkerTags {
     DamageTypes.init();
     MenuTypes.init();
     Potions.init();
+    CreativeTabs.init();
+    Instruments.init();
     NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, TagsUpdatedEvent.class, event -> tagsLoaded = true);
   }
 
@@ -524,7 +528,11 @@ public class TinkerTags {
 
     /** Tools that can receive wood based embellishments */
     public static final TagKey<Item> EMBELLISHMENT_WOOD = local("modifiable/embellishment/wood");
-    /** Tools that can receive slime based embellishments */
+    /**
+     * Tools that can receive slime based embellishments.
+     * @deprecated Will be removed in 1.21 due to slimesuit rework. Plan to reimplement if needed.
+     */
+    @Deprecated
     public static final TagKey<Item> EMBELLISHMENT_SLIME = local("modifiable/embellishment/slime");
     /** Tools that can be dyed */
     public static final TagKey<Item> DYEABLE = local("modifiable/dyeable");
@@ -645,14 +653,73 @@ public class TinkerTags {
   public static class EntityTypes {
     private static void init() {}
 
-    // mob classes
+    // common tag mob classes
     public static final TagKey<EntityType<?>> SLIMES = common("slimes");
-    /** Entities in this tag take more damage from bane of sssss */
+    // overworld
+    /** Take more damage from bane of sssss and melt into glass. */
     public static final TagKey<EntityType<?>> CREEPERS = common("creepers");
+    /** Melt into venom. */
+    public static final TagKey<EntityType<?>> SPIDERS = common("spiders");
+    /** Melt into seared stone. */
+    public static final TagKey<EntityType<?>> GUARDIANS = common("guardians");
+    /** Melt into seared stone. */
+    public static final TagKey<EntityType<?>> SILVERFISH = common("silverfish");
+    // nether
+    /** Melt into blazing blood. */
+    public static final TagKey<EntityType<?>> BLAZES = common("blazes");
+    /** Melt into regeneration. */
+    public static final TagKey<EntityType<?>> GHASTS = common("ghasts");
+    /** Melt into slow falling. */
+    public static final TagKey<EntityType<?>> PHANTOMS = common("phantoms");
+    // end
+    /** Melt into levitation */
+    public static final TagKey<EntityType<?>> SHULKERS = common("shulkers");
+    // passive
+    /** Melt into regeneration. */
+    public static final TagKey<EntityType<?>> AXOLOTLS = common("axolotls");
+    /** Melt into honey. */
+    public static final TagKey<EntityType<?>> BEES = common("bees");
+    /** Melt into leaping */
+    public static final TagKey<EntityType<?>> FROGS = common("frogs");
+    /** Melt into water breathing. */
+    public static final TagKey<EntityType<?>> SQUIDS = common("squids");
+    /** Melt into fire resistance. */
+    public static final TagKey<EntityType<?>> STRIDERS = common("striders");
+    /** Melt into turtle master. */
+    public static final TagKey<EntityType<?>> TURTLES = common("turtles");
+    // villager
+    /** Entities in this tag melt into emerald. Also added to {@link #KILLAGERS}. */
     public static final TagKey<EntityType<?>> VILLAGERS = common("villagers");
+    /** Entities in this tag melt into less emerald. Also added to {@link #KILLAGERS}. */
     public static final TagKey<EntityType<?>> ILLAGERS = common("illagers");
-    /** Entities in this tag may spawn with battle signs */
+    /** Entities in this tag may spawn with battle signs and melt into gold */
     public static final TagKey<EntityType<?>> PIGLINS = common("piglins");
+
+    // melting
+    /** Entities in this tag blacklisted from melting in the smeltery, notably in the default recipe */
+    public static final TagKey<EntityType<?>> MELTING_BLACKLIST = local("melting/blacklist");
+    /** Entities in this tag are forced to show in JEI even if not living */
+    public static final TagKey<EntityType<?>> MELTING_SHOW = local("melting/show_in_default");
+    /** Entities in this tag are hidden from JEI and blacklisted from melting in the smeltery */
+    public static final TagKey<EntityType<?>> MELTING_HIDE = local("melting/hide_in_default");
+    // specialized melting tags
+    /** Farm animals that melt into meat soup. */
+    public static final TagKey<EntityType<?>> MELTABLE_FARM_ANIMALS = local("meltable/farm_animals");
+    // hostile
+    /** Zombie-like mobs expected to melt into iron. */
+    public static final TagKey<EntityType<?>> MELTABLE_ZOMBIE = local("meltable/zombie");
+    /** Drowned-like mobs expected to melt into copper. */
+    public static final TagKey<EntityType<?>> MELTABLE_DROWNED = local("meltable/drowned");
+    /** Skeleton-like mobs expected to melt into milk. */
+    public static final TagKey<EntityType<?>> MELTABLE_SKELETON = local("meltable/skeleton");
+    /** Ender-based mobs expected to melt into molten ender. */
+    public static final TagKey<EntityType<?>> MELTABLE_ENDER = local("meltable/ender");
+    /** Vanilla slime-like mobs expected to melt into earthslime. */
+    public static final TagKey<EntityType<?>> MELTABLE_SLIME = local("meltable/slime");
+    /** Magmacube like mobs expected to melt into magma (cream). */
+    public static final TagKey<EntityType<?>> MELTABLE_MAGMA = local("meltable/magma");
+
+
     /** @deprecated use the chance fields on the severing recipe to adjust rates. */
     @Deprecated(forRemoval = true)
     public static final TagKey<EntityType<?>> RARE_MOBS = local("rare_mobs");
@@ -687,12 +754,6 @@ public class TinkerTags {
     public static final TagKey<EntityType<?>> ENDERFERENCE_ARROW_BLACKLIST = local("enderference_arrow_blacklist");
     /** Entities that will not heal you using necrotic */
     public static final TagKey<EntityType<?>> NECROTIC_BLACKLIST = local("necrotic_blacklist");
-
-    // melting
-    /** Entities in this tag are forced to show in JEI even if not living */
-    public static final TagKey<EntityType<?>> MELTING_SHOW = local("melting/show_in_default");
-    /** Entities in this tag are hidden from JEI and blacklisted from melting in the smeltery */
-    public static final TagKey<EntityType<?>> MELTING_HIDE = local("melting/hide_in_default");
 
     // collecting
     /** Things that can be collected using {@link net.minecraft.world.entity.Entity#playerTouch(Player)} using a fishing rod. */
@@ -844,6 +905,14 @@ public class TinkerTags {
 
     // JEI
     public static final TagKey<Modifier> HIDDEN_FROM_RECIPE_VIEWERS = hiddenFromRecipeViewers(ModifierManager.REGISTRY_KEY);
+    /** Modifiers in this tag allow crafting and should be listed as a crafting table catalyst */
+    public static final TagKey<Modifier> CRAFTING = local("jei/crafting");
+    /** Modifiers in this tag allow smelting and should be listed as a furnace catalyst */
+    public static final TagKey<Modifier> SMELTING = local("jei/smelting");
+    /** Modifiers in this tag allow melting recipes and should be listed as an item and entity melting catalyst. If a modifier needs these separated make a feature request. */
+    public static final TagKey<Modifier> MELTING = local("jei/melting");
+    /** Modifiers in this tag allow severing and are listed as a severing catalyst */
+    public static final TagKey<Modifier> SEVERING = local("jei/severing");
 
 
     private static TagKey<Modifier> local(String name) {
@@ -946,5 +1015,19 @@ public class TinkerTags {
 
     /** Any potion variants in this tag will be hidden from the variants of the potion fluid shown in JEI. */
     public static final TagKey<Potion> HIDDEN_FLUID = TagKey.create(Registries.POTION, getResource("hide_in_fluid"));
+  }
+
+  public static class CreativeTabs {
+    private static void init() {}
+
+    /** Any creative tabs in this tag will not include their items in JEI. */
+    public static final TagKey<CreativeModeTab> HIDDEN_IN_RECIPE_VIEWERS = hiddenFromRecipeViewers(Registries.CREATIVE_MODE_TAB);
+  }
+
+  public static class Instruments {
+    private static void init() {}
+
+    /** Any goat horns that have a material variant recipe. */
+    public static final TagKey<Instrument> VARIANT_HORNS = TagKey.create(Registries.INSTRUMENT, getResource("variant_horns"));
   }
 }

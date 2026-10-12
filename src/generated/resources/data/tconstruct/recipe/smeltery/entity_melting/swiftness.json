@@ -15,6 +15,11 @@
   },
   "result": {
     "amount": 50,
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:swiftness"
+      }
+    },
     "fluid": "tconstruct:potion"
   }
 }

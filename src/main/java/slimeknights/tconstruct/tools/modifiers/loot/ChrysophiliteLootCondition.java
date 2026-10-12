@@ -2,13 +2,15 @@ package slimeknights.tconstruct.tools.modifiers.loot;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import slimeknights.tconstruct.shared.TinkerAttributes;
 import slimeknights.tconstruct.tools.TinkerModifiers;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.ChrysophiliteModifier;
 
 import java.util.Set;
 
@@ -21,7 +23,8 @@ public class ChrysophiliteLootCondition implements LootItemCondition {
 
   @Override
   public boolean test(LootContext context) {
-    return ChrysophiliteModifier.getTotalGold(context.getParamOrNull(LootContextParams.THIS_ENTITY)) > 0;
+    return context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof LivingEntity living
+      && living.getAttributeValue(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(TinkerAttributes.CHRYSOPHILITE.get())) >= 1;
   }
 
   @Override

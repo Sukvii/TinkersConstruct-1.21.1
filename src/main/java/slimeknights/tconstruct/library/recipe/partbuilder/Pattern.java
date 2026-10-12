@@ -51,7 +51,7 @@ public class Pattern extends ResourceId {
    * @return  Pattern texture
    */
   public ResourceLocation getTexture() {
-    return ResourceLocation.fromNamespaceAndPath(getNamespace(), "gui/tinker_pattern/" + getPath());
+    return withPrefix("gui/tinker_pattern/");
   }
 
 

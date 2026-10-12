@@ -2,10 +2,15 @@
   "type": "tconstruct:entity_melting",
   "damage": 3,
   "entity": {
-    "type": "minecraft:turtle"
+    "tag": "c:turtles"
   },
   "result": {
     "amount": 25,
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:turtle_master"
+      }
+    },
     "fluid": "tconstruct:potion"
   }
 }

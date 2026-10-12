@@ -62,9 +62,11 @@ import slimeknights.tconstruct.library.json.variable.protection.ProtectionVariab
 import slimeknights.tconstruct.library.json.variable.stat.ConditionalStatVariable;
 import slimeknights.tconstruct.library.json.variable.stat.EntityConditionalStatVariable;
 import slimeknights.tconstruct.library.json.variable.tool.ConditionalToolVariable;
+import slimeknights.tconstruct.library.json.variable.tool.FluidAmountVariable;
 import slimeknights.tconstruct.library.json.variable.tool.ModDataVariable;
 import slimeknights.tconstruct.library.json.variable.tool.ModifierLevelVariable;
 import slimeknights.tconstruct.library.json.variable.tool.StatMultiplierVariable;
+import slimeknights.tconstruct.library.json.variable.tool.TankCapacityVariable;
 import slimeknights.tconstruct.library.json.variable.tool.ToolStatVariable;
 import slimeknights.tconstruct.library.json.variable.tool.ToolVariable;
 import slimeknights.tconstruct.library.modifiers.FakeModifier;
@@ -158,6 +160,7 @@ import slimeknights.tconstruct.library.modifiers.modules.display.DurabilityBarCo
 import slimeknights.tconstruct.library.modifiers.modules.display.MaterialVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantColorModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ModifierVariantNameModule;
+import slimeknights.tconstruct.library.modifiers.modules.display.MeleeInstrumentModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.ShowInteractionSourceModule;
 import slimeknights.tconstruct.library.modifiers.modules.display.StatTooltipModule;
 import slimeknights.tconstruct.library.modifiers.modules.mining.ConditionalMiningSpeedModule;
@@ -243,14 +246,11 @@ import slimeknights.tconstruct.tools.modifiers.traits.melee.InsatiableModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.melee.LaceratingModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.ranged.OlympicModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.BreathtakingModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.ChrysophiliteModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.FirebreathModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.GoldGuardModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.PlagueModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.SelfDestructiveModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.StrongBonesModifier;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.WildfireModifier;
-import slimeknights.tconstruct.tools.modifiers.traits.skull.WitheredModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.PiercingModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.melee.SweepingEdgeModifier;
 import slimeknights.tconstruct.tools.modifiers.upgrades.ranged.SinistralModifier;
@@ -274,6 +274,7 @@ import slimeknights.tconstruct.tools.modules.armor.FireWalkerModule;
 import slimeknights.tconstruct.tools.modules.armor.FlameBarrierModule;
 import slimeknights.tconstruct.tools.modules.armor.FreezingCounterModule;
 import slimeknights.tconstruct.tools.modules.armor.GlowWalkerModule;
+import slimeknights.tconstruct.tools.modules.armor.GoldenAttributeModule;
 import slimeknights.tconstruct.tools.modules.armor.KineticModule;
 import slimeknights.tconstruct.tools.modules.armor.KnockbackCounterModule;
 import slimeknights.tconstruct.tools.modules.armor.LightspeedAttributeModule;
@@ -429,8 +430,6 @@ public final class TinkerModifiers extends TinkerModule {
   public static final StaticModifier<SelfDestructiveModifier> selfDestructive = MODIFIERS.register("self_destructive", SelfDestructiveModifier::new);
   public static final StaticModifier<StrongBonesModifier> strongBones = MODIFIERS.register("strong_bones", StrongBonesModifier::new);
   public static final StaticModifier<PlagueModifier> plague = MODIFIERS.register("plague", PlagueModifier::new);
-  public static final StaticModifier<ChrysophiliteModifier> chrysophilite = MODIFIERS.register("chrysophilite", ChrysophiliteModifier::new);
-  public static final StaticModifier<GoldGuardModifier> goldGuard = MODIFIERS.register("gold_guard", GoldGuardModifier::new);
 
   // slotless - cosmetic - used as defaults for rendering modules and recipes
   public static final StaticModifier<?> embellishment = MODIFIERS.registerDynamic("embellishment");
@@ -496,12 +495,12 @@ public final class TinkerModifiers extends TinkerModule {
   /** @deprecated drowned's trait was switched to {@link slimeknights.tconstruct.tools.data.ModifierIds#respiration}. Reimplement if you need its behavior. */
   @Deprecated(forRemoval = true)
   public static final StaticModifier<BreathtakingModifier> breathtaking = MODIFIERS.register("breathtaking", BreathtakingModifier::new);
-  /** @deprecated wither skeleton's trait was switched to {@link slimeknights.tconstruct.tools.data.ModifierIds#restore}. Reimplement if you need its behavior. */
-  @Deprecated(forRemoval = true)
-  public static final StaticModifier<WitheredModifier> withered = MODIFIERS.register("withered", WitheredModifier::new);
   /** @deprecated blazes trait was switched to {@link slimeknights.tconstruct.tools.data.ModifierIds#fireborn} and helmet projectile was switched to {@link slimeknights.tconstruct.tools.data.ModifierIds#spitting} */
   @Deprecated(forRemoval = true)
   public static final StaticModifier<FirebreathModifier> firebreath = MODIFIERS.register("firebreath", FirebreathModifier::new);
+  /** @deprecated zombified piglin's trait was switched to {@link slimeknights.tconstruct.tools.data.ModifierIds#vitalProtectionSkull} */
+  @Deprecated(forRemoval = true)
+  public static final StaticModifier<?> revenge = MODIFIERS.registerDynamic("revenge");
 
   // fields that have been relocated to ModifierIds
   // slotless
@@ -692,12 +691,18 @@ public final class TinkerModifiers extends TinkerModule {
   /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#slowBones} */
   @Deprecated(forRemoval = true)
   public static final StaticModifier<?> frosttouch = MODIFIERS.registerDynamic("frosttouch");
-  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#revenge} */
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#witheredBones} */
   @Deprecated(forRemoval = true)
-  public static final StaticModifier<?> revenge = MODIFIERS.registerDynamic("revenge");
-  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#revenge} */
+  public static final StaticModifier<?> withered = MODIFIERS.registerDynamic("withered");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#enderdodging} */
   @Deprecated(forRemoval = true)
   public static final StaticModifier<?> enderdodging = MODIFIERS.registerDynamic("enderdodging");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#chrysophilite} */
+  @Deprecated(forRemoval = true)
+  public static final StaticModifier<?> chrysophilite = MODIFIERS.registerDynamic("chrysophilite");
+  /** @deprecated use {@link slimeknights.tconstruct.tools.data.ModifierIds#goldGuard} */
+  @Deprecated(forRemoval = true)
+  public static final StaticModifier<?> goldGuard = MODIFIERS.registerDynamic("gold_guard");
 
 
   /*
@@ -910,12 +915,14 @@ public final class TinkerModifiers extends TinkerModule {
       ModifierModule.LOADER.register(getResource("counter_mob_effect"), MobEffectModule.ArmorCounter.LOADER);
       ModifierModule.LOADER.register(getResource("tool_usage_mob_effect"), MobEffectModule.ToolUsage.LOADER);
       ModifierModule.LOADER.register(getResource("armor_attack_mob_effect"), MobEffectModule.ArmorAttack.LOADER);
+      ModifierModule.LOADER.register(getResource("edible_mob_effect"), MobEffectModule.Edible.LOADER);
       // display
       ModifierModule.LOADER.register(getResource("durability_color"), DurabilityBarColorModule.LOADER);
       ModifierModule.LOADER.register(getResource("variant_name"), ModifierVariantNameModule.LOADER);
       ModifierModule.LOADER.register(getResource("variant_color"), ModifierVariantColorModule.LOADER);
       ModifierModule.LOADER.register(getResource("material_variant_color"), MaterialVariantColorModule.LOADER);
       ModifierModule.LOADER.register(getResource("show_interaction_source"), ShowInteractionSourceModule.LOADER);
+      ModifierModule.LOADER.register(getResource("melee_instrument"), MeleeInstrumentModule.LOADER);
       ModifierModule.LOADER.register(getResource("stat_tooltip"), StatTooltipModule.LOADER);
       // enchantment
       ModifierModule.LOADER.register(getResource("constant_enchantment"), EnchantmentModule.Constant.LOADER);
@@ -966,6 +973,7 @@ public final class TinkerModifiers extends TinkerModule {
       ModifierModule.LOADER.register(getResource("projectile_bounce"), ProjectileBounceModule.LOADER);
       ModifierModule.LOADER.register(getResource("block_item_provider"), BlockItemProviderModule.LOADER);
       ModifierModule.LOADER.register(getResource("tool_damage_range"), ToolDamageRangeModule.LOADER);
+      ModifierModule.LOADER.register(getResource("golden_attribute"), GoldenAttributeModule.LOADER);
       // interaction
       ModifierModule.LOADER.register(getResource("brush"), BrushModule.LOADER);
       ModifierModule.LOADER.register(getResource("campfire_extinguish"), ExtinguishCampfireModule.LOADER);
@@ -1076,6 +1084,8 @@ public final class TinkerModifiers extends TinkerModule {
       ToolVariable.register(getResource("stat_multiplier"), StatMultiplierVariable.LOADER);
       ToolVariable.register(getResource("mod_data"), ModDataVariable.LOADER);
       ToolVariable.register(getResource("modifier_level"), ModifierLevelVariable.LOADER);
+      ToolVariable.register(getResource("fluid_amount"), FluidAmountVariable.LOADER);
+      ToolVariable.register(getResource("tank_capacity"), TankCapacityVariable.LOADER);
       // stat
       ConditionalStatVariable.LOADER.register(getResource("constant"), ConditionalStatVariable.Constant.LOADER);
       ConditionalStatVariable.register(getResource("entity"), EntityConditionalStatVariable.LOADER);

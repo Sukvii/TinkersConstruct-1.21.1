@@ -35,6 +35,5 @@
     [
       "damage"
     ]
-  ],
-  "sends_telemetry_event": true
+  ]
 }

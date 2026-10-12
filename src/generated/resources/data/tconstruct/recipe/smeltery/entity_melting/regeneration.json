@@ -1,14 +1,21 @@
 {
   "type": "tconstruct:entity_melting",
   "damage": 2,
-  "entity": {
-    "types": [
-      "minecraft:ghast",
-      "minecraft:axolotl"
-    ]
-  },
+  "entity": [
+    {
+      "tag": "c:ghasts"
+    },
+    {
+      "tag": "c:axolotls"
+    }
+  ],
   "result": {
     "amount": 50,
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:regeneration"
+      }
+    },
     "fluid": "tconstruct:potion"
   }
 }

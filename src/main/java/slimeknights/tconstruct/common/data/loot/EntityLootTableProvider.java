@@ -27,6 +27,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.gadgets.TinkerGadgets;
 import slimeknights.tconstruct.shared.TinkerCommons;
 import slimeknights.tconstruct.shared.block.SlimeType;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
@@ -47,6 +48,11 @@ public class EntityLootTableProvider extends EntityLootSubProvider {
     return BuiltInRegistries.ENTITY_TYPE.stream()
                                         // remove earth slime entity, we redirect to the vanilla loot table
                                         .filter(entity -> TConstruct.MOD_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(entity).getNamespace()));
+  }
+
+  @Override
+  protected boolean canHaveLootTable(EntityType<?> type) {
+    return super.canHaveLootTable(type) || type == TinkerGadgets.armorStandEntity.get();
   }
 
   @Override
@@ -75,6 +81,8 @@ public class EntityLootTableProvider extends EntityLootSubProvider {
                                                      .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0F)))
                                                      .when(killedByFrog))
                                         .apply(SmeltItemFunction.smelted().when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, ENTITY_ON_FIRE)))));
+    // not really sure why armor stands have a loot table, but vanilla does it
+    this.add(TinkerGadgets.armorStandEntity.get(), LootTable.lootTable());
   }
 
   /** Drops an item using the same chances as slimeballs */

@@ -43,6 +43,7 @@ import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHo
 import slimeknights.tconstruct.library.modifiers.hook.combat.DamageDealtModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.combat.MeleeHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.combat.MonsterMeleeHitModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.interaction.EdibleEffectHook;
 import slimeknights.tconstruct.library.modifiers.hook.mining.BlockBreakModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileHitModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileLaunchModifierHook;
@@ -203,6 +204,11 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
     /** Effect targets ourselves after using the tool */
     public ToolUsage buildToolUsage() {
       return new ToolUsage(buildEffect(), requireNonNullElse(chance, LevelingValue.ONE), isAoe, isProjectile, condition);
+    }
+
+    /** Effect upon eating an edible tool */
+    public Edible buildEdible() {
+      return new Edible(buildEffect(), holder, condition);
     }
 
     /** Builds the finished modifier */
@@ -515,6 +521,33 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
     public void afterSlingLaunch(IToolStackView tool, ModifierEntry modifier, LivingEntity holder, LivingEntity target, ModifierEntry slingSource, float force, float multiplier, Vec3 angle) {
       if (isAoe.test(false) && isProjectile.test(false) && condition.matches(tool, modifier) && checkChance(modifier)) {
         effect.applyEffect(holder, modifier, null);
+      }
+    }
+  }
+
+  /** Module for dealing damage with any weapon while wearing this as armor. */
+  record Edible(ModifierMobEffect effect, IJsonPredicate<LivingEntity> holder, ModifierCondition<IToolStackView> condition) implements Combat, EdibleEffectHook {
+    private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<Edible>defaultHooks(ModifierHooks.EDIBLE_EFFECT);
+    public static final RecordLoadable<Edible> LOADER = RecordLoadable.create(EFFECT_FIELD, HOLDER_FIELD, ModifierCondition.TOOL_FIELD, Edible::new);
+
+    /** @apiNote use {@link Builder#buildEdible()} */
+    @Internal
+    public Edible {}
+
+    @Override
+    public RecordLoadable<? extends MobEffectModule> getLoader() {
+      return LOADER;
+    }
+
+    @Override
+    public List<ModuleHook<?>> getDefaultHooks() {
+      return DEFAULT_HOOKS;
+    }
+
+    @Override
+    public void onToolEaten(IToolStackView tool, ModifierEntry modifier, Player player, EquipmentSlot eatenSlot, int hunger, float saturation, List<ItemStack> representativeItems) {
+      if (condition.matches(tool, modifier) && this.holder.matches(player)) {
+        effect.applyEffect(player, modifier, null);
       }
     }
   }

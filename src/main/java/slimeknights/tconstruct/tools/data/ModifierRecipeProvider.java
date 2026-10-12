@@ -956,13 +956,20 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .save(consumer, prefix(ModifierIds.swiftSneak, upgradeFolder));
 
     // upgrade - boots
-    IncrementalModifierRecipeBuilder.modifier(ModifierIds.featherFalling)
-                                    .setTools(TinkerTags.Items.BOOTS)
-                                    .setInput(Items.FEATHER, 1, 25) // 1% per feather
-                                    .setSlots(SlotType.UPGRADE, 1)
-                                    .setMaxLevel(2)
-                                    .saveSalvage(consumer, prefix(ModifierIds.featherFalling, upgradeSalvage))
-                                    .save(consumer, prefix(ModifierIds.featherFalling, upgradeFolder));
+    ModifierRecipeBuilder.modifier(ModifierIds.featherFalling)
+      .setTools(TinkerTags.Items.BOOTS)
+      .setSlots(SlotType.UPGRADE, 1)
+      .saveSalvage(consumer, prefix(ModifierIds.featherFalling, upgradeSalvage));
+    MultilevelIncrementalModifierRecipeBuilder.modifier(ModifierIds.featherFall)
+      .setTools(TinkerTags.Items.BOOTS)
+      .setInput(Items.FEATHER, 1, 12) // 1% per feather
+      .addLevel(SlotType.UPGRADE, 1, 1)
+      .addLevel(2)
+      .addLevel(SlotType.UPGRADE, 1, 3)
+      .addLevel(4)
+      .checkTraitLevel()
+      .saveSalvage(consumer, prefix(ModifierIds.featherFall, upgradeSalvage))
+      .save(consumer, prefix(ModifierIds.featherFall, upgradeFolder));
     ModifierRecipeBuilder.modifier(ModifierIds.longFall)
       .setTools(TinkerTags.Items.BOOTS)
       .addInput(Items.PISTON)
@@ -1253,7 +1260,8 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .disallowCrystal() // would allow a cost cheese
                          .exactLevel(3)
                          .save(consumer, wrap(ModifierIds.luck, abilityFolder, "_level_3"));
-    // pants have just one level
+    // add recipe to salvage luck from pants
+    // TODO 1.21: remove this salvage recipe
     ModifierRecipeBuilder.modifier(ModifierIds.luck)
                          .setTools(TinkerTags.Items.LEGGINGS)
                          .setMaxLevel(1)
@@ -1494,7 +1502,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .save(consumer, prefix(ModifierIds.firestarter, abilityFolder));
     ModifierRecipeBuilder.modifier(ModifierIds.fireprimer)
                          .setTools(Ingredient.of(TinkerTools.flintAndBrick))
-                         .addInput(TinkerMaterials.steel.getIngotTag())
+                         .addInput(TinkerMaterials.amethystBronze.getIngotTag())
                          .addInput(Items.FLINT)
                          .setMaxLevel(1)
                          .setSlots(SlotType.UPGRADE, 1)
@@ -1864,6 +1872,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
     String folder = "tools/modifiers/slotless/";
 
     // slime staff
+    woodTexture(consumer, MaterialIds.wood, Items.STICK, folder);
     // nether
     woodTexture(consumer, MaterialIds.crimson, Blocks.CRIMSON_PLANKS, folder);
     woodTexture(consumer, MaterialIds.warped, Blocks.WARPED_PLANKS, folder);
@@ -1900,32 +1909,33 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
     consumer.accept(banner, new BannerModifierRecipe(banner), null);
 
     // slimesuit //
+    RecipeOutput slimeEmbellishmentConsumer = withCondition(consumer, new TagFilledCondition<>(TinkerTags.Items.EMBELLISHMENT_SLIME));
     // basic slime
-    slimeTexture(consumer, MaterialIds.earthslime, SlimeType.EARTH, folder);
-    slimeTexture(consumer, MaterialIds.skyslime,   SlimeType.SKY, folder);
-    slimeTexture(consumer, MaterialIds.ichor,      SlimeType.ICHOR, folder);
-    slimeTexture(consumer, MaterialIds.enderslime, SlimeType.ENDER, folder);
+    slimeTexture(slimeEmbellishmentConsumer, MaterialIds.earthslime, SlimeType.EARTH, folder);
+    slimeTexture(slimeEmbellishmentConsumer, MaterialIds.skyslime,   SlimeType.SKY, folder);
+    slimeTexture(slimeEmbellishmentConsumer, MaterialIds.ichor,      SlimeType.ICHOR, folder);
+    slimeTexture(slimeEmbellishmentConsumer, MaterialIds.enderslime, SlimeType.ENDER, folder);
     // slimy planks
-    slimyWoodTexture(consumer, MaterialIds.earthslime, TinkerWorld.greenheart,  FoliageType.EARTH, folder);
-    slimyWoodTexture(consumer, MaterialIds.skyslime,   TinkerWorld.skyroot,     FoliageType.SKY,   folder);
-    slimyWoodTexture(consumer, MaterialIds.blood,      TinkerWorld.bloodshroom, FoliageType.BLOOD, folder);
-    slimyWoodTexture(consumer, MaterialIds.enderslime, TinkerWorld.enderbark,   FoliageType.ENDER, folder);
+    slimyWoodTexture(slimeEmbellishmentConsumer, MaterialIds.earthslime, TinkerWorld.greenheart,  FoliageType.EARTH, folder);
+    slimyWoodTexture(slimeEmbellishmentConsumer, MaterialIds.skyslime,   TinkerWorld.skyroot,     FoliageType.SKY,   folder);
+    slimyWoodTexture(slimeEmbellishmentConsumer, MaterialIds.blood,      TinkerWorld.bloodshroom, FoliageType.BLOOD, folder);
+    slimyWoodTexture(slimeEmbellishmentConsumer, MaterialIds.enderslime, TinkerWorld.enderbark,   FoliageType.ENDER, folder);
     // weird slime
     SwappableModifierRecipeBuilder.modifier(TinkerModifiers.embellishment, MaterialIds.clay.toString())
                                   .variantFormatter(VariantFormatter.MATERIAL)
                                   .setTools(TinkerTags.Items.EMBELLISHMENT_SLIME)
                                   .addInput(Blocks.CLAY).addInput(Items.CLAY_BALL).addInput(Blocks.CLAY)
-                                  .save(consumer, wrap(TinkerModifiers.embellishment, folder, "/slime/clay"));
+                                  .save(slimeEmbellishmentConsumer, wrap(TinkerModifiers.embellishment, folder, "/slime/clay"));
     SwappableModifierRecipeBuilder.modifier(TinkerModifiers.embellishment, MaterialIds.magma.toString())
                                   .variantFormatter(VariantFormatter.MATERIAL)
                                   .setTools(TinkerTags.Items.EMBELLISHMENT_SLIME)
                                   .addInput(Blocks.MAGMA_BLOCK).addInput(Items.MAGMA_CREAM).addInput(Blocks.MAGMA_BLOCK)
-                                  .save(consumer, wrap(TinkerModifiers.embellishment, folder, "/slime/magma"));
+                                  .save(slimeEmbellishmentConsumer, wrap(TinkerModifiers.embellishment, folder, "/slime/magma"));
     SwappableModifierRecipeBuilder.modifier(TinkerModifiers.embellishment, MaterialIds.honey.toString())
                                   .variantFormatter(VariantFormatter.MATERIAL)
                                   .setTools(TinkerTags.Items.EMBELLISHMENT_SLIME)
                                   .addInput(Blocks.HONEY_BLOCK).addInput(Items.HONEY_BOTTLE).addInput(Blocks.HONEY_BLOCK)
-                                  .save(consumer, wrap(TinkerModifiers.embellishment, folder, "/slime/honey"));
+                                  .save(slimeEmbellishmentConsumer, wrap(TinkerModifiers.embellishment, folder, "/slime/honey"));
   }
 
   private void addHeadRecipes(RecipeOutput consumer) {
@@ -1949,12 +1959,9 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .save(consumer, location(folder + "iron_golem_head"));
     SeveringRecipeBuilder.severing(EntityIngredient.of(EntityType.ENDER_DRAGON), Items.DRAGON_HEAD).rareMob()
                          .save(consumer, location(folder + "ender_dragon_head"));
-    TinkerWorld.headItems.forEach((type, head) -> {
-      if (type.isNatural()) {
-        SeveringRecipeBuilder.severing(EntityIngredient.of(type.getType()), head)
-          .save(consumer, location(folder + type.getSerializedName() + "_head"));
-      }
-    });
+    TinkerWorld.headItems.forEach((type, head) ->
+      SeveringRecipeBuilder.severing(EntityIngredient.of(type.getType()), head)
+        .save(consumer, location(folder + type.getSerializedName() + "_head")));
 
     // other body parts
     // hostile
