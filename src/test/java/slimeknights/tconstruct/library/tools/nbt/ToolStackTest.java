@@ -112,6 +112,24 @@ class ToolStackTest extends ToolItemTest {
   }
 
   @Test
+  void repeatedDisplayRefreshesKeepSourceAndSiblingOutputsIsolated() {
+    CompoundTag source = ItemStackUtil.getTag(testItemStack);
+    assertThat(source).isNotNull();
+    CompoundTag sourceSnapshot = source.copy();
+
+    ItemStack first = IDisplayModifierRecipe.withModifiers(testItemStack,
+      List.of(new ModifierEntry(ModifierFixture.TEST_MODIFIER_1, 1)));
+    ItemStack second = IDisplayModifierRecipe.withModifiers(testItemStack,
+      List.of(new ModifierEntry(ModifierFixture.TEST_MODIFIER_2, 1)));
+
+    assertThat(ItemStackUtil.getTag(testItemStack)).isEqualTo(sourceSnapshot);
+    assertThat(ToolStack.from(first).getUpgrades().getLevel(ModifierFixture.TEST_1)).isEqualTo(1);
+    assertThat(ToolStack.from(first).getUpgrades().getLevel(ModifierFixture.TEST_2)).isZero();
+    assertThat(ToolStack.from(second).getUpgrades().getLevel(ModifierFixture.TEST_1)).isZero();
+    assertThat(ToolStack.from(second).getUpgrades().getLevel(ModifierFixture.TEST_2)).isEqualTo(1);
+  }
+
+  @Test
   void copy_notSharedNBT() {
     ToolStack tool = ToolStack.from(testItemStack);
     ToolStack copy = tool.copy();
