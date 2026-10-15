@@ -225,7 +225,7 @@
   "block.tconstruct.budding_ender_slime_crystal": "Kristal Lendir Ender Bertumbuh",
 
   "item.tconstruct.iron_reinforcement": "Penguatan Besi",
-  "item.tconstruct.iron_reinforcement.tooltip": "Mengurangi kemungkinan alat mengambil kerusakan",
+  "item.tconstruct.iron_reinforcement.tooltip": "Meningkatkan ketahanan armor terhadap proyektil",
   "item.tconstruct.slimesteel_reinforcement": "Penguatan Slimesteel",
   "item.tconstruct.slimesteel_reinforcement.tooltip": "Meningkatkan kapasitas overslime",
   "item.tconstruct.seared_reinforcement": "Penguatan Batu Hangus",
@@ -235,7 +235,7 @@
   "item.tconstruct.gold_reinforcement": "Penguatan Emas",
   "item.tconstruct.gold_reinforcement.tooltip": "Meningkatkan ketahanan armor terhadap sihir",
   "item.tconstruct.emerald_reinforcement": "Penguatan Zamrud",
-  "item.tconstruct.emerald_reinforcement.tooltip": "Meningkatkan ketahanan armor terhadap ledakan",
+  "item.tconstruct.emerald_reinforcement.tooltip": "Mengurangi kemungkinan alat mengambil kerusakan",
   "item.tconstruct.cobalt_reinforcement": "Penguatan Kobalt",
   "item.tconstruct.cobalt_reinforcement.tooltip": "Meningkatkan ketahanan armor terhadap serangan umum",
   "item.tconstruct.jeweled_apple": "Apel Permata",
@@ -2638,7 +2638,8 @@
   "advancements.tconstruct.world.slime_sling.title": "Sling Expert",
   "advancements.tconstruct.world.slime_sling.description": "Sufficiently use each of the 4 slime sling types",
   "advancements.tconstruct.world.piggybackpack.title": "Pig Piggyback",
-  "advancements.tconstruct.world.piggybackpack.description": "Pick up a pig with a piggybackpack"
+  "advancements.tconstruct.world.piggybackpack.description": "Pick up a pig with a piggybackpack",
 
+  "item.tconstruct.obsidian_reinforcement.tooltip": "Meningkatkan ketahanan armor terhadap ledakan"
 }
 

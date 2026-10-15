@@ -73,7 +73,17 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
     private LevelingInt lootingLevel = LevelingInt.LEVEL;
     private IJsonPredicate<BlockState> block = BlockPredicate.ANY;
     private IJsonPredicate<LivingEntity> holder = LivingEntityPredicate.ANY;
-    @Deprecated(forRemoval = true) public Builder level(int level) { return lootingLevel(LevelingInt.eachLevel(level)); }
+    /** Sets the level in the builder. */
+    public Builder level(LevelingInt level) {
+      this.lootingLevel = level;
+      return this;
+    }
+
+    /** @deprecated use {@link #level(LevelingInt)} */
+    @Deprecated(forRemoval = true)
+    public Builder level(int level) {
+      return level(LevelingInt.eachLevel(level));
+    }
     public Constant constant() {
       if (block != BlockPredicate.ANY || holder != LivingEntityPredicate.ANY) throw new IllegalStateException("Cannot build a constant enchantment module with block or holder conditions");
       return new Constant(enchantment, lootingLevel, condition);

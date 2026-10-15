@@ -9,5 +9,6 @@
     "İyi aydınlatılmış blokları daha hızlı çıkarır",
     "Çoklu seviyeler, hızı her seviyede daha da artırır",
     "Seviye başına 1 yükseltme yuvası gerekir"
-  ]
+  ],
+  "tool_filter": "tconstruct:modifiable/harvest"
 }

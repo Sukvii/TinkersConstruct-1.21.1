@@ -2,7 +2,7 @@
   "modifier_id": "tconstruct:pierce",
   "text": [
     {
-      "text": "矢は(1×レベル)ポイントの防御を無視します。"
+      "text": "矢が命中後の4秒間、(1×レベル)ポイントの防御を無視します。"
     }
   ],
   "more_text_space": true,

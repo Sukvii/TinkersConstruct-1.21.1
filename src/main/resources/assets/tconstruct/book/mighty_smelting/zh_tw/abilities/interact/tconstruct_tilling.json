@@ -9,5 +9,6 @@
     "允許使用該工具開墾耕地",
     "單個等級",
     "需要1個能力槽"
-  ]
+  ],
+  "tool_filter": "tconstruct:modifiable/interactable"
 }

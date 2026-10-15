@@ -10,5 +10,6 @@
     "可以逐級強化",
     "最高5級",
     "每級需要1個升級槽"
-  ]
+  ],
+  "tool_filter": "tconstruct:modifiable/harvest"
 }

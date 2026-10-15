@@ -9,5 +9,6 @@
     "Aracınla yolak yapmanı sağlar",
     "Tek seviye",
     "1 yetenek yuvası gerekir"
-  ]
+  ],
+  "tool_filter": "tconstruct:modifiable/interactable"
 }

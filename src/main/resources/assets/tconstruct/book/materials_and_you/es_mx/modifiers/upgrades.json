@@ -1,0 +1,30 @@
+{
+  "type": "tconstruct:showcase",
+  "title": "Mejoras",
+  "item": {
+    "type": "neoforge:components",
+    "items": [
+      "tconstruct:creative_slot"
+    ],
+    "components": {
+      "minecraft:custom_data": {
+        "slot": "upgrades"
+      }
+    }
+  },
+  "tooltip": [
+    "Icono de ranura de mejora"
+  ],
+  "text": [
+    {
+      "text": "Las mejoras son optimizaciones para herramientas. Se realizan aplicando un objeto para transferir sus cualidades, como el redstone, que aumenta la velocidad de minado."
+    },
+    {
+      "text": "La mayoría de herramientas inician con 3 ranuras de mejora, aunque puedes conseguir más mediante otros modificadores."
+    },
+    {
+      "text": "Consulta 'Fundición insignificante' de Thruul M'Gon o la Enciclopedia de Tinkering para ver la lista completa de mejoras.",
+      "paragraph": true
+    }
+  ]
+}

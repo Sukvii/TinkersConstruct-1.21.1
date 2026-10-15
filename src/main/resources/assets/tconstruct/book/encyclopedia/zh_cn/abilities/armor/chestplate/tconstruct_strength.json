@@ -2,7 +2,7 @@
   "modifier_id": "tconstruct:strength",
   "text": [
     {
-      "text": "每级所有武器的攻击力+10%。"
+      "text": "每级让所有近战武器的近战伤害+10%。"
     }
   ],
   "more_text_space": true,

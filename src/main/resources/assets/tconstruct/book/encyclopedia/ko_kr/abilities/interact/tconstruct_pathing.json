@@ -13,5 +13,6 @@
   "effects": [
     "최대 1등급",
     "1개의 능력 슬롯 사용"
-  ]
+  ],
+  "tool_filter": "tconstruct:modifiable/interactable"
 }

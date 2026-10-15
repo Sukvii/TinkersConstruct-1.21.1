@@ -72,10 +72,16 @@ public interface LootingModule extends ModifierModule, LevelingIntModule, Condit
 
     private Builder() {}
 
-    /** @deprecated use {@link #lootingLevel(LevelingInt)} */
+    /** Sets the level in the builder. */
+    public Builder level(LevelingInt level) {
+      this.lootingLevel = level;
+      return this;
+    }
+
+    /** @deprecated use {@link #level(LevelingInt)} */
     @Deprecated(forRemoval = true)
     public Builder level(int level) {
-      return lootingLevel(LevelingInt.eachLevel(level));
+      return level(LevelingInt.eachLevel(level));
     }
 
     /** Builds a module for weapon looting */
