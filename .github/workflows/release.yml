@@ -12,7 +12,7 @@ permissions:
 env:
   # Mantle commit this release is built against; settings.gradle requires it at ../Mantle-1.21.1.
   MANTLE_REPOSITORY: Sukvii/Mantle-1.21.1
-  MANTLE_REF: 406cfd527f8c03b38dcb08985a3424cc19df2e33
+  MANTLE_REF: dc9e7177a618a6c6af187aabc600bde43472b34e
 
 jobs:
   release:

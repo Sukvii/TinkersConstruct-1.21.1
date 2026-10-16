@@ -7,8 +7,8 @@
 - Minecraft：`1.21.1`
 - NeoForge：`21.1.241`
 - Java：`21`
-- Tinkers' Construct 移植版本：`3.12.5`
-- 必需依赖：Mantle `1.12.4`
+- Tinkers' Construct 移植版本：`3.12.6`
+- 必需依赖：Mantle `1.12.5`
 - 可选 JEI 编译版本：`19.51.0.416`
 - 状态：开发版，不保证与旧存档 / 旧版本互通
 
