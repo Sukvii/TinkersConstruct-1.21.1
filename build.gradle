@@ -77,7 +77,7 @@ neoForge {
                     '--existing-mod', 'mantle'
         }
         configureEach {
-            gameDirectory = file('run')
+            gameDirectory = file(providers.gradleProperty('syncRunDir').getOrElse('run'))
             systemProperty 'forge.logging.markers', 'SCAN,REGISTRIES,CORE'
             logLevel = org.slf4j.event.Level.DEBUG
         }

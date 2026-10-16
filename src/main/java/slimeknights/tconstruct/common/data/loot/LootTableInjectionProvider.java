@@ -45,19 +45,21 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
   @SuppressWarnings("removal")
   @Override
   protected void addTables() {
+    // NeoForge 21.1 names unnamed vanilla pools "main" only for single-pool tables;
+    // in multi-pool tables it names them "pool0", "pool1", etc.
     // slimy foliage injections
     // earth/sky
     inject("slimy_foliage_dungeon", "chests/simple_dungeon", ConfigEnabledCondition.SLIMY_LOOT_CHESTS)
-      .addToPool("main", makeSapling(FoliageType.EARTH, 3), makeSapling(FoliageType.SKY, 7))
+      .addToPool("pool0", makeSapling(FoliageType.EARTH, 3), makeSapling(FoliageType.SKY, 7))
       .addToPool("pool1", makeSeed(FoliageType.EARTH, 3), makeSeed(FoliageType.SKY, 7));
     // blood
     inject("slimy_foliage_nether_fortress", "chests/nether_bridge", ConfigEnabledCondition.SLIMY_LOOT_CHESTS)
-      .addToPool("main", makeSeed(FoliageType.BLOOD, 5));
+      .addToPool("pool0", makeSeed(FoliageType.BLOOD, 5));
     inject("slimy_foliage_bastion", "chests/bastion_bridge", ConfigEnabledCondition.SLIMY_LOOT_CHESTS)
-      .addToPool("main", makeSapling(FoliageType.BLOOD, 1));
+      .addToPool("pool0", makeSapling(FoliageType.BLOOD, 1));
     // ender
     inject("slimy_foliage_end_city", "chests/end_city_treasure", ConfigEnabledCondition.SLIMY_LOOT_CHESTS)
-      .addToPool("main", makeSeed(FoliageType.ENDER, 5), makeSapling(FoliageType.ENDER, 3));
+      .addToPool("pool0", makeSeed(FoliageType.ENDER, 5), makeSapling(FoliageType.ENDER, 3));
 
     // bartering
     IJsonPredicate<MaterialVariantId> includeInLoot = MaterialPredicate.tag(TinkerTags.Materials.EXCLUDE_FROM_LOOT).inverted();
@@ -80,7 +82,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
     RandomMaterial randomTier1 = RandomMaterial.random().tier(0, 1).material(includeInLoot).build();
     RandomMaterial firstWithStat = RandomMaterial.firstWithStat(); // should be wood
     injectChest("spawn_bonus_chest")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.handAxe.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.handAxe.get())
                                  .setWeight(2)
                                  .apply(AddToolDataFunction.builder()
                                                            .addMaterial(randomTier1)
@@ -101,18 +103,18 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
                                                            .apply(buildData)
                                                            .setWeight(30).build());
     // nether fortress bridge is another place to get flint and brick
-    injectChest("nether_bridge").addToPool("main", LootItem.lootTableItem(TinkerTools.flintAndBrick.get())
+    injectChest("nether_bridge").addToPool("pool0", LootItem.lootTableItem(TinkerTools.flintAndBrick.get())
                                                            .apply(buildData)
                                                            .setWeight(5).build());
 
     // frypans just show up in some assorted locations
     injectChest("simple_dungeon")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.meltingPan.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.meltingPan.get())
                                  .setWeight(10) // about as often as both diamond swords
                                  .apply(ancientToolData2)
                                  .build());
     injectChest("igloo_chest")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.meltingPan.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.meltingPan.get())
                                  .setWeight(2) // common as a stone axe
                                  .apply(ancientToolData2)
                                  .build());
@@ -125,17 +127,17 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
     // find warpicks in pillager outputs, 50% chance to replace the crossbow
     AddToolDataFunction.Builder ancientToolData3 = AddToolDataFunction.builder().addMaterial(random).addMaterial(random).addMaterial(random);
     injectChest("pillager_outpost")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.warPick.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.warPick.get())
                                  .apply(ancientToolData3)
                                  .build());
     // also find them in mineshafts, same pool as iron picks
     injectChest("abandoned_mineshaft")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.warPick.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.warPick.get())
                                  .setWeight(5) // about as often as both diamond swords
                                  .apply(ancientToolData3)
                                  .build());
     injectChest("woodland_mansion")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.warPick.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.warPick.get())
                                  .setWeight(10) // about as often as both diamond swords
                                  .apply(ancientToolData3)
                                  .build());
@@ -146,7 +148,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
                                  .build());
 
     LootTableInjection.Builder bastion = injectChest("bastion_treasure")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.battlesign.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.battlesign.get())
                                  .setWeight(12) // about as often as both diamond swords
                                  .apply(ancientToolData2)
                                 .build());
@@ -159,7 +161,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
     // diamond armor shows in bastions, add in some plate with similar weight to enchanted version
     RandomMaterial randomHighTier = RandomMaterial.random().allowHidden().tier(3, 4).material(includeInLoot).build();
     for (ArmorItem.Type slot : ARMOR_TYPES) {
-      bastion.addToPool("main", LootItem.lootTableItem(TinkerTools.plateArmor.get(slot))
+      bastion.addToPool("pool0", LootItem.lootTableItem(TinkerTools.plateArmor.get(slot))
                                         .setWeight(6)
                                         .apply(AddToolDataFunction.builder()
                                                                   .addMaterial(randomHighTier)
@@ -176,7 +178,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
                                   .apply(setFluid)
                                   .build());
     injectChest("shipwreck_treasure")
-      .addToPool("main", LootItem.lootTableItem(TinkerTools.swasher.get())
+      .addToPool("pool0", LootItem.lootTableItem(TinkerTools.swasher.get())
                                   .setWeight(10) // as common as gold, less common than emerald, twice as common as diamond
                                   .apply(ancientToolData3)
                                  .apply(setFluid)
