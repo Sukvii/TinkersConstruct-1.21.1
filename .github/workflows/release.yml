@@ -1,0 +1,88 @@
+name: Build and release
+
+# Push a tag named v<mod_version> (for example v3.12.5) to build and publish a release.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  # Mantle commit this release is built against; settings.gradle requires it at ../Mantle-1.21.1.
+  MANTLE_REPOSITORY: Sukvii/Mantle-1.21.1
+  MANTLE_REF: 406cfd527f8c03b38dcb08985a3424cc19df2e33
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Tinkers' Construct
+        uses: actions/checkout@v4
+        with:
+          path: TinkersConstruct-1.21.1
+
+      - name: Checkout Mantle
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MANTLE_REPOSITORY }}
+          ref: ${{ env.MANTLE_REF }}
+          path: Mantle-1.21.1
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Read versions and check tag
+        working-directory: TinkersConstruct-1.21.1
+        run: |
+          mod_version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
+          mantle_version=$(grep '^mantle_version=' ../Mantle-1.21.1/gradle.properties | cut -d= -f2)
+          if [ "$GITHUB_REF_NAME" != "v$mod_version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match mod_version $mod_version" >&2
+            exit 1
+          fi
+          echo "MOD_VERSION=$mod_version" >> "$GITHUB_ENV"
+          echo "MANTLE_VERSION=$mantle_version" >> "$GITHUB_ENV"
+
+      - name: Build and test
+        working-directory: TinkersConstruct-1.21.1
+        run: ./gradlew build --no-daemon --console=plain
+
+      - name: Collect release files
+        run: |
+          mkdir dist
+          cp "TinkersConstruct-1.21.1/build/libs/TinkersConstruct-1.21.1-$MOD_VERSION.jar" dist/
+          cp "Mantle-1.21.1/build/libs/Mantle-1.21.1-$MANTLE_VERSION.jar" dist/
+          (cd dist && sha256sum *.jar > SHA256SUMS.txt && cat SHA256SUMS.txt)
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<EOF
+          Unofficial NeoForge port of Tinkers' Construct for Minecraft 1.21.1, based on Tinkers' Construct 3.12.0.220 for Minecraft 1.20.1.
+
+          **Development build.** Not guaranteed to be compatible with old saves or earlier builds of this port. Interactive gameplay and GUI acceptance is not complete yet.
+
+          **Requirements**
+          - Minecraft 1.21.1 and NeoForge 21.1.241 (the version this build was built and tested with)
+          - Mantle $MANTLE_VERSION (attached, required)
+          - Optional: JEI, or a provider of the JEI API such as TooManyRecipeViewers, declaring \`jei\` within [19.51.0.416,20.0.0)
+
+          **Sources**
+          - Tinkers' Construct: ${GITHUB_SHA}
+          - Mantle: ${MANTLE_REPOSITORY}@${MANTLE_REF}
+          EOF
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Tinkers' Construct $MOD_VERSION for Minecraft 1.21.1" \
+            --notes-file notes.md \
+            --prerelease \
+            --verify-tag
