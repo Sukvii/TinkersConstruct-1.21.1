@@ -15,6 +15,7 @@ import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect;
+import slimeknights.tconstruct.library.modifiers.modules.technical.CureOnRemovalModule;
 import slimeknights.tconstruct.library.modifiers.impl.SingleLevelModifier;
 import slimeknights.tconstruct.library.modifiers.modules.technical.ArmorLevelModule;
 import slimeknights.tconstruct.library.modifiers.modules.technical.CureOnRemovalModule;
@@ -50,7 +51,7 @@ public class StrongBonesModifier extends SingleLevelModifier {
     if (level > 0) {
       MobEffectInstance effect = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, flat + eachLevel * level);
       effect.getCures().clear();
-      effect.getCures().add(FluidMobEffect.cureForItem(helmet.getItem()));
+      effect.getCures().add(CureOnRemovalModule.toolCure(helmet.getItem()));
       // on simulate, don't apply the effect, just ask if we can apply
       didSomething = action.execute() ? living.addEffect(effect) : living.canBeAffected(effect);
       // quick exit on simulate: no more information needed

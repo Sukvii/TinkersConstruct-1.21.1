@@ -16,7 +16,5 @@
     "count": 1,
     "id": "tconstruct:seared_drain"
   },
-  "texture": {
-    "tag": "tconstruct:smeltery_bricks"
-  }
+  "texture": "#"
 }

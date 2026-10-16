@@ -65,7 +65,7 @@ public interface LootingModule extends ModifierModule, LevelingIntModule, Condit
   @Setter
   @Accessors(fluent = true)
   class Builder extends ModuleBuilder.Stack<Builder> {
-    private LevelingInt lootingLevel = LevelingInt.LEVEL;
+    private LevelingInt level = LevelingInt.LEVEL;
     private IJsonPredicate<LivingEntity> holder = LivingEntityPredicate.ANY;
     private IJsonPredicate<LivingEntity> target = LivingEntityPredicate.ANY;
     private IJsonPredicate<DamageSource> damageSource = DamageSourcePredicate.ANY;
@@ -74,7 +74,7 @@ public interface LootingModule extends ModifierModule, LevelingIntModule, Condit
 
     /** Sets the level in the builder. */
     public Builder level(LevelingInt level) {
-      this.lootingLevel = level;
+      this.level = level;
       return this;
     }
 
@@ -86,7 +86,7 @@ public interface LootingModule extends ModifierModule, LevelingIntModule, Condit
 
     /** Builds a module for weapon looting */
     public Weapon weapon() {
-      return new Weapon(lootingLevel, holder, target, damageSource, condition);
+      return new Weapon(level, holder, target, damageSource, condition);
     }
 
     /**
@@ -99,7 +99,7 @@ public interface LootingModule extends ModifierModule, LevelingIntModule, Condit
         throw new IllegalArgumentException("Must have at least 1 slot");
       }
       // immutable set preserves insertion order
-      return new Armor(lootingLevel, holder, target, damageSource, condition, ImmutableSet.copyOf(slots));
+      return new Armor(level, holder, target, damageSource, condition, ImmutableSet.copyOf(slots));
     }
 
     /** Creates a new armor harvest module with the default slots */

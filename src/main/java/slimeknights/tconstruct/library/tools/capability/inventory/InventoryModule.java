@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -139,6 +141,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
 
   @Override
   public ItemStack getStack(IToolStackView tool, ModifierEntry modifier, int slot) {
+    HolderLookup.Provider registries = RegistryAccessUtil.current();
     IModDataView modData = tool.getPersistentData();
     ResourceLocation key = getKey(modifier.getModifier());
     if (slot < getSlots(tool, modifier) && modData.contains(key, Tag.TAG_LIST)) {
@@ -146,7 +149,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
       for (int i = 0; i < list.size(); i++) {
         CompoundTag compound = list.getCompound(i);
         if (compound.getInt(TAG_SLOT) == slot) {
-          return ItemStack.parseOptional(RegistryAccessUtil.BUILTIN, compound);
+          return readStack(compound, registries);
         }
       }
     }
@@ -171,8 +174,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
             if (stack.isEmpty()) {
               list.remove(i);
             } else {
-              compound.getAllKeys().clear();
-              writeStack(stack, slot, compound);
+              list.set(i, writeStack(stack, slot, RegistryAccessUtil.current()));
             }
             return;
           // try to keep the stacks in order by inserting after the last slot smaller than the target
@@ -190,7 +192,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
 
       // list did not contain the slot, so add it
       if (!stack.isEmpty()) {
-        CompoundTag compound = writeStack(stack, slot, new CompoundTag());
+        CompoundTag compound = writeStack(stack, slot, RegistryAccessUtil.current());
         // if out of bounds, just put at the end. Shouldn't happen
         if (insertIndex > list.size()) {
           list.add(compound);
@@ -259,21 +261,26 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
 
   /* Helpers */
 
+  public static ItemStack readStack(CompoundTag compound, HolderLookup.Provider registries) {
+    return ItemStack.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), compound).getOrThrow();
+  }
+
   /**
-   * Writes a stack to NBT, including the slot
+   * Serializes a non-empty stack together with its slot into a new tag.
    * @param stack  Stack to write
    * @param slot   Target slot
-   * @param compound  Tag to write to, use new for new tag
-   * @return Tag written to, same as {@code compound}.
+   * @param registries  Registries used to serialize stack components
+   * @return Serialized stack and slot.
    */
-  public static CompoundTag writeStack(ItemStack stack, int slot, CompoundTag compound) {
-    stack.save(RegistryAccessUtil.BUILTIN, compound);
+  public static CompoundTag writeStack(ItemStack stack, int slot, HolderLookup.Provider registries) {
+    CompoundTag compound = (CompoundTag)stack.save(registries);
     compound.putInt(TAG_SLOT, slot);
     return compound;
   }
 
   @Override
   public StackMatch findStack(IToolStackView tool, ModifierEntry modifier, Predicate<ItemStack> predicate) {
+    HolderLookup.Provider registries = RegistryAccessUtil.current();
     // can save a lot of effort if we have no slots
     int max = getSlots(tool, modifier);
     if (max > 0) {
@@ -287,7 +294,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           // slot must be valid
           int slot = compound.getInt(TAG_SLOT);
           if (slot < max) {
-            ItemStack stack = ItemStack.parseOptional(RegistryAccessUtil.BUILTIN, compound);
+            ItemStack stack = readStack(compound, registries);
             if (!stack.isEmpty() && predicate.test(stack)) {
               return new StackMatch(stack, slot);
             }
@@ -300,6 +307,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
 
   @Override
   public List<ItemStack> getAllStacks(IToolStackView tool, ModifierEntry entry, List<ItemStack> stackList) {
+    HolderLookup.Provider registries = RegistryAccessUtil.current();
     // can save a lot of effort if we have no slots
     int max = getSlots(tool, entry);
     if (max > 0) {
@@ -315,7 +323,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           // slot must be valid
           int slot = compound.getInt(TAG_SLOT);
           if (slot < max) {
-            parsed[slot] = ItemStack.parseOptional(RegistryAccessUtil.BUILTIN, compound);
+            parsed[slot] = readStack(compound, registries);
           }
         }
         // add stacks into the list

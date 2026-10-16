@@ -70,12 +70,12 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
   @Setter @Accessors(fluent = true) @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   class Builder extends ModuleBuilder.Stack<Builder> {
     private final ResourceKey<Enchantment> enchantment;
-    private LevelingInt lootingLevel = LevelingInt.LEVEL;
+    private LevelingInt level = LevelingInt.LEVEL;
     private IJsonPredicate<BlockState> block = BlockPredicate.ANY;
     private IJsonPredicate<LivingEntity> holder = LivingEntityPredicate.ANY;
     /** Sets the level in the builder. */
     public Builder level(LevelingInt level) {
-      this.lootingLevel = level;
+      this.level = level;
       return this;
     }
 
@@ -86,18 +86,18 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
     }
     public Constant constant() {
       if (block != BlockPredicate.ANY || holder != LivingEntityPredicate.ANY) throw new IllegalStateException("Cannot build a constant enchantment module with block or holder conditions");
-      return new Constant(enchantment, lootingLevel, condition);
+      return new Constant(enchantment, level, condition);
     }
     public Protection protection() {
       if (block != BlockPredicate.ANY || holder != LivingEntityPredicate.ANY) throw new IllegalStateException("Cannot build a constant enchantment module with block or holder conditions");
-      return new Protection(enchantment, lootingLevel, condition);
+      return new Protection(enchantment, level, condition);
     }
-    public MainHandHarvest mainHandHarvest(ResourceLocation key) { return new MainHandHarvest(enchantment, lootingLevel, condition, key, block, holder); }
+    public MainHandHarvest mainHandHarvest(ResourceLocation key) { return new MainHandHarvest(enchantment, level, condition, key, block, holder); }
     public ArmorHarvest armorHarvest(EquipmentSlot... slots) {
       if (slots.length == 0) throw new IllegalArgumentException("Must have at least 1 slot");
       Set<EquipmentSlot> set = ImmutableSet.copyOf(slots);
       if (set.contains(EquipmentSlot.MAINHAND)) throw new IllegalArgumentException("Cannot create armor harvest for the main hand slot");
-      return new ArmorHarvest(enchantment, lootingLevel, condition, set, block, holder);
+      return new ArmorHarvest(enchantment, level, condition, set, block, holder);
     }
     public ArmorHarvest armorHarvest() { return armorHarvest(HarvestEnchantmentsModifierHook.APPLICABLE_SLOTS); }
   }

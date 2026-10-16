@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -113,7 +114,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
 
     // milk
     addFluid(Tags.Fluids.MILK, FluidValues.SIP * 2)
-      .addEntityEffect(new CureEffectsFluidEffect(Items.MILK_BUCKET))
+      .addEntityEffect(new CureEffectsFluidEffect(EffectCures.MILK))
       .addEntityEffect(StrongBonesModifier.FLUID_EFFECT);
 
     // slime - effects with blocks //
@@ -242,7 +243,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     compatMetal(TinkerFluids.moltenCadmium).fireDamage(2).addEntityEffect(new AddBreathFluidEffect(-90));
     compatMetal(TinkerFluids.moltenBendalloy).fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.SATURATION.value(), 20 * 5, 1), TimeAction.SET);
     // aluminum/duralumin/silver - remove effects/you
-    compatMetal(TinkerFluids.moltenAluminum).magicDamage(2).addEntityEffect(new CureEffectsFluidEffect(Items.MILK_BUCKET));
+    compatMetal(TinkerFluids.moltenAluminum).magicDamage(2).addEntityEffect(new CureEffectsFluidEffect(EffectCures.MILK));
     compatMetal(TinkerFluids.moltenDuralumin).magicDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.INVISIBILITY.value(), 20 * 5, 1), TimeAction.SET);
     compatMetal(TinkerFluids.moltenSilver).magicDamage(2).addEntityEffect(new RemoveEffectFluidEffect(MobEffects.WITHER.value()));
     // non-cosmere ores

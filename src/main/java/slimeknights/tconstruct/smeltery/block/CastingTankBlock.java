@@ -99,7 +99,7 @@ public class CastingTankBlock extends InventoryBlock implements ITankBlock, Enti
   public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
     CompoundTag nbt = ItemStackUtil.getTag(stack);
     if (nbt != null && worldIn.getBlockEntity(pos) instanceof CastingTankBlockEntity tank) {
-      tank.updateTank(nbt.getCompound(NBTTags.TANK));
+      tank.updateTank(nbt.getCompound(NBTTags.TANK), worldIn.registryAccess());
     }
 
     super.setPlacedBy(worldIn, pos, state, placer, stack);

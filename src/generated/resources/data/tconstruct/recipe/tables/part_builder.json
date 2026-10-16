@@ -18,7 +18,5 @@
     "count": 1,
     "id": "tconstruct:part_builder"
   },
-  "texture": {
-    "tag": "tconstruct:planklike"
-  }
+  "texture": "w"
 }

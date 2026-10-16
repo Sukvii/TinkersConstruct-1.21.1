@@ -96,7 +96,7 @@ class FluidStackLoadableTest extends BaseMcTest {
   }
 
   @Test
-  void legacyNbtJsonRemainsReadable() {
+  void nbtFieldJsonStoresCustomData() {
     JsonObject json = new JsonObject();
     json.addProperty("fluid", "minecraft:water");
     json.addProperty("amount", 50);

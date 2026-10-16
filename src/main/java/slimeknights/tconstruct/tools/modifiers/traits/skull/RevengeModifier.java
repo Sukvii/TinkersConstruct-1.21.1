@@ -13,7 +13,7 @@ import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModif
 import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHook;
 import slimeknights.tconstruct.library.modifiers.impl.NoLevelsModifier;
 import slimeknights.tconstruct.library.module.ModuleHookMap.Builder;
-import slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect;
+import slimeknights.tconstruct.library.modifiers.modules.technical.CureOnRemovalModule;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.context.EquipmentContext;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -34,7 +34,7 @@ public class RevengeModifier extends NoLevelsModifier implements EquipmentChange
     if (trueSource != null && trueSource != living) { // no making yourself mad with slurping or self-destruct or alike
       MobEffectInstance effect = new MobEffectInstance(MobEffects.DAMAGE_BOOST, 300);
       effect.getCures().clear();
-      effect.getCures().add(FluidMobEffect.cureForItem(living.getItemBySlot(slotType).getItem()));
+      effect.getCures().add(CureOnRemovalModule.toolCure(living.getItemBySlot(slotType).getItem()));
       living.addEffect(effect);
     }
   }
@@ -45,7 +45,7 @@ public class RevengeModifier extends NoLevelsModifier implements EquipmentChange
       IToolStackView replacement = context.getReplacementTool();
       if (replacement == null || replacement.getModifierLevel(this) == 0) {
         // cure effects using the helmet
-        context.getEntity().removeEffectsCuredBy(FluidMobEffect.cureForItem(tool.getItem()));
+        context.getEntity().removeEffectsCuredBy(CureOnRemovalModule.toolCure(tool.getItem()));
       }
     }
   }

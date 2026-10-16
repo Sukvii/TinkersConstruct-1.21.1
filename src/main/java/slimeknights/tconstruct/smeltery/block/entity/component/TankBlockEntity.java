@@ -23,7 +23,6 @@ import slimeknights.tconstruct.common.multiblock.IMasterLogic;
 import slimeknights.tconstruct.library.client.model.ModelProperties;
 import slimeknights.tconstruct.library.fluid.FluidTankAnimated;
 import slimeknights.tconstruct.library.utils.NBTTags;
-import slimeknights.tconstruct.library.utils.RegistryAccessUtil;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.TankType;
@@ -146,13 +145,9 @@ public class TankBlockEntity extends SmelteryComponentBlockEntity implements ITa
    * Updates the tank from an NBT tag, used in the block
    * @param nbt  tank NBT
    */
-  public void updateTank(CompoundTag nbt) {
-    tank.setFluid(TankItem.readFluid(registries(), nbt));
+  public void updateTank(CompoundTag nbt, HolderLookup.Provider registries) {
+    tank.setFluid(TankItem.readFluid(registries, nbt));
     updateLight(this, tank);
-  }
-
-  private HolderLookup.Provider registries() {
-    return level == null ? RegistryAccessUtil.BUILTIN : level.registryAccess();
   }
 
   @Override
@@ -161,18 +156,18 @@ public class TankBlockEntity extends SmelteryComponentBlockEntity implements ITa
   }
 
   @Override
-  public void load(CompoundTag tag) {
+  public void load(CompoundTag tag, HolderLookup.Provider registries) {
     tank.setCapacity(getCapacity(getBlockState().getBlock()));
-    updateTank(tag.getCompound(NBTTags.TANK));
-    super.load(tag);
+    updateTank(tag.getCompound(NBTTags.TANK), registries);
+    super.load(tag, registries);
   }
 
   @Override
-  public void saveSynced(CompoundTag tag) {
-    super.saveSynced(tag);
+  protected void saveSynced(CompoundTag tag, HolderLookup.Provider registries) {
+    super.saveSynced(tag, registries);
     // want tank on the client on world load
     if (!tank.isEmpty()) {
-      tag.put(NBTTags.TANK, tank.writeToNBT(registries(), new CompoundTag()));
+      tag.put(NBTTags.TANK, tank.writeToNBT(registries, new CompoundTag()));
     }
   }
 

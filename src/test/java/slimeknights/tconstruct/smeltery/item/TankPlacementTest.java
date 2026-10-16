@@ -3,7 +3,6 @@ package slimeknights.tconstruct.smeltery.item;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -37,6 +36,7 @@ class TankPlacementTest extends BaseMcTest {
     contents.setFluid(new FluidStack(Fluids.WATER, AMOUNT));
     TankItem.setTank(stack, contents);
 
+    assertThat(ItemStackUtil.getTag(stack).getCompound(NBTTags.TANK).contains("Fluid", Tag.TAG_COMPOUND)).isTrue();
     assertPlacedFluid(block, roundTrip(stack));
   }
 
@@ -44,17 +44,6 @@ class TankPlacementTest extends BaseMcTest {
   void tankPreFilledWithFluidStackSurvivesPlacement() {
     SearedTankBlock block = TinkerSmeltery.searedTank.get(TankType.FUEL_TANK);
     ItemStack stack = TankItem.setTank(new ItemStack(block), new FluidStack(Fluids.WATER, AMOUNT));
-
-    assertPlacedFluid(block, roundTrip(stack));
-  }
-
-  @Test
-  void tankWithDirectFluidDataFromEarlyPortSurvivesPlacement() {
-    SearedTankBlock block = TinkerSmeltery.searedTank.get(TankType.FUEL_TANK);
-    ItemStack stack = new ItemStack(block);
-    CompoundTag itemData = new CompoundTag();
-    itemData.put(NBTTags.TANK, new FluidStack(Fluids.WATER, AMOUNT).save(RegistryAccessUtil.BUILTIN));
-    ItemStackUtil.setTag(stack, itemData);
 
     assertPlacedFluid(block, roundTrip(stack));
   }
@@ -87,6 +76,7 @@ class TankPlacementTest extends BaseMcTest {
     BlockPos pos = BlockPos.ZERO;
     TankBlockEntity placed = new TankBlockEntity(pos, block.defaultBlockState(), block);
     Level level = mock(Level.class);
+    when(level.registryAccess()).thenReturn(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
     when(level.getBlockEntity(pos)).thenReturn(placed);
 
     block.setPlacedBy(level, pos, block.defaultBlockState(), null, stack);

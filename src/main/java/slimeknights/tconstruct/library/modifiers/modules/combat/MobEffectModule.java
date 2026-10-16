@@ -16,13 +16,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.EffectCure;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.mantle.data.loadable.LegacyLoadable;
 import slimeknights.mantle.data.loadable.Loadables;
@@ -50,7 +50,7 @@ import slimeknights.tconstruct.library.modifiers.hook.ranged.ProjectileLaunchMod
 import slimeknights.tconstruct.library.modifiers.hook.special.PlantHarvestModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.special.ShearsModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.special.sling.SlingLaunchModifierHook;
-import slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect;
+import slimeknights.tconstruct.library.json.TinkerLoadables;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
 import slimeknights.tconstruct.library.modifiers.modules.util.BooleanPredicate;
 import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition;
@@ -147,7 +147,7 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
     private LevelingValue chance = null;
     /** Curative items */
     @Nullable
-    private List<Item> curativeItems = null;
+    private List<EffectCure> cures = null;
 
     // weapon
     /** Applies the effect before melee hit instead of after. */
@@ -171,19 +171,19 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
     /** Predicate for whether to apply the effect to usages from projectiles, such as throwing or arrow hit */
     private BooleanPredicate isProjectile = BooleanPredicate.FALSE;
 
-    /** Sets curative items to the builder. May call with no arguments to force curative items to empty. */
-    public Builder curativeItem(Item... items) {
-      if (curativeItems == null) {
-        curativeItems = new ArrayList<>();
+    /** Sets effect cures on the builder. May call with no arguments to force cures to empty. */
+    public Builder cure(EffectCure... cures) {
+      if (this.cures == null) {
+        this.cures = new ArrayList<>();
       }
-      Collections.addAll(curativeItems, items);
+      Collections.addAll(this.cures, cures);
       return this;
     }
 
 
     /** Builds the effect */
     private ModifierMobEffect buildEffect() {
-      return new ModifierMobEffect(effect, level, time, target, curativeItems);
+      return new ModifierMobEffect(effect, level, time, target, cures);
     }
 
     /** Effect targets an entity hit with this weapon, melee or ranged */
@@ -219,13 +219,13 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
   }
 
   /** Represents a mob effect applied via a modifier. Meant to be nested inside a modifier module. */
-  record ModifierMobEffect(MobEffect effect, RandomLevelingValue level, RandomLevelingValue time, IJsonPredicate<LivingEntity> target, @Nullable List<Item> curativeItems) {
+  record ModifierMobEffect(MobEffect effect, RandomLevelingValue level, RandomLevelingValue time, IJsonPredicate<LivingEntity> target, @Nullable List<EffectCure> cures) {
     public static final RecordLoadable<ModifierMobEffect> LOADER = RecordLoadable.create(
       Loadables.MOB_EFFECT.requiredField("effect", ModifierMobEffect::effect),
       RandomLevelingValue.LOADABLE.requiredField("level", ModifierMobEffect::level),
       RandomLevelingValue.LOADABLE.requiredField("time", ModifierMobEffect::time),
       LivingEntityPredicate.LOADER.defaultField("target", ModifierMobEffect::target),
-      Loadables.ITEM.list(0).nullableField("curative_items", ModifierMobEffect::curativeItems),
+      TinkerLoadables.EFFECT_CURE.list(0).nullableField("cures", ModifierMobEffect::cures),
       ModifierMobEffect::new);
     // TODO: visibility?
 
@@ -241,9 +241,9 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
       float duration = this.time.computeValue(scaledLevel);
       if (duration > 0) {
         MobEffectInstance instance = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), (int)duration, level);
-        if (curativeItems != null) {
+        if (cures != null) {
           instance.getCures().clear();
-          curativeItems.stream().map(FluidMobEffect::cureForItem).forEach(instance.getCures()::add);
+          instance.getCures().addAll(cures);
         }
         target.addEffect(instance, cause);
       }

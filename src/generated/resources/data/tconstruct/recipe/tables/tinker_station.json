@@ -19,7 +19,5 @@
     "count": 1,
     "id": "tconstruct:tinker_station"
   },
-  "texture": {
-    "tag": "tconstruct:planklike"
-  }
+  "texture": "w"
 }

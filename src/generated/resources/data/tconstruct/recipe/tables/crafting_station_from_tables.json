@@ -23,13 +23,5 @@
     "count": 1,
     "id": "tconstruct:crafting_station"
   },
-  "texture": {
-    "type": "neoforge:difference",
-    "base": {
-      "tag": "tconstruct:tables"
-    },
-    "subtracted": {
-      "item": "tconstruct:crafting_station"
-    }
-  }
+  "texture": "w"
 }

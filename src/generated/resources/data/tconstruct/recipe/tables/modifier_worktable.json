@@ -19,7 +19,5 @@
     "count": 1,
     "id": "tconstruct:modifier_worktable"
   },
-  "texture": {
-    "tag": "tconstruct:workstation_rock"
-  }
+  "texture": "r"
 }

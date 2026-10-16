@@ -35,7 +35,6 @@ import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.library.client.model.ModelProperties;
 import slimeknights.tconstruct.library.fluid.FluidTankAnimated;
 import slimeknights.tconstruct.library.utils.NBTTags;
-import slimeknights.tconstruct.library.utils.RegistryAccessUtil;
 import slimeknights.tconstruct.shared.block.entity.TableBlockEntity;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 import slimeknights.tconstruct.smeltery.block.CastingTankBlock;
@@ -261,8 +260,7 @@ public class CastingTankBlockEntity extends TableBlockEntity implements ITankBlo
    * Updates the tank from an NBT tag, used in the block
    * @param nbt  tank NBT
    */
-  public void updateTank(CompoundTag nbt) {
-    HolderLookup.Provider registries = level == null ? RegistryAccessUtil.BUILTIN : level.registryAccess();
+  public void updateTank(CompoundTag nbt, HolderLookup.Provider registries) {
     tank.setFluid(TankItem.readFluid(registries, nbt));
     TankBlockEntity.updateLight(this, tank);
   }

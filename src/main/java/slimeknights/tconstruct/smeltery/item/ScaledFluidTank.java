@@ -1,15 +1,9 @@
 package slimeknights.tconstruct.smeltery.item;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import slimeknights.tconstruct.library.utils.FluidStackUtil;
 
 import javax.annotation.Nonnull;
 
@@ -18,6 +12,7 @@ import javax.annotation.Nonnull;
  * Internally works the same as a fluid tank with {@code capacity * scale}, except operations are truncated to the nearest scale (e.g. if scale is 4, we must fill in 4mb increments).
  */
 public class ScaledFluidTank extends FluidTank {
+  private static final String TAG_FLUID = "Fluid";
   private final int scale;
   private ScaledFluidTank(int capacity, int scale) {
     super(capacity * scale);
@@ -90,18 +85,7 @@ public class ScaledFluidTank extends FluidTank {
   @Override
   public FluidTank readFromNBT(HolderLookup.Provider registries, CompoundTag nbt) {
     // scale the fluid on reading from NBT; as each instance should store the fluid relative to stack size 1
-    FluidStack fluid = FluidStack.parseOptional(registries, nbt);
-    // Preserve tanks written before 1.20.5, which used FluidName/Amount/Tag.
-    if (fluid.isEmpty() && nbt.contains("FluidName", Tag.TAG_STRING)) {
-      ResourceLocation id = ResourceLocation.tryParse(nbt.getString("FluidName"));
-      Fluid legacyFluid = id == null ? Fluids.EMPTY : BuiltInRegistries.FLUID.get(id);
-      if (legacyFluid != null && legacyFluid != Fluids.EMPTY) {
-        fluid = new FluidStack(legacyFluid, nbt.getInt("Amount"));
-        if (nbt.contains("Tag", Tag.TAG_COMPOUND)) {
-          FluidStackUtil.setTag(fluid, nbt.getCompound("Tag"));
-        }
-      }
-    }
+    FluidStack fluid = FluidStack.parseOptional(registries, nbt.getCompound(TAG_FLUID));
     fluid.setAmount(fluid.getAmount() * scale);
     setFluid(fluid);
     return this;
@@ -112,6 +96,9 @@ public class ScaledFluidTank extends FluidTank {
     // Scale the fluid on writing to NBT, as each instance stores fluid relative to a stack size of 1.
     FluidStack fluid = this.fluid.copy();
     fluid.setAmount(fluid.getAmount() / scale);
-    return fluid.isEmpty() ? nbt : (CompoundTag)fluid.save(registries, nbt);
+    if (!fluid.isEmpty()) {
+      nbt.put(TAG_FLUID, fluid.save(registries));
+    }
+    return nbt;
   }
 }

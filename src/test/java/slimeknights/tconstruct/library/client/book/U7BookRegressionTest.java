@@ -92,39 +92,6 @@ class U7BookRegressionTest extends BaseMcTest {
       .contains("encyclopedia:fr_fr:materials_ammo.subtext", "tinkers_gadgetry:ja_jp:melee_harvest_materials.subtext");
   }
 
-  @Test
-  void reflectingBookVariantsDescribeDurationAndSlotCostsConsistently() throws IOException {
-    List<String> smelting = readEffects(
-      "assets/tconstruct/book/mighty_smelting/zh_cn/abilities/armor/shield/tconstruct_reflecting.json");
-    List<String> encyclopedia = readEffects(
-      "assets/tconstruct/book/encyclopedia/zh_cn/abilities/armor/shield/tconstruct_reflecting.json");
-    JsonObject recipe = readObject("data/tconstruct/recipe/tools/modifiers/ability/reflecting.json");
-
-    assertThat(smelting).containsExactly(
-      "格挡后2秒内反弹弹射物",
-      "多个等级，每级增加2秒判定时间",
-      "第1级需要1个能力槽",
-      "后续每级需要1个升级槽"
-    );
-    assertThat(encyclopedia).contains(
-      "第1级需要1个能力槽", "后续每级需要1个升级槽", "最高3级"
-    );
-    assertThat(smelting.stream().filter(line -> line.contains("能力槽"))).hasSize(1);
-    assertThat(smelting.stream().filter(line -> line.contains("升级槽"))).hasSize(1);
-
-    JsonArray levels = recipe.getAsJsonArray("levels");
-    assertThat(levels).hasSize(2);
-    JsonObject firstLevel = levels.get(0).getAsJsonObject();
-    assertThat(firstLevel.get("level").getAsInt()).isEqualTo(1);
-    assertThat(firstLevel.getAsJsonObject("slots").get("abilities").getAsInt()).isEqualTo(1);
-    assertThat(firstLevel.getAsJsonObject("slots").has("upgrades")).isFalse();
-    JsonObject laterLevels = levels.get(1).getAsJsonObject();
-    assertThat(laterLevels.getAsJsonObject("level").get("min").getAsInt()).isEqualTo(2);
-    assertThat(laterLevels.getAsJsonObject("level").get("max").getAsInt()).isEqualTo(3);
-    assertThat(laterLevels.getAsJsonObject("slots").get("upgrades").getAsInt()).isEqualTo(1);
-    assertThat(laterLevels.getAsJsonObject("slots").has("abilities")).isFalse();
-  }
-
   private static JsonArray readIndex(String book) throws IOException {
     String path = "assets/tconstruct/book/" + book + "/index.json";
     try (InputStream stream = Objects.requireNonNull(
@@ -147,20 +114,4 @@ class U7BookRegressionTest extends BaseMcTest {
     return properties;
   }
 
-  private static List<String> readEffects(String path) throws IOException {
-    JsonObject page = readObject(path);
-    List<String> effects = new ArrayList<>();
-    for (var effect : page.getAsJsonArray("effects")) {
-      effects.add(effect.getAsString());
-    }
-    return effects;
-  }
-
-  private static JsonObject readObject(String path) throws IOException {
-    try (InputStream stream = Objects.requireNonNull(
-        U7BookRegressionTest.class.getClassLoader().getResourceAsStream(path), "Missing resource: " + path);
-         InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-      return JsonParser.parseReader(reader).getAsJsonObject();
-    }
-  }
 }

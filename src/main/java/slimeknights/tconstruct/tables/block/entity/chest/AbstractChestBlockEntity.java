@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import slimeknights.mantle.block.entity.NameableBlockEntity;
 import slimeknights.tconstruct.tables.block.entity.inventory.IChestItemHandler;
 import slimeknights.tconstruct.tables.menu.TinkerChestContainerMenu;
-import slimeknights.tconstruct.library.utils.RegistryAccessUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,11 +71,6 @@ public abstract class AbstractChestBlockEntity extends NameableBlockEntity {
     CompoundTag handlerNBT = new CompoundTag();
     handlerNBT.put(KEY_ITEMS, tags.getList(KEY_ITEMS, Tag.TAG_COMPOUND));
     itemHandler.deserializeNBT(registries, handlerNBT);
-  }
-
-  /** Compatibility overload for callers without direct registry access. */
-  public void readInventory(CompoundTag tags) {
-    readInventory(tags, RegistryAccessUtil.BUILTIN);
   }
 
   @Override

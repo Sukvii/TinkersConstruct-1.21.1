@@ -248,17 +248,9 @@ public class TankItem extends BlockTooltipItem {
     return stack;
   }
 
-  /**
-   * Reads a fluid from either the current {@link FluidTank} NBT format or the direct fluid stack
-   * format produced by early 1.21 builds.
-   */
+  /** Reads the fluid of a single tank from its tank tag, in NeoForge's FluidTank layout. */
   public static FluidStack readFluid(HolderLookup.Provider registries, CompoundTag nbt) {
-    return FluidStack.parseOptional(registries, unwrapFluidTag(nbt));
-  }
-
-  /** Gets the serialized fluid stack from a tank tag, accepting both supported layouts. */
-  private static CompoundTag unwrapFluidTag(CompoundTag nbt) {
-    return nbt.contains(FLUID_TAG, Tag.TAG_COMPOUND) ? nbt.getCompound(FLUID_TAG) : nbt;
+    return FluidStack.parseOptional(registries, nbt.getCompound(FLUID_TAG));
   }
 
   /** Creates a stack with the given fluid and amount, not validated. */
@@ -293,7 +285,7 @@ public class TankItem extends BlockTooltipItem {
     CompoundTag nbt = ItemStackUtil.getTag(stack);
     if (nbt != null) {
       // the NBT stores the fluid of a single tank; scale it to represent the whole stack,
-      // matching the scaled capacity (like ScaledFluidTank#readFromNBT did before 1.21)
+      // matching the scaled capacity
       FluidStack fluid = readFluid(RegistryAccessUtil.BUILTIN, nbt.getCompound(NBTTags.TANK));
       if (!fluid.isEmpty()) {
         fluid.setAmount(fluid.getAmount() * scale);
@@ -311,11 +303,7 @@ public class TankItem extends BlockTooltipItem {
   public static String getSubtype(ItemStack stack) {
     CompoundTag nbt = ItemStackUtil.getTag(stack);
     if (nbt != null && nbt.contains(NBTTags.TANK, Tag.TAG_COMPOUND)) {
-      CompoundTag tank = unwrapFluidTag(nbt.getCompound(NBTTags.TANK));
-      if (tank.contains("id", Tag.TAG_STRING)) {
-        return tank.getString("id");
-      }
-      return tank.getString("FluidName");
+      return nbt.getCompound(NBTTags.TANK).getCompound(FLUID_TAG).getString("id");
     }
     return "";
   }

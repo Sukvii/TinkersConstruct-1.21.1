@@ -16,7 +16,5 @@
     "count": 1,
     "id": "tconstruct:scorched_drain"
   },
-  "texture": {
-    "tag": "tconstruct:foundry_bricks"
-  }
+  "texture": "#"
 }

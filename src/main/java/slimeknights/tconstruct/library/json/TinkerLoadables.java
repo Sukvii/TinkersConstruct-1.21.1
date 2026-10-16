@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.neoforged.neoforge.common.loot.LootModifierManager;
+import net.neoforged.neoforge.common.EffectCure;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.mantle.data.loadable.Loadable;
 import slimeknights.mantle.data.loadable.Loadables;
@@ -47,6 +48,8 @@ public class TinkerLoadables {
   public static final StringLoadable<InteractionSource> INTERACTION_SOURCE = new EnumLoadable<>(InteractionSource.class);
   public static final StringLoadable<OreRateType> ORE_RATE_TYPE = new EnumLoadable<>(OreRateType.class);
   public static final StringLoadable<TooltipKey> TOOLTIP_KEY = new EnumLoadable<>(TooltipKey.class);
+  /** NeoForge effect cure by name, e.g. "milk", "honey", "protected_by_totem". */
+  public static final StringLoadable<EffectCure> EFFECT_CURE = StringLoadable.DEFAULT.flatXmap(EffectCure::get, EffectCure::name);
 
   /* Registries */
   public static final StringLoadable<StatType<?>> STAT_TYPE = new RegistryLoadable<>(BuiltInRegistries.STAT_TYPE);

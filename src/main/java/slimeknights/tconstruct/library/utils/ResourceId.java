@@ -11,15 +11,8 @@ import java.util.function.BiFunction;
  * @see IdParser
  */
 public abstract class ResourceId extends ResourceLocation {
-  /** Compatibility token retained for the typed ID subclasses. */
-  protected static final class Dummy {}
-
-  protected ResourceId(String namespace, String path, @Nullable Dummy pDummy) {
-    super(namespace, path);
-  }
-
   public ResourceId(ResourceLocation location) {
-    this(location.getNamespace(), location.getPath(), null);
+    super(location.getNamespace(), location.getPath());
   }
 
   public ResourceId(String namespace, String path) {

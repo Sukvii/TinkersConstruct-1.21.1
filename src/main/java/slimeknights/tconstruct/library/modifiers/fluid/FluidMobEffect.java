@@ -6,13 +6,14 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
+import slimeknights.tconstruct.library.json.TinkerLoadables;
 import slimeknights.tconstruct.library.modifiers.fluid.block.MobEffectCloudFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffect;
 
@@ -26,15 +27,15 @@ import java.util.stream.Collectors;
  * @param effect  Effect to apply
  * @param level   Potion level starting at 1. Fixed with respect to fluid amount.
  * @param time    Potion time in ticks, scales with fluid amount. Set to {@link MobEffectInstance#INFINITE_DURATION} for infinite.
- * @param curativeItems  Items allowed to cure the effect
+ * @param cures  Cure types allowed to remove the effect
  */
-public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable List<Item> curativeItems) {
+public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable List<EffectCure> cures) {
   private static final String TRANSLATION_ROOT = TConstruct.makeTranslationKey("fluid_effect", "mob_effect.");
   public static final RecordLoadable<FluidMobEffect> LOADABLE = RecordLoadable.create(
     Loadables.MOB_EFFECT.requiredField("effect", e -> e.effect),
     IntLoadable.FROM_ONE.defaultField("time", -1, false, e -> e.time),
     IntLoadable.FROM_ONE.defaultField("level", 1, true, e -> e.level),
-    Loadables.ITEM.list(0).nullableField("curative_items", e -> e.curativeItems),
+    TinkerLoadables.EFFECT_CURE.list(0).nullableField("cures", e -> e.cures),
     FluidMobEffect::new);
 
   public FluidMobEffect(MobEffect effect, int time, int level) {
@@ -54,9 +55,9 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
   /** Creates the final effect */
   public MobEffectInstance effectWithTime(int time) {
     MobEffectInstance instance = new MobEffectInstance(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), time, this.level - 1);
-    if (curativeItems != null) {
+    if (cures != null) {
       instance.getCures().clear();
-      curativeItems.stream().map(FluidMobEffect::cureForItem).forEach(instance.getCures()::add);
+      instance.getCures().addAll(cures);
     }
     return instance;
   }
@@ -130,11 +131,6 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
     return 0;
   }
 
-  /** Maps legacy item-based cures to stable NeoForge cure identifiers. */
-  public static net.neoforged.neoforge.common.EffectCure cureForItem(Item item) {
-    return net.neoforged.neoforge.common.EffectCure.get(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).toString());
-  }
-
   /** Gets the display name for this effect */
   public Component getDisplayName(TimeAction action) {
     // level display based on PotionUtils#addPotionTooltip
@@ -160,8 +156,8 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
     private Builder() {}
 
     /** Adds an effect to the builder with the passed cures. If none are passed, effect will have no cure*/
-    public Builder effectCure(MobEffect effect, int time, int level, Item... curativeItems) {
-      effects.add(new FluidMobEffect(effect, time, level, List.of(curativeItems)));
+    public Builder effectCure(MobEffect effect, int time, int level, EffectCure... cures) {
+      effects.add(new FluidMobEffect(effect, time, level, List.of(cures)));
       return this;
     }
 

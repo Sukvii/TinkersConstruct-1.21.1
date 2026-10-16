@@ -25,7 +25,5 @@
     "count": 1,
     "id": "tconstruct:tinkers_anvil"
   },
-  "texture": {
-    "tag": "tconstruct:anvil_metal"
-  }
+  "texture": "m"
 }

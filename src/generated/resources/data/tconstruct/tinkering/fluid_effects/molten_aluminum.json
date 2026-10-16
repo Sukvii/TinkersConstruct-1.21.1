@@ -25,7 +25,7 @@
     },
     {
       "type": "tconstruct:cure_effects",
-      "item": "minecraft:milk_bucket"
+      "cure": "milk"
     }
   ],
   "fluid": {

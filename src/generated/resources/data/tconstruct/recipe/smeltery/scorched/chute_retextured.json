@@ -18,7 +18,5 @@
     "count": 1,
     "id": "tconstruct:scorched_chute"
   },
-  "texture": {
-    "tag": "tconstruct:foundry_bricks"
-  }
+  "texture": "#"
 }

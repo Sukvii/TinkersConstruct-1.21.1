@@ -2,7 +2,7 @@
   "entity_effects": [
     {
       "type": "tconstruct:cure_effects",
-      "item": "minecraft:milk_bucket"
+      "cure": "milk"
     },
     {
       "type": "tconstruct:calcified"

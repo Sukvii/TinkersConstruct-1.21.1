@@ -1606,7 +1606,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
       .addModule(MobEffectModule.builder(MobEffects.WITHER.value()).damageSource(DamageSourcePredicate.tag(TinkerTags.DamageTypes.MELEE_PROTECTION)).time(RandomLevelingValue.flat(120)).buildArmorAttack());
     buildModifier(ModifierIds.fireborn).levelDisplay(ModifierLevelDisplay.SINGLE_LEVEL)
       // make immune to fire by forcing fire time to 0 (that is, -105% fire tick time)
-      .addModule(EnchantmentModule.builder(Enchantments.FIRE_PROTECTION).lootingLevel(LevelingInt.flat(7)).protection())
+      .addModule(EnchantmentModule.builder(Enchantments.FIRE_PROTECTION).level(LevelingInt.flat(7)).protection())
       // also immune to conductive, this one is purely defensive
       .addModule(new EffectImmunityModule(TinkerEffects.conductive, LevelingInt.LEVEL));
     // bundles - adds 2 levels of ###, plus 1 when trimmed
@@ -1659,12 +1659,12 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
     // traits - slimeboots
     UniqueForLevels twoLevels = new UniqueForLevels(2, false);
     buildModifier(ModifierIds.looter).levelDisplay(twoLevels)
-      .addModule(LootingModule.builder().lootingLevel(LevelingInt.ONE).armor(ARMOR_SLOTS))
+      .addModule(LootingModule.builder().level(LevelingInt.ONE).armor(ARMOR_SLOTS))
       .addModule(AttributeModule.builder(TinkerAttributes.EXPERIENCE_MULTIPLIER, Operation.ADD_MULTIPLIED_BASE).minLevel(2).flat(0.25f));
     buildModifier(ModifierIds.fortunate).levelDisplay(twoLevels)
-      .addModule(EnchantmentModule.builder(Enchantments.FORTUNE).lootingLevel(LevelingInt.ONE).toolItem(harvest).constant())
+      .addModule(EnchantmentModule.builder(Enchantments.FORTUNE).level(LevelingInt.ONE).toolItem(harvest).constant())
       .addModule(AttributeModule.builder(Attributes.LUCK.value(), Operation.ADD_VALUE).toolTag(TinkerTags.Items.ARMOR).flat(1))
-      .addModule(LootingModule.builder().minLevel(2).lootingLevel(LevelingInt.ONE).armor(ARMOR_SLOTS));
+      .addModule(LootingModule.builder().minLevel(2).level(LevelingInt.ONE).armor(ARMOR_SLOTS));
     buildModifier(ModifierIds.entwined)
       .levelDisplay(ModifierLevelDisplay.SINGLE_LEVEL)
       // boots: +15% movement speed

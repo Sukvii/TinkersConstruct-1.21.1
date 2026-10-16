@@ -1,11 +1,13 @@
 package slimeknights.tconstruct.library.modifiers.modules.technical;
 
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.common.EffectCure;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
-import slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
@@ -25,6 +27,11 @@ public enum CureOnRemovalModule implements HookProvider, EquipmentChangeModifier
 
   private final EquipmentSlot slot;
 
+  /** Custom cure for effects that end when the given tool leaves its slot. */
+  public static EffectCure toolCure(Item item) {
+    return EffectCure.get(BuiltInRegistries.ITEM.getKey(item).toString());
+  }
+
   @Override
   public List<ModuleHook<?>> getDefaultHooks() {
     return DEFAULT_HOOKS;
@@ -36,7 +43,7 @@ public enum CureOnRemovalModule implements HookProvider, EquipmentChangeModifier
       IToolStackView replacement = context.getReplacementTool();
       if (replacement == null || replacement.getModifierLevel(modifier.getModifier()) == 0 || replacement.getItem() != tool.getItem()) {
         // cure effects using the helmet
-        context.getEntity().removeEffectsCuredBy(FluidMobEffect.cureForItem(tool.getItem()));
+        context.getEntity().removeEffectsCuredBy(toolCure(tool.getItem()));
       }
     }
   }

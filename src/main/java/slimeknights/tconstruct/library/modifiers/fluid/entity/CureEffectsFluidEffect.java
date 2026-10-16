@@ -1,27 +1,21 @@
 package slimeknights.tconstruct.library.modifiers.fluid.entity;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import slimeknights.mantle.data.loadable.common.ItemStackLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.tconstruct.library.json.TinkerLoadables;
 import slimeknights.tconstruct.library.modifiers.fluid.EffectLevel;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext.Entity;
 
 /**
- * Effect to clear all effects using the given stack
- * @param stack  Stack used for curing, standard is milk bucket
+ * Effect to clear all effects cured by the given cure, standard is milk
  */
-public record CureEffectsFluidEffect(ItemStack stack) implements FluidEffect<FluidEffectContext.Entity> {
-  public static final RecordLoadable<CureEffectsFluidEffect> LOADER = RecordLoadable.create(ItemStackLoadable.REQUIRED_ITEM.requiredField("item", e -> e.stack), CureEffectsFluidEffect::new);
-
-  public CureEffectsFluidEffect(ItemLike item) {
-    this(new ItemStack(item));
-  }
+public record CureEffectsFluidEffect(EffectCure cure) implements FluidEffect<FluidEffectContext.Entity> {
+  public static final RecordLoadable<CureEffectsFluidEffect> LOADER = RecordLoadable.create(TinkerLoadables.EFFECT_CURE.requiredField("cure", CureEffectsFluidEffect::cure), CureEffectsFluidEffect::new);
 
   @Override
   public float apply(FluidStack fluid, EffectLevel level, Entity context, FluidAction action) {
@@ -30,17 +24,9 @@ public record CureEffectsFluidEffect(ItemStack stack) implements FluidEffect<Flu
       // when simulating, search the effects list directly for curative effects
       // may still be wrong if the event cancels things though, no way to safely simulate it
       if (action.simulate()) {
-        var cure = slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect.cureForItem(stack.getItem());
         return target.getActiveEffects().stream().anyMatch(effect -> effect.getCures().contains(cure)) ? 1 : 0;
       }
-      var cure = slimeknights.tconstruct.library.modifiers.fluid.FluidMobEffect.cureForItem(stack.getItem());
-      boolean removed = target.removeEffectsCuredBy(cure);
-      if (stack.is(net.minecraft.world.item.Items.MILK_BUCKET)) {
-        removed |= target.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.MILK);
-      } else if (stack.is(net.minecraft.world.item.Items.HONEY_BOTTLE)) {
-        removed |= target.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.HONEY);
-      }
-      return removed ? 1 : 0;
+      return target.removeEffectsCuredBy(cure) ? 1 : 0;
     }
     return 0;
   }

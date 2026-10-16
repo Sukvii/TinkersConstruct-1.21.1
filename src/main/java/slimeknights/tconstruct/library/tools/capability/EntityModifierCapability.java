@@ -68,9 +68,6 @@ public final class EntityModifierCapability {
     ENTITY_PREDICATES.add(predicate);
   }
 
-  /** Retained for source compatibility; attachments are registered through TinkerModule. */
-  public static void register() {}
-
   private record AttachedModifiers(Entity entity) implements EntityModifiers {
     @Override public ModifierNBT getModifiers() { return entity.getData(type()); }
     @Override public void setModifiers(ModifierNBT nbt) { entity.setData(type(), nbt); }
