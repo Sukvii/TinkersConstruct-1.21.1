@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="${loader_range}"
-issueTrackerURL="https://github.com/SlimeKnights/TinkersConstruct/issues"
+issueTrackerURL="https://github.com/Sukvii/TinkersConstruct-1.21.1/issues"
 logoFile="logo.png"
 license="MIT"
 
@@ -8,10 +8,10 @@ license="MIT"
     modId="tconstruct"
     version="${version}"
     displayName="Tinkers' Construct"
-    authors="主厨"
+    authors="Sukvii"
     enumExtensions="META-INF/enumextensions.json"
     description='''
-基于匠魂3 3.12.0版本制作的neoforge移植版
+Unofficial NeoForge port of Tinkers' Construct for Minecraft 1.21.1, based on Tinkers' Construct 3.12.0.220 for Minecraft 1.20.1.
     '''
 
 [[dependencies.tconstruct]]
